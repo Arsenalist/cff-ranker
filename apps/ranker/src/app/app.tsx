@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Message } from '@cff/api-interfaces';
+import { ValidationFileUpload } from './validation-file-upload'
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
 export const App = () => {
   const [m, setMessage] = useState<Message>({ message: '' });
@@ -11,16 +19,13 @@ export const App = () => {
   }, []);
 
   return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to ranker!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-        />
-      </div>
-      <div>{m.message}</div>
-    </>
+    <Router>
+      <Switch>
+          <Route path="/validation-file-upload">
+            <ValidationFileUpload />
+          </Route>
+      </Switch>
+    </Router>
   );
 };
 
