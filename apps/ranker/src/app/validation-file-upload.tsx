@@ -7,9 +7,7 @@ export class ValidationFileUpload extends React.Component {
         super(props);
         this.state = {
             selectedFile: null
-        };
-    
-//        this.handleSubmit = this.handleSubmit.bind(this);
+        };    
       }
 
       onFileChange = event => {

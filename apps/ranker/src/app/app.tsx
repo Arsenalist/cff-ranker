@@ -10,13 +10,13 @@ import {
 } from "react-router-dom";
 
 export const App = () => {
-  const [m, setMessage] = useState<Message>({ message: '' });
+  // const [m, setMessage] = useState<Message>({ message: '' });
 
-  useEffect(() => {
-    fetch('/api')
-      .then((r) => r.json())
-      .then(setMessage);
-  }, []);
+  // useEffect(() => {
+  //   fetch('/api')
+  //     .then((r) => r.json())
+  //     .then(setMessage);
+  // }, []);
 
   return (
     <Router>
