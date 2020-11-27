@@ -33,6 +33,7 @@
     "csv-parser": "^2.3.3",
     "document-register-element": "1.13.1",
     "express": "4.17.1",
+    "express-async-handler": "^1.1.4",
     "express-fileupload": "^1.2.0",
     "mongoose": "^5.10.15",
     "react": "17.0.1",
