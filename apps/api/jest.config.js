@@ -11,4 +11,5 @@ module.exports = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api',
+  setupFilesAfterEnv: ["./mockgoose.ts"], // use .js if you prefer JavaScript
 };
