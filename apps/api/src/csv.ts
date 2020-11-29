@@ -1,7 +1,6 @@
 const csv = require('async-csv');
-const fs = require('fs').promises;
 
-async function loadValidationFile(fileName) {
+async function parseValidationFileContents(fileContents) {
   const columnToFieldMapping = {
     'Surname': 'surname',
     'Name': 'name',
@@ -13,18 +12,11 @@ async function loadValidationFile(fileName) {
     'CFF#': 'cffNumber',
     'Validated': 'validated'
   };
-  return await csv.parse(await readFile(fileName),{
+  return await csv.parse(fileContents, {
     columns: (header) => {
-      console.log("header is ", header);
       return header.map(column => columnToFieldMapping[column]);
     }
   });
 }
 
-async function readFile(fileName) {
-  return await fs.readFile(fileName, 'utf-8');
-}
-
-
-
-export { loadValidationFile }
+export { parseValidationFileContents }

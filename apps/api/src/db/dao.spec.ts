@@ -2,7 +2,7 @@ import { mockOnce } from '../../mockgoose';
 
 const mongoose = require('mongoose');
 
-import {saveValidationFileRecords} from '../db';
+import {saveValidationFileRecords} from './dao';
 
 describe('validation file fields are validated', () => {
   let fields;
