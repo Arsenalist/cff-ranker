@@ -18,8 +18,7 @@ describe('ValidationFileUpload', () => {
     container = null;
   });
 
-  it('uploads file', async () => {
-    mock.onPost('/api/upload-validation-file').reply(200, {rowCount: 100 });
+  async function executeUpload() {
     act(() => { render(<ValidationFileUpload/>, container); });
     const fileInput = document.querySelector(`[data-testid="file-select-button"]`);
     const uploadButton = document.querySelector(`[data-testid="upload-button"]`);
@@ -30,21 +29,17 @@ describe('ValidationFileUpload', () => {
       });
       await uploadButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     });
+  }
+
+  it('uploads file', async () => {
+    mock.onPost('/api/upload-validation-file').reply(200, {rowCount: 100 });
+    await executeUpload()
     expect(container.textContent).toContain("100 rows uploaded")
   });
 
   it('upload failed', async () => {
     mock.onPost('/api/upload-validation-file').reply(500, {message: 'problem with file' });
-    act(() => { render(<ValidationFileUpload/>, container); });
-    const fileInput = document.querySelector(`[data-testid="file-select-button"]`);
-    const uploadButton = document.querySelector(`[data-testid="upload-button"]`);
-    await act(async() => {
-      await fileInput.dispatchEvent(new MouseEvent('change'), {
-        bubbles: true,
-        files: [new Blob(['file contents'])]
-      });
-      await uploadButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
-    });
+    await executeUpload()
     expect(container.textContent).toContain("problem with file")
   });
 
