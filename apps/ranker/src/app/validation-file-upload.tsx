@@ -13,6 +13,10 @@ export function ValidationFileUpload() {
   }
 
   function onFileUpload() {
+    if (!selectedFile) {
+      setError("Please select a file.")
+      return
+    }
     const formData = new FormData();
     formData.append(
       'validationFile',

@@ -40,4 +40,12 @@ describe('ValidationFileUpload', () => {
     expect(container.textContent).toContain("problem with file")
   });
 
+  it('upload without file selection', async () => {
+    await act(async() => {
+      render(<ValidationFileUpload/>, container);
+      await userEvent.click(screen.getByTestId("upload-button"));
+    });
+    expect(container.textContent).toContain("Please select a file.")
+  });
+
 });
