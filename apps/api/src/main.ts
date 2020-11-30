@@ -15,7 +15,9 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
     const contents = await readFile(filePathOnDisk);
     const results = await parseValidationFileContents(contents);
     await saveValidationFileRecords(results);
-    res.send("ok")
+    res.send({
+      rowCount: results.length
+    })
 }));
 
 const port = process.env.port || 3333;

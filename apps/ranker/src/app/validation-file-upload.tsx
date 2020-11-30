@@ -1,36 +1,59 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import Button from '@material-ui/core/Button';
 
 import axios from 'axios';
 
-export class ValidationFileUpload extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            selectedFile: null
-        };    
+export function ValidationFileUpload() {
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [rowCount, setRowCount] = useState(null);
+  const [error, setError] = useState(null);
+
+  function onFileChange(event) {
+    setSelectedFile(event.target.files[0]);
+  }
+
+  function onFileUpload() {
+    const formData = new FormData();
+    formData.append(
+      'validationFile',
+      selectedFile
+    );
+    axios.post('/api/upload-validation-file', formData).then(response => {
+      setRowCount(response.data.rowCount)
+    }).catch(error => {
+      if (error.response) {
+        setError(error.response.data.message)
       }
+    });
+  }
 
-      onFileChange = event => {
-        this.setState({ selectedFile: event.target.files[0] });
-      };
-
-    onFileUpload = () => {
-        const formData = new FormData();
-        formData.append(
-          "validationFile",
-          this.state.selectedFile,
-          this.state.selectedFile.name
-        );
-        console.log("sending ", formData)
-        axios.post("/api/upload-validation-file", formData);
-      };
-
-      render() {
-        return (
-            <div>
-                <input type="file" onChange={this.onFileChange} />
-                <button onClick={this.onFileUpload}>Upload!</button>
-            </div>
-        );
+  return (
+    <div>
+      {error
+        ? <div> {error} </div>
+        : ''
       }
+      {rowCount
+        ? <div> {rowCount} rows uploaded.</div>
+        : ''
+      }
+      <div>
+        <Button
+          data-testid="file-select-button"
+          variant="contained"
+          component="label"
+        >
+          Select Validation File
+          <input
+            type="file"
+            hidden
+            onChange={onFileChange}
+          />
+        </Button>
+      </div>
+      <div>
+        <Button data-testid="upload-button" onClick={onFileUpload}>Upload!</Button>
+      </div>
+    </div>
+  );
 }

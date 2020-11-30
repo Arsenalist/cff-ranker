@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import { Message } from '@cff/api-interfaces';
+import React from 'react';
 import { ValidationFileUpload } from './validation-file-upload'
 
 import {
@@ -10,20 +9,11 @@ import {
 } from "react-router-dom";
 
 export const App = () => {
-  // const [m, setMessage] = useState<Message>({ message: '' });
-
-  // useEffect(() => {
-  //   fetch('/api')
-  //     .then((r) => r.json())
-  //     .then(setMessage);
-  // }, []);
-
   return (
     <Router>
+      <Link to={`/validation-file-upload`}>Upload Validation File</Link>
       <Switch>
-          <Route path="/validation-file-upload">
-            <ValidationFileUpload />
-          </Route>
+          <Route path="/validation-file-upload" component={ValidationFileUpload}/>
       </Switch>
     </Router>
   );
