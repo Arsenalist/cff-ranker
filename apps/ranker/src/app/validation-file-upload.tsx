@@ -16,7 +16,8 @@ export function ValidationFileUpload() {
     const formData = new FormData();
     formData.append(
       'validationFile',
-      selectedFile
+      selectedFile,
+      selectedFile.name
     );
     axios.post('/api/upload-validation-file', formData).then(response => {
       setRowCount(response.data.rowCount)

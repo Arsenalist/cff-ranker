@@ -1,9 +1,11 @@
 import React from 'react';
-import { ValidationFileUpload } from './validation-file-upload';
 import { render, unmountComponentAtNode } from 'react-dom';
+import { screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils';
+import { ValidationFileUpload } from './validation-file-upload';
+import MockAdapter from 'axios-mock-adapter';
 
-const MockAdapter = require('axios-mock-adapter');
 const mock = new MockAdapter(require('axios'));
 
 describe('ValidationFileUpload', () => {
@@ -20,14 +22,9 @@ describe('ValidationFileUpload', () => {
 
   async function executeUpload() {
     act(() => { render(<ValidationFileUpload/>, container); });
-    const fileInput = document.querySelector(`[data-testid="file-select-button"]`);
-    const uploadButton = document.querySelector(`[data-testid="upload-button"]`);
     await act(async() => {
-      await fileInput.dispatchEvent(new MouseEvent('change'), {
-        bubbles: true,
-        files: [new Blob(['file contents'])]
-      });
-      await uploadButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      await userEvent.upload(screen.getByTestId("file-select-button"), new File(['contents'], 'name.csv'));
+      await userEvent.click(screen.getByTestId("upload-button"));
     });
   }
 
