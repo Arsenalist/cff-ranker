@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
+import MuiAlert from '@material-ui/lab/Alert';
 
 import axios from 'axios';
 
@@ -34,12 +35,13 @@ export function ValidationFileUpload(props) {
 
   return (
     <div>
+
       {error
-        ? <div> {error} </div>
+        ? <MuiAlert severity="error"> {error} </MuiAlert>
         : ''
       }
       {rowCount
-        ? <div> {rowCount} rows uploaded.</div>
+        ? <MuiAlert severity="success"> {rowCount} rows uploaded.</MuiAlert>
         : ''
       }
       <div>
@@ -55,9 +57,9 @@ export function ValidationFileUpload(props) {
             onChange={onFileChange}
           />
         </Button>
-      </div>
-      <div>
-        <Button data-testid="upload-button" onClick={onFileUpload}>Upload!</Button>
+        <Button
+          variant="contained" color="primary"
+          data-testid="upload-button" onClick={onFileUpload}>Upload!</Button>
       </div>
     </div>
   );
