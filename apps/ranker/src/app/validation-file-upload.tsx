@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 
 import axios from 'axios';
 
-export function ValidationFileUpload() {
+export function ValidationFileUpload(props) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [rowCount, setRowCount] = useState(null);
   const [error, setError] = useState(null);
@@ -23,7 +23,7 @@ export function ValidationFileUpload() {
       selectedFile,
       selectedFile.name
     );
-    axios.post('/api/upload-validation-file', formData).then(response => {
+    axios.post(props.endpoint, formData).then(response => {
       setRowCount(response.data.rowCount)
     }).catch(error => {
       if (error.response) {

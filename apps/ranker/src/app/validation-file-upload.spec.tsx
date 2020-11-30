@@ -10,6 +10,7 @@ const mock = new MockAdapter(require('axios'));
 
 describe('ValidationFileUpload', () => {
   let container = null;
+  const endpoint = "/api/upload-file"
   beforeEach(() => {
     container = document.createElement("div");
     document.body.appendChild(container);
@@ -21,7 +22,7 @@ describe('ValidationFileUpload', () => {
   });
 
   async function executeUpload() {
-    act(() => { render(<ValidationFileUpload/>, container); });
+    act(() => { render(<ValidationFileUpload endpoint={ endpoint } />, container); });
     await act(async() => {
       await userEvent.upload(screen.getByTestId("file-select-button"), new File(['contents'], 'name.csv'));
       await userEvent.click(screen.getByTestId("upload-button"));
@@ -29,20 +30,20 @@ describe('ValidationFileUpload', () => {
   }
 
   it('uploads file', async () => {
-    mock.onPost('/api/upload-validation-file').reply(200, {rowCount: 100 });
+    mock.onPost(endpoint).reply(200, {rowCount: 100 });
     await executeUpload()
     expect(container.textContent).toContain("100 rows uploaded")
   });
 
   it('upload failed', async () => {
-    mock.onPost('/api/upload-validation-file').reply(500, {message: 'problem with file' });
+    mock.onPost(endpoint).reply(500, {message: 'problem with file' });
     await executeUpload()
     expect(container.textContent).toContain("problem with file")
   });
 
   it('upload without file selection', async () => {
     await act(async() => {
-      render(<ValidationFileUpload/>, container);
+      render(<ValidationFileUpload endpoint={ endpoint }/>, container);
       await userEvent.click(screen.getByTestId("upload-button"));
     });
     expect(container.textContent).toContain("Please select a file.")

@@ -25,12 +25,12 @@ export const App = () => {
         <CssBaseline/>
       <Grid container spacing={3}>
         <Grid item xs>
-          <Link to={`/validation-file-upload`}>Upload Validation File</Link>
+          <Link to='/validation-file-upload'>Upload Validation File</Link>
         </Grid>
       </Grid>
       <Grid>
         <Switch>
-          <Route path="/validation-file-upload" component={ValidationFileUpload}/>
+          <Route path="/validation-file-upload" children={ <ValidationFileUpload endpoint = "/api/upload-validation-file"/> } />
         </Switch>
       </Grid>
       </MuiThemeProvider>
