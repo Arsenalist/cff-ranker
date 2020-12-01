@@ -36,7 +36,7 @@ describe('competition file csv parsing', () => {
     expect(result.gender).toBe("M")
     expect(result.level).toBe("senior")
     expect(result.tournamentName).toBe("FM CHALLENGE DE LA VILLE DE LONGUEUIL")
-    expect(result.tournamentLocation).toBe("FM OM")
+    expect(result.competitionShortName).toBe("FM OM")
   });
   it('parse player results', async () => {
     const result = await parseCompetitionFileContents(csv);

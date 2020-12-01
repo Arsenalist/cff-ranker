@@ -32,7 +32,7 @@ async function parseCompetitionFileContents(fileContents) {
       gender: line2Values[2],
       level: line2Values[3],
       tournamentName: line2Values[4],
-      tournamentLocation: line2Values[5],
+      competitionShortName: line2Values[5],
       results: records
     }
   )
@@ -63,7 +63,7 @@ async function parseResults(fileContents) {
         branch: block3[1],
         club: block3[2],
         rank: block4[0],
-        figureThisOut: block4[1]
+        validated: block4[1]
       };
     }
   });
