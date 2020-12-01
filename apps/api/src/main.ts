@@ -1,6 +1,6 @@
-import { saveValidationFileRecords } from './db/dao'
+import { saveValidationFileRecords, saveCompetitionResults } from './db/dao'
 import { handleUpload } from './file-upload'
-import { parseValidationFileContents } from './csv'
+import { parseValidationFileContents, parseCompetitionFileContents } from './csv'
 import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
@@ -19,6 +19,17 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
       rowCount: results.length
     })
 }));
+
+app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
+  const filePathOnDisk = await handleUpload(req, 'validationFile');
+  const contents = await readFile(filePathOnDisk);
+  const results = await parseCompetitionFileContents(contents);
+  await saveCompetitionResults(results);
+  res.send({
+    rowCount: results.results.length
+  })
+}));
+
 
 const port = process.env.port || 3333;
 app.use(handleErrors);
