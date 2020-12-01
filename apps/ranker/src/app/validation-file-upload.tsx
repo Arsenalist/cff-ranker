@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import MuiAlert from '@material-ui/lab/Alert';
-
+import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 
 export function ValidationFileUpload(props) {
@@ -35,32 +35,37 @@ export function ValidationFileUpload(props) {
 
   return (
     <div>
-
-      {error
-        ? <MuiAlert severity="error"> {error} </MuiAlert>
-        : ''
-      }
-      {rowCount
-        ? <MuiAlert severity="success"> {rowCount} rows uploaded.</MuiAlert>
-        : ''
-      }
-      <div>
-        <Button
-          data-testid="file-select-button"
-          variant="contained"
-          component="label"
-        >
-          Select Validation File
-          <input
-            type="file"
-            hidden
-            onChange={onFileChange}
-          />
-        </Button>
-        <Button
-          variant="contained" color="primary"
-          data-testid="upload-button" onClick={onFileUpload}>Upload!</Button>
-      </div>
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          {error
+            ? <MuiAlert severity="error"> {error} </MuiAlert>
+            : ''
+          }
+          {rowCount
+            ? <MuiAlert severity="success"> {rowCount} rows uploaded.</MuiAlert>
+            : ''
+          }
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            data-testid="file-select-button"
+            variant="contained"
+            component="label"
+          >
+            Select Validation File
+            <input
+              type="file"
+              hidden
+              onChange={onFileChange}
+            />
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="contained" color="primary"
+            data-testid="upload-button" onClick={onFileUpload}>Upload!</Button>
+        </Grid>
+      </Grid>
     </div>
   );
 }
