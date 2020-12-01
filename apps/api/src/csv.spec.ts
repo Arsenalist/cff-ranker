@@ -34,7 +34,7 @@ describe('competition file csv parsing - format 2', () => {
     expect(result.competitionDate).toBe("10/12/2011")
     expect(result.weapon).toBe("fleuret")
     expect(result.gender).toBe("M")
-    expect(result.level).toBe("senior")
+    expect(result.ageCategory).toBe("senior")
     expect(result.tournamentName).toBe("FM CHALLENGE DE LA VILLE DE LONGUEUIL")
     expect(result.competitionShortName).toBe("FM OM")
   });

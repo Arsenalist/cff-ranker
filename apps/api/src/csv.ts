@@ -30,7 +30,7 @@ async function parseCompetitionFileContents(fileContents) {
       competitionDate: line2Values[0],
       weapon: line2Values[1],
       gender: line2Values[2],
-      level: line2Values[3],
+      ageCategory: line2Values[3],
       tournamentName: line2Values[4],
       competitionShortName: line2Values[5],
       results: records
@@ -46,7 +46,7 @@ function parseHeaderRows(fileContents) {
 }
 
 async function parseResults(fileContents) {
-  const records = await csv.parse(fileContents, {
+  return await csv.parse(fileContents, {
     from_line: 3,
     delimiter: ';',
     on_record: (record, { lines }) => {
@@ -67,7 +67,6 @@ async function parseResults(fileContents) {
       };
     }
   });
-  return records;
 }
 
 export { parseValidationFileContents, parseCompetitionFileContents }
