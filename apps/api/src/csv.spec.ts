@@ -20,7 +20,7 @@ describe('validation file csv parsing', () => {
   });
 });
 
-describe('competition file csv parsing', () => {
+describe('competition file csv parsing - format 2', () => {
   const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
               "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
               "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;C06-0516,QC,OM,,;1,t\n" +
