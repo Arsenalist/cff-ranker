@@ -1,7 +1,11 @@
-import { ValidationFileRecord } from './schemas'
+import { CompetitionResults, ValidationFileRecord } from './schemas';
 
 async function saveValidationFileRecords(results) {
     await ValidationFileRecord.insertMany(results);
 }
 
-export { saveValidationFileRecords }
+async function saveCompetitionResults(competitionResults) {
+  await new CompetitionResults(competitionResults).save()
+}
+
+export { saveValidationFileRecords, saveCompetitionResults }

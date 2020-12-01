@@ -2,7 +2,7 @@ import { mockOnce } from '../../mockgoose';
 
 const mongoose = require('mongoose');
 
-import {saveValidationFileRecords} from './dao';
+import {saveValidationFileRecords, saveCompetitionResults} from './dao';
 
 describe('validation file fields are validated', () => {
   let fields;
@@ -47,5 +47,54 @@ describe('validation file fields are validated', () => {
   it('all eight fields are provided', async () => {
     mockOnce('insertMany');
     await saveValidationFileRecords(fields);
+  });
+});
+
+describe('competition fields are validated', () => {
+  let fields;
+  beforeEach(() => {
+    fields = {
+      creator: "Bill Smith",
+      competitionType: "individuel",
+      competitionDate: "10/12/2011",
+      weapon: "fleuret",
+      gender: "M",
+      ageCategory: "senior",
+      tournamentName: "FM CHALLENGE DE LA VILLE DE LONGUEUIL",
+      competitionShortName: "FM OM",
+      results: [{
+        surname: "TEISSEIRE",
+        name: "Nicolas",
+        yearOfBirth: 1986,
+        gender: "M",
+        country: "CAN",
+        cffNumber: "C06-0516",
+        branch: "QC",
+        club: "OM",
+        rank: 1,
+        validated: "t"
+      }]
+    };
+  });
+  it('check for required fields at top level', async () => {
+    try {
+      await saveCompetitionResults({});
+    } catch (err) {
+      expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+      expect(Object.keys(err.errors).length).toBe(8)
+    }
+  });
+  it('at least one result must be provided', async () => {
+    fields["results"] = []
+    try {
+      await saveCompetitionResults(fields);
+    } catch (err) {
+      expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
+      expect(Object.keys(err.errors).length).toBe(1)
+    }
+  });
+  it('results are valid', async () => {
+    mockOnce('insertOne');
+    await saveCompetitionResults(fields);
   });
 });
