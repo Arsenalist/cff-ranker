@@ -51,4 +51,8 @@ describe('competition file csv parsing - format 2', () => {
     expect(result.results[0].rank).toBe("1")
     expect(result.results[0].figureThisOut).toBe("t")
   });
+  it('all results are read', async () => {
+    const result = await parseCompetitionFileContents(csv);
+    expect(result.results.length).toBe(3)
+  });
 });
