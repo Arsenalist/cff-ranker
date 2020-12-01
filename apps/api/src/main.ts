@@ -11,7 +11,7 @@ app.use(require('express-fileupload')());
 openMongo();
 
 app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
-    const filePathOnDisk = await handleUpload(req, 'validationFile');
+    const filePathOnDisk = await handleUpload(req, 'uploadedFile');
     const contents = await readFile(filePathOnDisk);
     const results = await parseValidationFileContents(contents);
     await saveValidationFileRecords(results);
@@ -21,7 +21,7 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
 }));
 
 app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
-  const filePathOnDisk = await handleUpload(req, 'validationFile');
+  const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results = await parseCompetitionFileContents(contents);
   await saveCompetitionResults(results);

@@ -20,7 +20,7 @@ export function ValidationFileUpload(props) {
     }
     const formData = new FormData();
     formData.append(
-      'validationFile',
+      'uploadedFile',
       selectedFile,
       selectedFile.name
     );
@@ -52,7 +52,7 @@ export function ValidationFileUpload(props) {
             variant="contained"
             component="label"
           >
-            Select Validation File
+            Select File
             <input
               type="file"
               hidden
