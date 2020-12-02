@@ -26,7 +26,8 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const results = await parseCompetitionFileContents(contents);
   await saveCompetitionResults(results);
   res.send({
-    rowCount: results.results.length
+    rowCount: results.results.length,
+    competition: results
   })
 }));
 

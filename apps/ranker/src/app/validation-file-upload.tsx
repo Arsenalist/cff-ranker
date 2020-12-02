@@ -26,6 +26,7 @@ export function ValidationFileUpload(props) {
     );
     axios.post(props.endpoint, formData).then(response => {
       setRowCount(response.data.rowCount)
+      props.postUploadHandler(response.data.competition)
     }).catch(error => {
       if (error.response) {
         setError(error.response.data.message)

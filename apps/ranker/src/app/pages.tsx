@@ -1,6 +1,15 @@
 import { ValidationFileUpload } from './validation-file-upload';
-import React from 'react';
-
+import React, { useState } from 'react';
+import CardContent from '@material-ui/core/CardContent';
+import Card from '@material-ui/core/Card';
+import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
 import { DataGrid } from '@material-ui/data-grid';
 
 export function ValidateFileUploadPage() {
@@ -15,12 +24,83 @@ export function ValidateFileUploadPage() {
 }
 
 export function CompetitionUploadPage() {
+  const [competition, setCompetition] = useState(null);
+  function displayCompetition(competition) {
+    console.log("it got called ", competition)
+    setCompetition(competition)
+  }
+
+
+
   return (
     <div>
       <p>
         Please specify a competition file.
       </p>
-      <ValidationFileUpload endpoint = "/api/upload-competition-file"/>
+      <ValidationFileUpload postUploadHandler={displayCompetition}  endpoint = "/api/upload-competition-file"/>
+      {competition &&
+        <div>
+      <Card>
+        <CardContent>
+          <Typography gutterBottom>
+            {competition.competitionDate}
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {competition.tournamentName} ({competition.competitionShortName})
+          </Typography>
+          <Typography variant="body2" component="p">
+            Age Category {competition.ageCategory}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Competition Type {competition.competitionType}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Gender {competition.gender}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Weapon {competition.weapon}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Creator: {competition.creator}
+          </Typography>
+        </CardContent>
+      </Card>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>YOB</TableCell>
+                <TableCell>Gender</TableCell>
+                <TableCell>Country</TableCell>
+                <TableCell>CFF Number</TableCell>
+                <TableCell>Branch</TableCell>
+                <TableCell>Club</TableCell>
+                <TableCell>Rank</TableCell>
+                <TableCell>Validated</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {competition.results.map((row) => (
+                <TableRow key={row.name}>
+                  <TableCell component="th" scope="row">
+                    {row.name} {row.surname}
+                  </TableCell>
+                  <TableCell>{row.yearOfBirth}</TableCell>
+                  <TableCell>{row.gender}</TableCell>
+                  <TableCell>{row.country}</TableCell>
+                  <TableCell>{row.cffNumber}</TableCell>
+                  <TableCell>{row.branch}</TableCell>
+                  <TableCell>{row.club}</TableCell>
+                  <TableCell>{row.rank}</TableCell>
+                  <TableCell>{row.validated}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        </div>
+      }
     </div>
   )
 }
