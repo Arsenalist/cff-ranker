@@ -55,7 +55,7 @@ export function ValidationFileUpload(props) {
             : ''
           }
         </Grid>
-        <Grid item xs={21}>
+        <Grid item xs={12}>
           <Button
             data-testid="file-select-button"
             variant="contained"
