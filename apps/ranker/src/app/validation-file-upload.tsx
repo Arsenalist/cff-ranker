@@ -3,6 +3,7 @@ import Button from '@material-ui/core/Button';
 import MuiAlert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
+import { Chip } from '@material-ui/core';
 
 export function ValidationFileUpload(props) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -11,6 +12,13 @@ export function ValidationFileUpload(props) {
 
   function onFileChange(event) {
     setSelectedFile(event.target.files[0]);
+  }
+
+  function SelectedFileChip(props) {
+    return (<Chip label={props.file
+              ? props.file.name
+              : 'No file selected'
+          } />)
   }
 
   function onFileUpload() {
@@ -47,7 +55,7 @@ export function ValidationFileUpload(props) {
             : ''
           }
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={21}>
           <Button
             data-testid="file-select-button"
             variant="contained"
@@ -60,6 +68,9 @@ export function ValidationFileUpload(props) {
               onChange={onFileChange}
             />
           </Button>
+
+          &nbsp; <SelectedFileChip file={selectedFile} />
+
         </Grid>
         <Grid item xs={12}>
           <Button
