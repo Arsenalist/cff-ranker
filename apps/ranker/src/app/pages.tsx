@@ -30,8 +30,6 @@ export function CompetitionUploadPage() {
     setCompetition(competition)
   }
 
-
-
   return (
     <div>
       <p>

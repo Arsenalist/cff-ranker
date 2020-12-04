@@ -1,4 +1,5 @@
 const csv = require('async-csv');
+import { MultiMessageError } from './multi-message-error';
 
 async function parseValidationFileContents(fileContents) {
   const columnToFieldMapping = {
@@ -45,15 +46,52 @@ function parseHeaderRows(fileContents) {
   return { line1Values, line2Values };
 }
 
+function validateCompetitionRow(info, lines) {
+  const errors: string[] = []
+  if (!info.surname) {
+    errors.push(`Line ${lines}: Missing Surname.`)
+  }
+  if (!info.name) {
+    errors.push(`Line ${lines}: Missing Name.`)
+  }
+  if (!info.yearOfBirth) {
+    errors.push(`Line ${lines}: Missing YOB.`)
+  }
+  if (!info.gender) {
+    errors.push(`Line ${lines}: Missing Gender.`)
+  }
+  if (!info.country) {
+    errors.push(`Line ${lines}: Missing Country.`)
+  }
+  if (!info.cffNumber) {
+    errors.push(`Line ${lines}: Missing CFF#.`)
+  }
+  if (!info.branch) {
+    errors.push(`Line ${lines}: Missing Branch.`)
+  }
+  if (!info.club) {
+    errors.push(`Line ${lines}: Missing Club.`)
+  }
+  if (!info.rank) {
+    errors.push(`Line ${lines}: Missing Rank.`)
+  }
+  if (!info.rank) {
+    errors.push(`Line ${lines}: Missing Validated.`)
+  }
+  return errors
+}
+
 async function parseResults(fileContents) {
-  return await csv.parse(fileContents, {
-    from_line: 3,
+  let errors: string[] = []
+  const fromLine = 3
+  const results = await csv.parse(fileContents, {
+    from_line: fromLine,
     delimiter: ';',
     on_record: (record, { lines }) => {
       const block1 = record[0].split(/,/);
       const block3 = record[2].split(/,/);
       const block4 = record[3].split(/,/);
-      return {
+      const info = {
         surname: block1[0],
         name: block1[1],
         yearOfBirth: block1[2],
@@ -64,9 +102,17 @@ async function parseResults(fileContents) {
         club: block3[2],
         rank: block4[0],
         validated: block4[1]
-      };
+      }
+      errors = errors.concat(validateCompetitionRow(info, lines - fromLine + 1))
     }
   });
+  if (errors) {
+    const e = new MultiMessageError("")
+    e.errorMessages = errors
+    throw e
+  } else {
+    return results
+  }
 }
 
 export { parseValidationFileContents, parseCompetitionFileContents }

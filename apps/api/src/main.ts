@@ -1,4 +1,4 @@
-import { saveValidationFileRecords, saveCompetitionResults } from './db/dao'
+import { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult } from './db/dao'
 import { handleUpload } from './file-upload'
 import { parseValidationFileContents, parseCompetitionFileContents } from './csv'
 import { handleErrors } from './middleware/errors'
@@ -31,6 +31,15 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   })
 }));
 
+app.get('/api/competition', asyncHandler(async (req, res) => {
+  const contents = await findCompetitionResults();
+  res.send(contents)
+}));
+
+app.get('/api/competition/:id', asyncHandler(async (req, res) => {
+  const contents = await findCompetitionResult(req.params.id);
+  res.send(contents)
+}));
 
 const port = process.env.port || 3333;
 app.use(handleErrors);
