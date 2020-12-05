@@ -1,16 +1,13 @@
 class MultiMessageError extends Error {
-  errorMessages: string[] = []
-  constructor(message) {
-    super(message);
+  _errorMessages: string[] = []
+  constructor(errorMessages) {
+    super("MultiMessageError");
     this.name = "MultiMessageError";
+    this._errorMessages = errorMessages
   }
 
-  get errors() {
-    return this.errorMessages
-  }
-
-  set errors(errorMessages) {
-    this.errorMessages = errorMessages
+  get errorMessages() {
+    return this._errorMessages
   }
 }
 
