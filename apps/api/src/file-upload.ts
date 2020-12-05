@@ -7,7 +7,6 @@ async function handleUpload(req, fileInputName) {
     if (!validateFileIsProvided(req)) {
         throw new Error("No file provided")
     }
-    console.log("in handleUpload ", fileInputName)
     return await moveFileToDisk(req.files[fileInputName])
 }
 

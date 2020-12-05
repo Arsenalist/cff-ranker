@@ -13,10 +13,8 @@ export function ViewCompetition() {
   const { id } = useParams();
 
   const [competition, setCompetition] = useState({})
-  console.log("id is ", id)
   useEffect(() => {
     axios.get(`/api/competition/${id}`).then(response => {
-      console.log(response.data)
       setCompetition(response.data)
     });
   }, []);

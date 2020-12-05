@@ -26,7 +26,6 @@ export function ValidateFileUploadPage() {
 export function CompetitionUploadPage() {
   const [competition, setCompetition] = useState(null);
   function displayCompetition(competition) {
-    console.log("it got called ", competition)
     setCompetition(competition)
   }
 
@@ -80,7 +79,7 @@ export function CompetitionUploadPage() {
             </TableHead>
             <TableBody>
               {competition.results.map((row) => (
-                <TableRow key={row.name}>
+                <TableRow key={row.cffNumber}>
                   <TableCell component="th" scope="row">
                     {row.name} {row.surname}
                   </TableCell>

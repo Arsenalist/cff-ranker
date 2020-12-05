@@ -14,7 +14,6 @@ export function CompetitionList() {
   const [competitions, setCompetitions] = useState([])
   useEffect(() => {
     axios.get('/api/competition').then(response => {
-      console.log(response.data)
       setCompetitions(response.data)
     });
   }, []);
