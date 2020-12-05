@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import MuiAlert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import { Chip } from '@material-ui/core';
+import { MessagesContext } from './messages-context';
 
 export function ValidationFileUpload(props) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [rowCount, setRowCount] = useState(null);
+  const { errors, addErrors, clear } = useContext(MessagesContext);
 
   function onFileChange(event) {
     setSelectedFile(event.target.files[0]);
@@ -22,7 +24,7 @@ export function ValidationFileUpload(props) {
 
   function onFileUpload() {
     if (!selectedFile) {
-      // setErrors("Please select a file.")
+      addErrors(["Please select a file"])
       return
     }
     const formData = new FormData();

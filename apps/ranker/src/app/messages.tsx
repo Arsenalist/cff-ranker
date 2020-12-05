@@ -1,8 +1,9 @@
 import Grid from '@material-ui/core/Grid';
 import MuiAlert from '@material-ui/lab/Alert';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
+import { MessagesContext } from './messages-context';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -16,13 +17,13 @@ const useStyles = makeStyles((theme) => ({
 
 export function Messages() {
   const classes = useStyles();
-  const [errors, setErrors] = useState([]);
+  const { errors, addErrors } = useContext(MessagesContext);
 
   axios.interceptors.response.use(function(response) {
     return response;
   }, function(error) {
     if (error.response) {
-      setErrors(error.response.data.messages);
+      addErrors(error.response.data.messages);
     }
     return Promise.reject(error);
   });

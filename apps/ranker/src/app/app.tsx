@@ -14,6 +14,7 @@ import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import { CompetitionList } from './competition-list';
 import { ViewCompetition } from './competition';
 import { Messages } from './messages';
+import { MessagesProvider } from './messages-context';
 
 
 const theme = createMuiTheme({
@@ -49,6 +50,7 @@ export const App = () => {
   return (
     <Router>
       <MuiThemeProvider theme={theme}>
+        <MessagesProvider>
         <CssBaseline/>
         <Grid container spacing={3}>
           <Grid item xs={12}>
@@ -98,6 +100,7 @@ export const App = () => {
           </Grid>
           <Grid item xs={2}/>
         </Grid>
+        </MessagesProvider>
       </MuiThemeProvider>
     </Router>
   );
