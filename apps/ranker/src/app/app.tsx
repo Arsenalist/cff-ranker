@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import { CompetitionList } from './competition-list';
 import { ViewCompetition } from './competition';
+import { Messages } from './messages';
 
 
 const theme = createMuiTheme({
@@ -85,6 +86,7 @@ export const App = () => {
           </Grid>
           <Grid item xs={2}/>
           <Grid item xs={8}>
+            <Messages />
             <Switch>
               <Route path="/validation-file-upload" component={ValidateFileUploadPage} />
               <Route path="/competition-file-upload" component={CompetitionUploadPage} />
