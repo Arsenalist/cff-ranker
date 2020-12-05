@@ -1,44 +1,25 @@
+import { MultiMessageError } from '../multi-message-error';
 const csv = require('async-csv');
-import { MultiMessageError } from './multi-message-error';
-
-async function parseValidationFileContents(fileContents) {
-  const columnToFieldMapping = {
-    'Surname': 'surname',
-    'Name': 'name',
-    'YOB': 'yearOfBirth',
-    'Gender': 'gender',
-    'Club': 'club',
-    'Branch': 'branch',
-    'Country': 'country',
-    'CFF#': 'cffNumber',
-    'Validated': 'validated'
-  };
-  return await csv.parse(fileContents, {
-    columns: (header) => {
-      return header.map(column => columnToFieldMapping[column]);
-    }
-  });
-}
 
 async function parseCompetitionFileContents(fileContents) {
   const { line1Values, line2Values } = parseHeaderRows(fileContents);
   const records = await parseResults(fileContents);
   const competition = {
-      creator: line1Values[3],
-      competitionType: line1Values[4],
-      competitionDate: line2Values[0],
-      weapon: line2Values[1],
-      gender: line2Values[2],
-      ageCategory: line2Values[3],
-      tournamentName: line2Values[4],
-      competitionShortName: line2Values[5],
-      results: records
-  }
-  const errors = validateCompetition(competition)
+    creator: line1Values[3],
+    competitionType: line1Values[4],
+    competitionDate: line2Values[0],
+    weapon: line2Values[1],
+    gender: line2Values[2],
+    ageCategory: line2Values[3],
+    tournamentName: line2Values[4],
+    competitionShortName: line2Values[5],
+    results: records
+  };
+  const errors = validateCompetition(competition);
   if (errors === undefined || errors.length == 0) {
-    return competition
+    return competition;
   } else {
-    throw new MultiMessageError(errors)
+    throw new MultiMessageError(errors);
   }
 }
 
@@ -112,4 +93,4 @@ async function parseResults(fileContents) {
   });
 }
 
-export { parseValidationFileContents, parseCompetitionFileContents }
+export { parseCompetitionFileContents };

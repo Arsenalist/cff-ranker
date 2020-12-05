@@ -1,31 +1,11 @@
-import { parseValidationFileContents, parseCompetitionFileContents } from './csv';
-
-describe('validation file csv parsing', () => {
-  beforeEach(() => {
-  });
-  it('parses column names for validation file correctly', async () => {
-    const contents = "Surname,Name,YOB,Gender,Club,Branch,Country,CFF#,Validated\n" +
-                     "Lowry,Kyle,1986,M,TOR,ON,CAN,123,y";
-    const result = await parseValidationFileContents(contents);
-    expect(result.length).toBe(1);
-    const row = result[0];
-    expect(row.surname).toBe("Lowry");
-    expect(row.name).toBe("Kyle");
-    expect(row.yearOfBirth).toBe("1986");
-    expect(row.club).toBe("TOR");
-    expect(row.branch).toBe("ON");
-    expect(row.country).toBe("CAN");
-    expect(row.cffNumber).toBe("123");
-    expect(row.validated).toBe("y");
-  });
-});
+import { parseCompetitionFileContents } from './competition-file';
 
 describe('competition file csv parsing - format 2', () => {
   const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
-              "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
-              "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;C06-0516,QC,OM,,;1,t\n" +
-              "VANHAASTER,Maximilien,1992,M,CAN,,;,,;C06-0019,QC,CRA,,;2,t\n" +
-              "BRODEUR,Marc-Antoine,1993,M,CAN,,;,,;C06-0999,QC,OM,,;3,t"
+    "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+    "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;C06-0516,QC,OM,,;1,t\n" +
+    "VANHAASTER,Maximilien,1992,M,CAN,,;,,;C06-0019,QC,CRA,,;2,t\n" +
+    "BRODEUR,Marc-Antoine,1993,M,CAN,,;,,;C06-0999,QC,OM,,;3,t"
 
   it('parse headers', async () => {
     const result = await parseCompetitionFileContents(csv);
