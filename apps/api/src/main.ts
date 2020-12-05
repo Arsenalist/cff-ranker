@@ -1,6 +1,6 @@
 import { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult } from './db/dao'
 import { handleUpload } from './file-upload'
-import { parseValidationFileContents} from './csv/csv'
+import { parseValidationFileContents} from './csv/validation-file'
 import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';

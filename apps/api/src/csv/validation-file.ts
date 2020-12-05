@@ -1,4 +1,4 @@
-const csv = require('async-csv');
+const validationFileSpec = require('async-csv');
 
 async function parseValidationFileContents(fileContents) {
   const columnToFieldMapping = {
@@ -12,7 +12,7 @@ async function parseValidationFileContents(fileContents) {
     'CFF#': 'cffNumber',
     'Validated': 'validated'
   };
-  return await csv.parse(fileContents, {
+  return await validationFileSpec.parse(fileContents, {
     columns: (header) => {
       return header.map(column => columnToFieldMapping[column]);
     }
