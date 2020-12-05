@@ -8,8 +8,7 @@ import { MessagesContext } from './messages-context';
 
 export function ValidationFileUpload(props) {
   const [selectedFile, setSelectedFile] = useState(null);
-  const [rowCount, setRowCount] = useState(null);
-  const { errors, addErrors, clear } = useContext(MessagesContext);
+  const { addErrors, addMessages } = useContext(MessagesContext);
 
   function onFileChange(event) {
     setSelectedFile(event.target.files[0]);
@@ -34,19 +33,13 @@ export function ValidationFileUpload(props) {
       selectedFile.name
     );
     axios.post(props.endpoint, formData).then(response => {
-      setRowCount(response.data.rowCount)
+      addMessages([`${response.data.rowCount} rows uploaded.`])
       props.postUploadHandler(response.data.competition)
     });
   }
 
   return (
     <div>
-      {rowCount ?
-        <Grid item xs={12}>
-          <MuiAlert severity="success"> {rowCount} rows uploaded.</MuiAlert>
-        </Grid>
-        : ''
-      }
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Button

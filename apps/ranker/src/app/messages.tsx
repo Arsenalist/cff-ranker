@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function Messages() {
   const classes = useStyles();
-  const { errors, addErrors } = useContext(MessagesContext);
+  const { errors, messages, addErrors } = useContext(MessagesContext);
 
   axios.interceptors.response.use(function(response) {
     return response;
@@ -35,6 +35,18 @@ export function Messages() {
           <Grid item xs={12}>
             {errors.map((error) =>
               <MuiAlert severity="error"> {error} </MuiAlert>
+            )
+            }
+          </Grid>
+        </div>
+        : ''
+      }
+
+      {messages ?
+        <div className={classes.root}>
+          <Grid item xs={12}>
+            {messages.map((msg) =>
+              <MuiAlert severity="success"> {msg} </MuiAlert>
             )
             }
           </Grid>

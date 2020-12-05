@@ -4,25 +4,32 @@ import React, { useState, useCallback  } from 'react';
 const MessagesContext = React.createContext(
   {
     errors: [],
+    messages: [],
     clear: () => {},
-    addErrors: (errs) => {}
+    addErrors: (errs) => {},
+    addMessages: (messages) => {}
   }
 );
 
 function MessagesProvider({ children }) {
   const [errors, setErrors] = useState([]);
-
-  const clear = () => setErrors([]);
-  const addErrors = (errs) => setErrors(errs);
+  const [messages, setMessages] = useState([]);
 
   const contextValue = {
     errors,
+    messages,
+    clear: useCallback(() => {
+      setErrors([])
+      setMessages([])
+    }, []),
     addErrors: useCallback((errs) => {
-      errors.concat(errs)
-      addErrors(errs)
+        setErrors(errs);
       }
       , [errors]),
-    clear: useCallback(() => clear(), [])
+    addMessages: useCallback((msgs) => {
+        setMessages(msgs);
+      }
+      , [messages]),
   };
 
   return (
