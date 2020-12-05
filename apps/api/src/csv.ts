@@ -23,9 +23,7 @@ async function parseValidationFileContents(fileContents) {
 async function parseCompetitionFileContents(fileContents) {
   const { line1Values, line2Values } = parseHeaderRows(fileContents);
   const records = await parseResults(fileContents);
-
-  return (
-    {
+  const competition = {
       creator: line1Values[3],
       competitionType: line1Values[4],
       competitionDate: line2Values[0],
@@ -35,8 +33,16 @@ async function parseCompetitionFileContents(fileContents) {
       tournamentName: line2Values[4],
       competitionShortName: line2Values[5],
       results: records
-    }
-  )
+  }
+  const errors = validateCompetition(competition)
+  if (errors === undefined || errors.length == 0) {
+    return competition
+  } else {
+    const e =  new MultiMessageError("")
+    e.errorMessages = errors
+    throw e
+
+  }
 }
 
 function parseHeaderRows(fileContents) {
@@ -46,52 +52,54 @@ function parseHeaderRows(fileContents) {
   return { line1Values, line2Values };
 }
 
-function validateCompetitionRow(info, lines) {
+function validateCompetition(competition) {
   const errors: string[] = []
-  if (!info.surname) {
-    errors.push(`Line ${lines}: Missing Surname.`)
-  }
-  if (!info.name) {
-    errors.push(`Line ${lines}: Missing Name.`)
-  }
-  if (!info.yearOfBirth) {
-    errors.push(`Line ${lines}: Missing YOB.`)
-  }
-  if (!info.gender) {
-    errors.push(`Line ${lines}: Missing Gender.`)
-  }
-  if (!info.country) {
-    errors.push(`Line ${lines}: Missing Country.`)
-  }
-  if (!info.cffNumber) {
-    errors.push(`Line ${lines}: Missing CFF#.`)
-  }
-  if (!info.branch) {
-    errors.push(`Line ${lines}: Missing Branch.`)
-  }
-  if (!info.club) {
-    errors.push(`Line ${lines}: Missing Club.`)
-  }
-  if (!info.rank) {
-    errors.push(`Line ${lines}: Missing Rank.`)
-  }
-  if (!info.rank) {
-    errors.push(`Line ${lines}: Missing Validated.`)
+  for (let i = 0; i < competition.results.length; i++) {
+    const p = competition.results[i]
+    const row = i + 1
+    if (!p.surname) {
+      errors.push(`Line ${row}: Missing Surname.`)
+    }
+    if (!p.name) {
+      errors.push(`Line ${row}: Missing Name.`)
+    }
+    if (!p.yearOfBirth) {
+      errors.push(`Line ${row}: Missing YOB.`)
+    }
+    if (!p.gender) {
+      errors.push(`Line ${row}: Missing Gender.`)
+    }
+    if (!p.country) {
+      errors.push(`Line ${row}: Missing Country.`)
+    }
+    if (!p.cffNumber) {
+      errors.push(`Line ${row}: Missing CFF#.`)
+    }
+    if (!p.branch) {
+      errors.push(`Line ${row}: Missing Branch.`)
+    }
+    if (!p.club) {
+      errors.push(`Line ${row}: Missing Club.`)
+    }
+    if (!p.rank) {
+      errors.push(`Line ${row}: Missing Rank.`)
+    }
+    if (!p.rank) {
+      errors.push(`Line ${row}: Missing Validated.`)
+    }
   }
   return errors
 }
 
 async function parseResults(fileContents) {
-  let errors: string[] = []
-  const fromLine = 3
-  const results = await csv.parse(fileContents, {
-    from_line: fromLine,
+  return await csv.parse(fileContents, {
+    from_line: 3,
     delimiter: ';',
     on_record: (record, { lines }) => {
       const block1 = record[0].split(/,/);
       const block3 = record[2].split(/,/);
       const block4 = record[3].split(/,/);
-      const info = {
+      return {
         surname: block1[0],
         name: block1[1],
         yearOfBirth: block1[2],
@@ -103,16 +111,8 @@ async function parseResults(fileContents) {
         rank: block4[0],
         validated: block4[1]
       }
-      errors = errors.concat(validateCompetitionRow(info, lines - fromLine + 1))
     }
   });
-  if (errors) {
-    const e = new MultiMessageError("")
-    e.errorMessages = errors
-    throw e
-  } else {
-    return results
-  }
 }
 
 export { parseValidationFileContents, parseCompetitionFileContents }
