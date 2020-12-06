@@ -50,9 +50,6 @@ function validateCompetition(competition) {
     if (!p.country) {
       errors.push(`Line ${row}: Missing Country.`)
     }
-    if (!p.cffNumber) {
-      errors.push(`Line ${row}: Missing CFF#.`)
-    }
     if (!p.branch) {
       errors.push(`Line ${row}: Missing Branch.`)
     }
