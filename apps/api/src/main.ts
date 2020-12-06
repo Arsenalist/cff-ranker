@@ -29,7 +29,6 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const contents = await readFile(filePathOnDisk);
   const results = await parseCompetitionFileContents(contents);
   const decoratedResults = decorateResultsWithWarnings(results);
-  console.log(decoratedResults)
   await saveCompetitionResults(decoratedResults);
   res.send({
     rowCount: results.results.length,
@@ -53,7 +52,6 @@ app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (re
 }));
 
 app.post('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
-  console.log("rq.body is ", req.body)
   const contents = await saveParticipantInCompetition(req.params.competitionId, req.params.participantId, req.body);
   res.send(contents)
 }));

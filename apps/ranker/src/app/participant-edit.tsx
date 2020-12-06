@@ -21,7 +21,6 @@ function EditParticipant(props) {
   useEffect(() => {
     if (props.participantId) {
       axios.get(`/api/participant/${props.competitionId}/${props.participantId}`).then(response => {
-        console.log(response.data)
         setParticipant(response.data)
       });
     }

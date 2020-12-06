@@ -24,10 +24,8 @@ async function findParticipantId(competitionId, participantId) {
 async function saveParticipantInCompetition(competitionId, participantId, data) {
   let competition = await CompetitionResults.findById(competitionId).exec()
   const participant = competition.results.id(participantId)
-  console.log("part before ", competition.results[3])
   participant.cffNumber = data.cffNumber
   competition = decorateResultsWithWarnings(competition)
-  console.log("part after ", competition.results[3])
   await competition.save()
 }
 
