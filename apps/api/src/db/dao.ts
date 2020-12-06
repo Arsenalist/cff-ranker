@@ -16,4 +16,16 @@ async function findCompetitionResult(id) {
   return await CompetitionResults.findById(id).exec()
 }
 
-export { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult }
+async function findParticipantId(competitionId, participantId) {
+  const competition = await CompetitionResults.findById(competitionId).exec()
+  return await competition.results.id(participantId)
+}
+async function saveParticipantInCompetition(competitionId, participantId, data) {
+  const competition = await CompetitionResults.findById(competitionId).exec()
+  const participant = competition.results.id(participantId)
+  participant.cffNumber = data.cffNumber
+  await competition.save()
+}
+
+
+export { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipantId, saveParticipantInCompetition }

@@ -9,16 +9,35 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import { EditParticipant } from './participant-edit';
 
 export function ViewCompetition() {
   const { id } = useParams();
+
+  const [open, setOpen] = useState(false);
+  const [participantId, setParticipantId] = useState(null);
+  const effectToken = []
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const editParticipant = (participantId) => {
+    setParticipantId(participantId)
+    setOpen(true)
+  }
+
+  const onSave = () => {
+    setOpen(false)
+    effectToken.push(0)
+  }
 
   const [competition, setCompetition] = useState({})
   useEffect(() => {
     axios.get(`/api/competition/${id}`).then(response => {
       setCompetition(response.data)
     });
-  }, []);
+  }, [effectToken]);
 
 
   return (
@@ -70,7 +89,11 @@ export function ViewCompetition() {
               <TableRow>
                 {row.warnings.map((warning) => (
                   <>
-                  <TableCell/>
+                  <TableCell>
+                    <Button variant="outlined" color="primary" onClick={(e) => editParticipant(row._id)}>
+                      Edit
+                    </Button>
+                  </TableCell>
                   <TableCell colSpan={7}>
                     <Chip
                       label={warning.type}
@@ -85,6 +108,7 @@ export function ViewCompetition() {
         </TableBody>
       </Table>
     </TableContainer>
+    <EditParticipant onSave={onSave} competitionId={competition._id}  participantId={participantId} open={open} onClose={handleClose}/>
     </div>
   )
 

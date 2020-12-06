@@ -1,14 +1,17 @@
-import { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult } from './db/dao'
+import { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipantId, saveParticipantInCompetition } from './db/dao'
 import { handleUpload } from './file-upload'
 import { parseValidationFileContents} from './csv/validation-file'
 import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
 import { parseCompetitionFileContents, decorateResultsWithWarnings } from './csv/competition-file';
+const express = require('express')
 
 const asyncHandler = require('express-async-handler');
-const app = require('express')();
+const app = express();
 app.use(require('express-fileupload')());
+app.use(express.json());
+app.use(express.urlencoded());
 openMongo();
 
 app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
@@ -43,6 +46,18 @@ app.get('/api/competition/:id', asyncHandler(async (req, res) => {
   const contents = await findCompetitionResult(req.params.id);
   res.send(contents)
 }));
+
+app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
+  const contents = await findParticipantId(req.params.competitionId, req.params.participantId);
+  res.send(contents)
+}));
+
+app.post('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
+  console.log("rq.body is ", req.body)
+  const contents = await saveParticipantInCompetition(req.params.competitionId, req.params.participantId, req.body);
+  res.send(contents)
+}));
+
 
 const port = process.env.port || 3333;
 app.use(handleErrors);
