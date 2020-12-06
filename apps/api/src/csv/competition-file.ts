@@ -30,8 +30,8 @@ function decorateResultsWithWarnings(competition) {
       warnings.push({
         type: 'MISSING_CFF_NUMBER'
       })
-      r['warnings'] = warnings
     }
+    r['warnings'] = warnings
   }
   return competition
 }
