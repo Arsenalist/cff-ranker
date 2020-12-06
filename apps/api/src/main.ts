@@ -4,7 +4,7 @@ import { parseValidationFileContents} from './csv/validation-file'
 import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
-import { parseCompetitionFileContents } from './csv/competition-file';
+import { parseCompetitionFileContents, decorateResultsWithWarnings } from './csv/competition-file';
 
 const asyncHandler = require('express-async-handler');
 const app = require('express')();
@@ -25,7 +25,9 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results = await parseCompetitionFileContents(contents);
-  await saveCompetitionResults(results);
+  const decoratedResults = decorateResultsWithWarnings(results);
+  console.log(decoratedResults)
+  await saveCompetitionResults(decoratedResults);
   res.send({
     rowCount: results.results.length,
     competition: results

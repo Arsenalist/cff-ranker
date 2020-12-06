@@ -8,6 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import { Chip } from '@material-ui/core';
 
 export function ViewCompetition() {
   const { id } = useParams();
@@ -39,6 +40,7 @@ export function ViewCompetition() {
         <TableBody>
           {competition && competition.results ?
             competition.results.map((row) => (
+              <>
             <TableRow key={row._id}>
               <TableCell scope="row">
                 {row.rank}
@@ -65,6 +67,20 @@ export function ViewCompetition() {
                 {row.country}
               </TableCell>
             </TableRow>
+              <TableRow>
+                {row.warnings.map((warning) => (
+                  <>
+                  <TableCell/>
+                  <TableCell colSpan={7}>
+                    <Chip
+                      label={warning.type}
+                      color="secondary"
+                    />
+                  </TableCell>
+                  </>
+                ))}
+              </TableRow>
+            </>
           )) : ''}
         </TableBody>
       </Table>

@@ -23,6 +23,19 @@ async function parseCompetitionFileContents(fileContents) {
   }
 }
 
+function decorateResultsWithWarnings(competition) {
+  for (const r of competition.results) {
+    const warnings = []
+    if (!r.cffNumber) {
+      warnings.push({
+        type: 'MISSING_CFF_NUMBER'
+      })
+      r['warnings'] = warnings
+    }
+  }
+  return competition
+}
+
 function parseHeaderRows(fileContents) {
   const lines = fileContents.split(/\r?\n/);
   const line1Values = lines[0].split(/;/);
@@ -90,4 +103,4 @@ async function parseResults(fileContents) {
   });
 }
 
-export { parseCompetitionFileContents };
+export { parseCompetitionFileContents, decorateResultsWithWarnings };

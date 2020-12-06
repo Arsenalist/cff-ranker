@@ -1,4 +1,4 @@
-import { parseCompetitionFileContents } from './competition-file';
+import { decorateResultsWithWarnings, parseCompetitionFileContents } from './competition-file';
 
 describe('competition file csv parsing', () => {
   const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
@@ -99,5 +99,18 @@ describe('competition file errors', () => {
       expect(e.errorMessages[8]).toBe("Line 1: Missing Validated.")
       expect(e.errorMessages[9]).toBe("Line 2: Missing Name.")
     }
+  });
+});
+
+describe('decorate competition results with warnings', () => {
+  it('CFF#', async () => {
+    const competiton = {
+      results: [{
+        name: 'johnny'
+      }]
+    }
+    const decorated = decorateResultsWithWarnings(competiton)
+    expect(decorated.results[0].warnings.length).toBe(1)
+    expect(decorated.results[0].warnings[0].type).toBe('MISSING_CFF_NUMBER')
   });
 });
