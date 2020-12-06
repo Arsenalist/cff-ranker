@@ -11,6 +11,9 @@ import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { EditParticipant } from './participant-edit';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
 
 export function ViewCompetition() {
   const { id } = useParams();
@@ -42,6 +45,43 @@ export function ViewCompetition() {
 
   return (
     <div>
+      <Card>
+        <CardContent>
+          <Typography gutterBottom>
+            {competition.competitionDate}
+          </Typography>
+          <Typography variant="h5" component="h2">
+            {competition.tournamentName} ({competition.competitionShortName})
+          </Typography>
+          <Typography variant="body2" component="p">
+            Age Category {competition.ageCategory}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Competition Type {competition.competitionType}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Gender {competition.gender}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Weapon {competition.weapon}
+          </Typography>
+          <Typography variant="body2" component="p">
+            Creator: {competition.creator}
+          </Typography>
+        </CardContent>
+      </Card>
+      <p>
+      <Button variant="contained" color="primary" disabled>
+        Approve
+      </Button>&nbsp;&nbsp;&nbsp;
+      <Button variant="contained" color="secondary">
+        Reject
+      </Button>
+      </p>
+      <p>
+        This competition cannot be approved as it has warnings. Fix the warnings to approve competition.
+      </p>
+
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
