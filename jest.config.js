@@ -4,5 +4,6 @@ module.exports = {
     '<rootDir>/apps/api',
     '<rootDir>/libs/api-interfaces',
     '<rootDir>/libs/ui',
+    '<rootDir>/libs/csv',
   ],
 };

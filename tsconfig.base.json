@@ -17,7 +17,8 @@
     "baseUrl": ".",
     "paths": {
       "@cff/api-interfaces": ["libs/api-interfaces/src/index.ts"],
-      "@cff/ui": ["libs/ui/src/index.ts"]
+      "@cff/ui": ["libs/ui/src/index.ts"],
+      "@cff/csv": ["libs/csv/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

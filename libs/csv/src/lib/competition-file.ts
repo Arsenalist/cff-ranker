@@ -1,4 +1,4 @@
-import { MultiMessageError } from '../multi-message-error';
+import { MultiMessageError } from '../../../../apps/api/src/multi-message-error';
 const csv = require('async-csv');
 
 async function parseCompetitionFileContents(fileContents) {

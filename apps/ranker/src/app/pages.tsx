@@ -1,8 +1,5 @@
-import { ValidationFileUpload } from './validation-file-upload';
+import { UploadFile } from '@cff/ui';
 import React, { useState } from 'react';
-import CardContent from '@material-ui/core/CardContent';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -19,7 +16,7 @@ export function ValidateFileUploadPage() {
       <p>
         Please specify a validation file.
       </p>
-      <ValidationFileUpload endpoint = "/api/upload-validation-file"/>
+      <UploadFile endpoint = "/api/upload-validation-file"/>
     </div>
   )
 }
@@ -35,7 +32,7 @@ export function CompetitionUploadPage() {
       <p>
         Please specify a competition file.
       </p>
-      <ValidationFileUpload postUploadHandler={displayCompetition}  endpoint = "/api/upload-competition-file"/>
+      <UploadFile postUploadHandler={displayCompetition} endpoint = "/api/upload-competition-file"/>
       {competition &&
         <div>
           <CompetitionHeader competition={competition} />
@@ -85,7 +82,7 @@ export function ClassificationUploadPage() {
       <p>
         Please specify a classification file.
       </p>
-      <ValidationFileUpload endpoint = "/api/upload-competition-file"/>
+      <UploadFile endpoint = "/api/upload-competition-file"/>
     </div>
   )
 }

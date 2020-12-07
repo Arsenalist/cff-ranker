@@ -1,4 +1,4 @@
-import { parseValidationFileContents} from './validation-file';
+import { parseValidationFileContents} from '@cff/csv';
 
 
 describe('validation file csv parsing', () => {

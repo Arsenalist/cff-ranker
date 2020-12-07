@@ -1,5 +1,5 @@
 import { CompetitionResults, ValidationFileRecord } from './schemas';
-import { decorateResultsWithWarnings } from '../csv/competition-file';
+import { decorateResultsWithWarnings } from '@cff/csv';
 
 async function saveValidationFileRecords(results) {
     await ValidationFileRecord.insertMany(results);

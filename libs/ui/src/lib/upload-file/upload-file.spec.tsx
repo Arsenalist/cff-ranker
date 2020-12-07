@@ -3,13 +3,12 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils';
-import { ValidationFileUpload } from './validation-file-upload';
+import { UploadFile } from '@cff/ui';
 import MockAdapter from 'axios-mock-adapter';
-import axios from 'axios';
 
 const mock = new MockAdapter(require('axios'));
 
-describe('ValidationFileUpload', () => {
+describe('UploadFile', () => {
   let container = null;
   const endpoint = "/api/upload-file"
   let postUploadHandler
@@ -25,7 +24,7 @@ describe('ValidationFileUpload', () => {
   });
 
   async function executeUpload() {
-    act(() => { render(<ValidationFileUpload postUploadHandler={postUploadHandler} endpoint={ endpoint } />, container); });
+    act(() => { render(<UploadFile postUploadHandler={postUploadHandler} endpoint={ endpoint } />, container); });
     await act(async() => {
       await userEvent.upload(screen.getByTestId("file-select-button"), new File(['contents'], 'name.csv'));
       await userEvent.click(screen.getByTestId("upload-button"));
@@ -46,7 +45,7 @@ describe('ValidationFileUpload', () => {
 
   it('upload without file selection', async () => {
     await act(async() => {
-      render(<ValidationFileUpload postUploadHandler={postUploadHandler}  endpoint={ endpoint }/>, container);
+      render(<UploadFile postUploadHandler={postUploadHandler} endpoint={ endpoint }/>, container);
       await userEvent.click(screen.getByTestId("upload-button"));
     });
     expect(container.textContent).toContain("No file selected")

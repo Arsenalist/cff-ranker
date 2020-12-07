@@ -1,10 +1,10 @@
 import { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipantId, saveParticipantInCompetition } from './db/dao'
 import { handleUpload } from './file-upload'
-import { parseValidationFileContents} from './csv/validation-file'
+import { parseValidationFileContents} from '@cff/csv'
 import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
-import { parseCompetitionFileContents, decorateResultsWithWarnings } from './csv/competition-file';
+import { parseCompetitionFileContents, decorateResultsWithWarnings } from '@cff/csv';
 const express = require('express')
 
 const asyncHandler = require('express-async-handler');

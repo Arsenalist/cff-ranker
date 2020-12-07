@@ -1,4 +1,4 @@
-import { decorateResultsWithWarnings, parseCompetitionFileContents } from './competition-file';
+import { decorateResultsWithWarnings, parseCompetitionFileContents } from '@cff/csv';
 
 describe('competition file csv parsing', () => {
   const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
