@@ -11,6 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { DataGrid } from '@material-ui/data-grid';
+import CompetitionHeader from '@cff/ui';
 
 export function ValidateFileUploadPage() {
   return (
@@ -37,31 +38,7 @@ export function CompetitionUploadPage() {
       <ValidationFileUpload postUploadHandler={displayCompetition}  endpoint = "/api/upload-competition-file"/>
       {competition &&
         <div>
-      <Card>
-        <CardContent>
-          <Typography gutterBottom>
-            {competition.competitionDate}
-          </Typography>
-          <Typography variant="h5" component="h2">
-            {competition.tournamentName} ({competition.competitionShortName})
-          </Typography>
-          <Typography variant="body2" component="p">
-            Age Category {competition.ageCategory}
-          </Typography>
-          <Typography variant="body2" component="p">
-            Competition Type {competition.competitionType}
-          </Typography>
-          <Typography variant="body2" component="p">
-            Gender {competition.gender}
-          </Typography>
-          <Typography variant="body2" component="p">
-            Weapon {competition.weapon}
-          </Typography>
-          <Typography variant="body2" component="p">
-            Creator: {competition.creator}
-          </Typography>
-        </CardContent>
-      </Card>
+          <CompetitionHeader competition={competition} />
         <TableContainer component={Paper}>
           <Table>
             <TableHead>

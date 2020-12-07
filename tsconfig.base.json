@@ -16,7 +16,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cff/api-interfaces": ["libs/api-interfaces/src/index.ts"]
+      "@cff/api-interfaces": ["libs/api-interfaces/src/index.ts"],
+      "@cff/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
