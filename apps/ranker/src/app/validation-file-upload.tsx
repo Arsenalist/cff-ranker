@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import Button from '@material-ui/core/Button';
-import MuiAlert from '@material-ui/lab/Alert';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import { Chip } from '@material-ui/core';
@@ -35,7 +34,7 @@ export function ValidationFileUpload(props) {
     axios.post(props.endpoint, formData).then(response => {
       addMessages([`${response.data.rowCount} rows uploaded.`])
       props.postUploadHandler(response.data.competition)
-    });
+    }, function(err) {});
   }
 
   return (
