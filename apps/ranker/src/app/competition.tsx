@@ -15,10 +15,15 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
+function checkHasWarnings(competition) {
+  return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
+}
+
 export function ViewCompetition() {
   const { id } = useParams();
 
   const [open, setOpen] = useState(false);
+  const [hasWarnings, setHasWarnings] = useState(false);
   const [participantId, setParticipantId] = useState(null);
   const effectToken = []
   const handleClose = () => {
@@ -39,6 +44,7 @@ export function ViewCompetition() {
   useEffect(() => {
     axios.get(`/api/competition/${id}`).then(response => {
       setCompetition(response.data)
+      setHasWarnings(checkHasWarnings(response.data))
     });
   }, [effectToken]);
 
@@ -71,16 +77,21 @@ export function ViewCompetition() {
         </CardContent>
       </Card>
       <p>
-      <Button variant="contained" color="primary" disabled>
+      <Button variant="contained" color="primary" disabled={hasWarnings} >
         Approve
       </Button>&nbsp;&nbsp;&nbsp;
       <Button variant="contained" color="secondary">
         Reject
       </Button>
       </p>
+      {hasWarnings ?
       <p>
         This competition cannot be approved as it has warnings. Fix the warnings to approve competition.
       </p>
+        : <p>
+            This competition has no warnings and can be approved.
+          </p>
+      }
 
     <TableContainer component={Paper}>
       <Table>
