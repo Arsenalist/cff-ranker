@@ -3,7 +3,7 @@ import { render, unmountComponentAtNode } from 'react-dom';
 import { screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils';
-import { UploadFile } from '@cff/ui';
+import { UploadFile } from './upload-file';
 import MockAdapter from 'axios-mock-adapter';
 
 const mock = new MockAdapter(require('axios'));
