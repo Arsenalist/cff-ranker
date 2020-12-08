@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -14,10 +13,18 @@ type Inputs = {
   cffNumber: string
 };
 
-function EditParticipant(props) {
+interface EditParticipantProps {
+  competitionId: string,
+  participantId: string,
+  open: boolean,
+  onClose?: () => void,
+  onSave?: () => void
+}
+
+function EditParticipant(props: EditParticipantProps) {
 
   const [participant, setParticipant] = useState(null)
-
+  const { register, handleSubmit } = useForm<Inputs>();
   useEffect(() => {
     if (props.participantId) {
       axios.get(`/api/participant/${props.competitionId}/${props.participantId}`).then(response => {
@@ -26,8 +33,6 @@ function EditParticipant(props) {
     }
   }, [props.participantId]);
 
-
-  const { register, handleSubmit } = useForm<Inputs>();
   const onSubmit = data => {
     axios.post(`/api/participant/${props.competitionId}/${props.participantId}`, data).then(response => {
       props.onSave()
