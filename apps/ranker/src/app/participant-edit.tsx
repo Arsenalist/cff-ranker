@@ -16,15 +16,15 @@ type Inputs = {
 interface EditParticipantProps {
   competitionId: string,
   participantId: string,
-  open: boolean,
-  onClose?: () => void,
-  onSave?: () => void
+  onSave: () => void,
+  onCancel: () => void
 }
 
 function EditParticipant(props: EditParticipantProps) {
 
   const [participant, setParticipant] = useState(null)
   const { register, handleSubmit } = useForm<Inputs>();
+
   useEffect(() => {
     if (props.participantId) {
       axios.get(`/api/participant/${props.competitionId}/${props.participantId}`).then(response => {
@@ -40,26 +40,24 @@ function EditParticipant(props: EditParticipantProps) {
   };
 
   return (
-    <Dialog open={props.open} onClose={props.onClose}>
     <DialogContent>
       <form onSubmit={handleSubmit(onSubmit)}>
     <DialogTitle id="form-dialog-title">Edit Participant</DialogTitle>
     <DialogContentText>
       {participant ?
-        <p>You can provide any missing information related to {participant.name} {participant.surname}.</p>
+        <>You can provide any missing information related to {participant.name} {participant.surname}.</>
         : ''
       }
     </DialogContentText>
-      <TextField name="cffNumber" id="outlined-basic" label="CFF Number" variant="outlined" inputRef={register} />
+      <TextField inputProps={{ "data-testid": "cffNumber" }} name="cffNumber" id="outlined-basic" label="CFF Number" variant="outlined" inputRef={register} />
     <DialogActions>
-      <Button type="submit" variant="contained" color="primary">Save</Button>
-      <Button color="primary" onClick={props.onClose}>
+      <Button data-testid="save-button" type="submit" variant="contained" color="primary">Save</Button>
+      <Button data-testid="cancel-button" color="primary" onClick={props.onCancel}>
         Close
       </Button>
     </DialogActions>
       </form>
     </DialogContent>
-    </Dialog>
   );
 }
 

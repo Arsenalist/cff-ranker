@@ -12,6 +12,7 @@ import { Chip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { EditParticipant } from './participant-edit';
 import CompetitionHeader from '@cff/ui';
+import Dialog from '@material-ui/core/Dialog';
 
 function checkHasWarnings(competition) {
   return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
@@ -133,7 +134,9 @@ export function ViewCompetition() {
         </TableBody>
       </Table>
     </TableContainer>
-    <EditParticipant onSave={onSave} competitionId={competition._id}  participantId={participantId} open={open} onClose={handleClose}/>
+      <Dialog open={open} onClose={handleClose}>
+        <EditParticipant onSave={onSave} onCancel={handleClose} competitionId={competition._id}  participantId={participantId}/>
+      </Dialog>
     </div>
   )
 
