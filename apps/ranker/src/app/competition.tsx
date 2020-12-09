@@ -20,11 +20,12 @@ function checkHasWarnings(competition) {
 
 export function ViewCompetition() {
   const { id } = useParams();
-
   const [open, setOpen] = useState(false);
   const [hasWarnings, setHasWarnings] = useState(false);
+  const [introMessage, setIntroMessage] = useState(null);
   const [participantId, setParticipantId] = useState(null);
-  const effectToken = []
+  const [competition, setCompetition] = useState({})
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -36,38 +37,37 @@ export function ViewCompetition() {
 
   const onSave = () => {
     setOpen(false)
-    effectToken.push(0)
   }
 
-  const [competition, setCompetition] = useState({})
+
   useEffect(() => {
     axios.get(`/api/competition/${id}`).then(response => {
       setCompetition(response.data)
-      setHasWarnings(checkHasWarnings(response.data))
+      const hasWarningsVar = checkHasWarnings(response.data)
+      setHasWarnings(hasWarningsVar)
+      if (hasWarningsVar) {
+        setIntroMessage("This competition cannot be approved as it has warnings. Fix the warnings to approve competition.")
+      } else {
+        setIntroMessage("This competition has no warnings and can be approved.")
+      }
     });
-  }, [effectToken]);
+  }, []);
 
 
   return (
     <div>
       <CompetitionHeader competition={competition} />
       <p>
-      <Button variant="contained" color="primary" disabled={hasWarnings} >
+      <Button variant="contained" color="primary" data-testid="approve-button" disabled={hasWarnings} >
         Approve
       </Button>&nbsp;&nbsp;&nbsp;
-      <Button variant="contained" color="secondary">
+      <Button variant="contained" data-testid="reject-button" color="secondary">
         Reject
       </Button>
       </p>
-      {hasWarnings ?
       <p>
-        This competition cannot be approved as it has warnings. Fix the warnings to approve competition.
+        {introMessage}
       </p>
-        : <p>
-            This competition has no warnings and can be approved.
-          </p>
-      }
-
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -82,11 +82,9 @@ export function ViewCompetition() {
             <TableCell>Country</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
-          {competition && competition.results ?
+        <TableBody>{competition && competition.results ?
             competition.results.map((row) => (
-              <>
-            <TableRow key={row._id}>
+              <><TableRow key={row._id}>
               <TableCell scope="row">
                 {row.rank}
               </TableCell>
@@ -116,7 +114,7 @@ export function ViewCompetition() {
                 {row.warnings.map((warning) => (
                   <>
                   <TableCell>
-                    <Button variant="outlined" color="primary" onClick={(e) => editParticipant(row._id)}>
+                    <Button data-testid="edit-button" variant="outlined" color="primary" onClick={(e) => editParticipant(row._id)}>
                       Edit
                     </Button>
                   </TableCell>

@@ -66,6 +66,7 @@
     "@nrwl/web": "10.4.4",
     "@nrwl/workspace": "10.4.4",
     "@testing-library/dom": "^7.28.1",
+    "@testing-library/jest-dom": "^5.11.6",
     "@testing-library/react": "^11.1.2",
     "@testing-library/user-event": "^12.3.0",
     "@types/jest": "26.0.8",
