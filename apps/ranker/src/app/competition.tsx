@@ -10,7 +10,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { EditParticipant } from './participant-edit';
+import { EditParticipant } from '@cff/ui'
 import CompetitionHeader from '@cff/ui';
 import Dialog from '@material-ui/core/Dialog';
 

@@ -5,7 +5,7 @@ import CompetitionHeader from './competition-header';
 
 describe('CompetitionHeader', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<CompetitionHeader />);
+    const { baseElement } = render(<CompetitionHeader competition={{}}/>);
     expect(baseElement).toBeTruthy();
   });
 });

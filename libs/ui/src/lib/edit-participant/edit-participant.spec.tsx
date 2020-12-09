@@ -2,7 +2,7 @@ import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
-import { EditParticipant } from './participant-edit';
+import { EditParticipant } from './edit-participant';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, screen } from '@testing-library/react';
 

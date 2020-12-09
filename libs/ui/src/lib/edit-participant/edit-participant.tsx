@@ -6,7 +6,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import Dialog from '@material-ui/core/Dialog';
 import axios from 'axios';
 
 type Inputs = {
@@ -20,7 +19,7 @@ interface EditParticipantProps {
   onCancel: () => void
 }
 
-function EditParticipant(props: EditParticipantProps) {
+export function EditParticipant(props: EditParticipantProps) {
 
   const [participant, setParticipant] = useState(null)
   const { register, handleSubmit } = useForm<Inputs>();
@@ -60,7 +59,3 @@ function EditParticipant(props: EditParticipantProps) {
     </DialogContent>
   );
 }
-
-export { EditParticipant };
-
-
