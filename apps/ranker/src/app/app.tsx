@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import { CompetitionList } from './competition-list';
-import { ViewCompetition } from './competition';
+import { ViewCompetition } from '@cff/ui';
 import { Messages } from './messages';
 import { MessagesProvider } from './messages-context';
 
