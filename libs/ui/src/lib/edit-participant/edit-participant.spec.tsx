@@ -12,7 +12,7 @@ describe('<EditParticipant/>', () => {
   it('name is shown in edit view', async () => {
     mock.onGet("/api/participant/cid/pid").reply(200, {name: "bob", surname: "jim" });
     await act(async () => {
-      render(<EditParticipant competitionId="cid" participantId="pid" />);
+      render(<EditParticipant onCancel={jest.fn()} onSave={jest.fn()} competitionId="cid" participantId="pid" />);
     });
     expect(screen.getByText(/bob jim/i)).toBeInTheDocument();
   });
@@ -22,7 +22,7 @@ describe('<EditParticipant/>', () => {
     mock.onPost("/api/participant/cid/pid", {cffNumber: "123456"}).reply(200);
     const save = jest.fn()
     await act(async () => {
-      render(<EditParticipant competitionId="cid" participantId="pid" onSave={save}/>);
+      render(<EditParticipant onCancel={jest.fn()} competitionId="cid" participantId="pid" onSave={save}/>);
       await fireEvent.change(screen.getByTestId("cffNumber"), {target: {value: "123456"}})
       await userEvent.click(screen.getByTestId("save-button"));
     });
@@ -33,7 +33,7 @@ describe('<EditParticipant/>', () => {
     mock.onGet("/api/participant/cid/pid").reply(200, {name: "bob", surname: "jim" });
     const cancel = jest.fn()
     await act(async () => {
-      render(<EditParticipant competitionId="cid" participantId="pid" onCancel={cancel}/>);
+      render(<EditParticipant onSave={jest.fn()} competitionId="cid" participantId="pid" onCancel={cancel}/>);
       await userEvent.click(screen.getByTestId("cancel-button"));
     });
     expect(cancel).toBeCalledTimes(1)
