@@ -1,30 +1,21 @@
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
-import { screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
 import { act } from 'react-dom/test-utils';
-import { UploadFile } from './upload-file';
+import { UploadFile } from '@cff/ui';
 import MockAdapter from 'axios-mock-adapter';
+import '@testing-library/jest-dom';
 
 const mock = new MockAdapter(require('axios'));
 
 describe('UploadFile', () => {
-  let container = null;
   const endpoint = "/api/upload-file"
   let postUploadHandler
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
     postUploadHandler = jest.fn()
   });
-  afterEach(() => {
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
-  });
-
   async function executeUpload() {
-    act(() => { render(<UploadFile postUploadHandler={postUploadHandler} endpoint={ endpoint } />, container); });
+    act(() => { render(<UploadFile postUploadHandler={postUploadHandler} endpoint={ endpoint } />); });
     await act(async() => {
       await userEvent.upload(screen.getByTestId("file-select-button"), new File(['contents'], 'name.csv'));
       await userEvent.click(screen.getByTestId("upload-button"));
@@ -45,11 +36,10 @@ describe('UploadFile', () => {
 
   it('upload without file selection', async () => {
     await act(async() => {
-      render(<UploadFile postUploadHandler={postUploadHandler} endpoint={ endpoint }/>, container);
+      render(<UploadFile postUploadHandler={postUploadHandler} endpoint={ endpoint }/>);
       await userEvent.click(screen.getByTestId("upload-button"));
     });
-    expect(container.textContent).toContain("No file selected")
+    expect(screen.getByText(/No file selected/i)).toBeInTheDocument();
     expect(postUploadHandler).not.toHaveBeenCalled()
   });
-
 });

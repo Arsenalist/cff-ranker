@@ -1,27 +1,15 @@
 import React from 'react';
-import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import { ViewCompetition } from '@cff/ui';
 import { MemoryRouter, Route } from "react-router-dom";
-import { screen } from '@testing-library/react';
+import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event';
 
 const mock = new MockAdapter(require('axios'));
 
 describe('<ViewCompetition/>', () => {
-  let container
-  beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-  });
-  afterEach(() => {
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
-  });
-
   it('no warnings to be shown', async () => {
     mock.onGet("/api/competition/cid").reply(200, {
       results:[{
@@ -31,12 +19,12 @@ describe('<ViewCompetition/>', () => {
       }
     );
     await act(async () => {
-      render(<MemoryRouter initialEntries={["/cid"]}><Route path="/:id"><ViewCompetition /></Route></MemoryRouter>, container);
+      render(<MemoryRouter initialEntries={["/cid"]}><Route path="/:id"><ViewCompetition /></Route></MemoryRouter>);
     });
     expect(screen.getByTestId("approve-button")).toBeEnabled()
     expect(screen.getByTestId("reject-button")).toBeEnabled()
-    expect(container.textContent).toContain("This competition has no warnings and can be approved.")
-    expect(container.textContent).toContain("Alice Angel")
+    expect(screen.getByText(/This competition has no warnings and can be approved/i)).toBeInTheDocument();
+    expect(screen.getByText(/Alice Angel/i)).toBeInTheDocument();
   });
 
   it('no warnings to be shown', async () => {
@@ -48,14 +36,13 @@ describe('<ViewCompetition/>', () => {
       }
     );
     await act(async () => {
-      render(<MemoryRouter initialEntries={["/cid"]}><Route path="/:id"><ViewCompetition /></Route></MemoryRouter>, container);
-
+      render(<MemoryRouter initialEntries={["/cid"]}><Route path="/:id"><ViewCompetition /></Route></MemoryRouter>);
     });
     expect(screen.getByTestId("approve-button")).toBeDisabled()
     expect(screen.getByTestId("reject-button")).toBeEnabled()
-    expect(container.textContent).toContain("Fix the warnings to approve competition.")
-    expect(container.textContent).toContain("Alice Angel")
-    expect(container.textContent).toContain("warning message")
+    expect(screen.getByText(/Fix the warnings to approve competition/i)).toBeInTheDocument();
+    expect(screen.getByText(/Alice Angel/i)).toBeInTheDocument();
+    expect(screen.getByText(/warning message/i)).toBeInTheDocument();
   });
 
   it('edit button shows popup', async () => {
@@ -67,11 +54,8 @@ describe('<ViewCompetition/>', () => {
       }
     );
     await act(async () => {
-      render(<MemoryRouter initialEntries={["/cid"]}><Route path="/:id"><ViewCompetition /></Route></MemoryRouter>, container);
+      render(<MemoryRouter initialEntries={["/cid"]}><Route path="/:id"><ViewCompetition /></Route></MemoryRouter>);
     });
-    await act(async () => {
-      await userEvent.click(container.querySelector('[data-testid="edit-button"]'))
-    });
-    // assert something here some time
+    expect(screen.getByTestId("edit-button")).toBeInTheDocument();
   });
 });
