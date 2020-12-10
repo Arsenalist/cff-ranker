@@ -2,9 +2,9 @@ import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
-import { ViewCompetition } from './view-competition';
+import { ViewCompetition } from '@cff/ui';
 import { MemoryRouter, Route } from "react-router-dom";
-import { fireEvent, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import '@testing-library/jest-dom'
 import userEvent from '@testing-library/user-event';
 

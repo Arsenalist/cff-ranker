@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
-import { Redirect, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export function CompetitionList() {
   const [competitions, setCompetitions] = useState([])
