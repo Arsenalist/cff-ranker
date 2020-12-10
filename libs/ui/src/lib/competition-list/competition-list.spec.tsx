@@ -2,8 +2,8 @@ import React from 'react';
 import { render, unmountComponentAtNode } from 'react-dom';
 import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
-import { MemoryRouter, BrowserRouter, Router } from "react-router-dom";
-import { CompetitionList } from './competition-list';
+import { MemoryRouter } from "react-router-dom";
+import { CompetitionList } from '@cff/ui';
 import '@testing-library/jest-dom'
 const mock = new MockAdapter(require('axios'));
 describe('<CompetitionList/>', () => {
