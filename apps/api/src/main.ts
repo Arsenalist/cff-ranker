@@ -5,6 +5,7 @@ import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
 import { parseCompetitionFileContents, decorateResultsWithWarnings } from '@cff/csv';
+import { Competition, CompetitionParticipant, Player } from '@cff/api-interfaces';
 const express = require('express')
 
 const asyncHandler = require('express-async-handler');
@@ -17,7 +18,7 @@ openMongo();
 app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
     const filePathOnDisk = await handleUpload(req, 'uploadedFile');
     const contents = await readFile(filePathOnDisk);
-    const results = await parseValidationFileContents(contents);
+    const results: Player[] = await parseValidationFileContents(contents);
     await saveValidationFileRecords(results);
     res.send({
       rowCount: results.length
@@ -27,8 +28,8 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
 app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
-  const results = await parseCompetitionFileContents(contents);
-  const decoratedResults = decorateResultsWithWarnings(results);
+  const results: Competition = await parseCompetitionFileContents(contents);
+  const decoratedResults: Competition = decorateResultsWithWarnings(results);
   await saveCompetitionResults(decoratedResults);
   res.send({
     rowCount: results.results.length,
@@ -37,17 +38,17 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
 }));
 
 app.get('/api/competition', asyncHandler(async (req, res) => {
-  const contents = await findCompetitionResults();
+  const contents: Competition[] = await findCompetitionResults();
   res.send(contents)
 }));
 
 app.get('/api/competition/:id', asyncHandler(async (req, res) => {
-  const contents = await findCompetitionResult(req.params.id);
+  const contents: Competition = await findCompetitionResult(req.params.id);
   res.send(contents)
 }));
 
 app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
-  const contents = await findParticipantId(req.params.competitionId, req.params.participantId);
+  const contents: CompetitionParticipant = await findParticipantId(req.params.competitionId, req.params.participantId);
   res.send(contents)
 }));
 

@@ -9,9 +9,10 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { Competition } from '@cff/api-interfaces';
 
 export function CompetitionList() {
-  const [competitions, setCompetitions] = useState([])
+  const [competitions, setCompetitions] = useState<Competition[]>([])
   useEffect(() => {
     axios.get('/api/competition').then(response => {
       setCompetitions(response.data)

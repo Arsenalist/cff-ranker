@@ -26,7 +26,7 @@ describe('<EditParticipant/>', () => {
       await fireEvent.change(screen.getByTestId("cffNumber"), {target: {value: "123456"}})
       await userEvent.click(screen.getByTestId("save-button"));
     });
-    expect(save).toBeCalledTimes(1)
+    expect(save).toBeCalledTimes(1)    
   });
 
   it('cancel is called', async () => {

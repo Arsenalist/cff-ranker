@@ -9,6 +9,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { DataGrid } from '@material-ui/data-grid';
 import CompetitionHeader from '@cff/ui';
+import { Competition } from '@cff/api-interfaces';
 
 export function ValidateFileUploadPage() {
   return (
@@ -22,17 +23,14 @@ export function ValidateFileUploadPage() {
 }
 
 export function CompetitionUploadPage() {
-  const [competition, setCompetition] = useState(null);
-  function displayCompetition(competition) {
-    setCompetition(competition)
-  }
+  const [competition, setCompetition] = useState<Competition>(null);
 
   return (
     <div>
       <p>
         Please specify a competition file.
       </p>
-      <UploadFile postUploadHandler={displayCompetition} endpoint = "/api/upload-competition-file"/>
+      <UploadFile postUploadHandler={setCompetition} endpoint = "/api/upload-competition-file"/>
       {competition &&
         <div>
           <CompetitionHeader competition={competition} />

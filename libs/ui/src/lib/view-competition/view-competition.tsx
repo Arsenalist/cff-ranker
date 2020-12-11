@@ -13,8 +13,9 @@ import Button from '@material-ui/core/Button';
 import { EditParticipant } from '@cff/ui'
 import CompetitionHeader from '@cff/ui';
 import Dialog from '@material-ui/core/Dialog';
+import { Competition } from '@cff/api-interfaces';
 
-function checkHasWarnings(competition) {
+function checkHasWarnings(competition: Competition) {
   return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
 }
 
@@ -24,19 +25,21 @@ export function ViewCompetition() {
   const [hasWarnings, setHasWarnings] = useState(false);
   const [introMessage, setIntroMessage] = useState(null);
   const [participantId, setParticipantId] = useState(null);
-  const [competition, setCompetition] = useState({})
+  const [competition, setCompetition] = useState<Competition>(null)
+  const [reload, setReload] = useState(0)
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const editParticipant = (participantId) => {
+  const editParticipant = (participantId: string) => {
     setParticipantId(participantId)
     setOpen(true)
   }
 
   const onSave = () => {
     setOpen(false)
+    setReload(reload + 1)
   }
 
 
@@ -51,7 +54,7 @@ export function ViewCompetition() {
         setIntroMessage("This competition has no warnings and can be approved.")
       }
     });
-  }, []);
+  }, [reload, id]);
 
 
   return (
@@ -133,7 +136,8 @@ export function ViewCompetition() {
       </Table>
     </TableContainer>
       <Dialog open={open} onClose={handleClose}>
-        <EditParticipant onSave={onSave} onCancel={handleClose} competitionId={competition._id}  participantId={participantId}/>
+        {competition ? <EditParticipant onSave={onSave} onCancel={handleClose} competitionId={competition._id}  participantId={participantId}/>
+        : ''}
       </Dialog>
     </div>
   )

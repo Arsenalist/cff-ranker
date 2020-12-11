@@ -7,6 +7,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import axios from 'axios';
+import { CompetitionParticipant } from '@cff/api-interfaces';
 
 type Inputs = {
   cffNumber: string
@@ -32,7 +33,7 @@ export function EditParticipant(props: EditParticipantProps) {
     }
   }, [props.participantId]);
 
-  const onSubmit = data => {
+  const onSubmit = (data: Partial<CompetitionParticipant>) => {
     axios.post(`/api/participant/${props.competitionId}/${props.participantId}`, data).then(response => {
       props.onSave()
     });
