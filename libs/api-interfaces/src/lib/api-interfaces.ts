@@ -1,10 +1,8 @@
-import * as mongoose from 'mongoose'
-
-interface CompetitionParticipant extends mongoose.Document {
+interface CompetitionParticipant  {
   _id?: string
   surname: string
   name: string
-  yearOfBirth:string
+  yearOfBirth: number
   gender: string
   country: string
   cffNumber: string
@@ -19,30 +17,40 @@ interface Warning {
   type: string
 }
 
-interface Competition extends mongoose.Document {
+interface CompetitionResults {
+
   _id?: string
-  creator: string
-  competitionType: string
-  competitionDate: string
-  weapon: string
-  gender: string
+
+  creator?: string;
+
+  competitionType?: string;
+
+  competitionDate?: string;
+
+  weapon:string
+
+  gender:string
+
   ageCategory: string
+
   tournamentName: string
+
   competitionShortName: string
-  results: mongoose.Types.Array<CompetitionParticipant>
+
+  results: CompetitionParticipant[]
 }
 
-interface Player extends mongoose.Document {
-  _id: string
-  surname: string
-  name: string
-  yearOfBirth: string
-  gender: string
-  club: string
-  branch: string
-  country: string
-  cffNumber: string
-  validated: string
+interface Player {
+  _id?: string
+  surname?: string
+  name?: string
+  yearOfBirth?: string
+  gender?: string
+  club?: string
+  branch?: string
+  country?: string
+  cffNumber?: string
+  validated?: string
 }
 
-export { CompetitionParticipant, Warning, Competition, Player }
+export { CompetitionParticipant, Warning, CompetitionResults, Player }

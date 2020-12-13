@@ -60,3 +60,5 @@ export function EditParticipant(props: EditParticipantProps) {
     </DialogContent>
   );
 }
+
+export default EditParticipant;

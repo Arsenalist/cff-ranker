@@ -5,7 +5,6 @@ import { ViewCompetition } from '@cff/ui';
 import { MemoryRouter, Route } from "react-router-dom";
 import { screen, render } from '@testing-library/react';
 import '@testing-library/jest-dom'
-import userEvent from '@testing-library/user-event';
 
 const mock = new MockAdapter(require('axios'));
 

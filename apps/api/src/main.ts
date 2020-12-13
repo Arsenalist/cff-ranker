@@ -1,11 +1,11 @@
-import { saveValidationFileRecords, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipantId, saveParticipantInCompetition } from './db/dao'
+import { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition } from './db/dao'
 import { handleUpload } from './file-upload'
 import { parseValidationFileContents} from '@cff/csv'
 import { handleErrors } from './middleware/errors'
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
 import { parseCompetitionFileContents, decorateResultsWithWarnings } from '@cff/csv';
-import { Competition, CompetitionParticipant, Player } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
 const express = require('express')
 
 const asyncHandler = require('express-async-handler');
@@ -19,7 +19,7 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
     const filePathOnDisk = await handleUpload(req, 'uploadedFile');
     const contents = await readFile(filePathOnDisk);
     const results: Player[] = await parseValidationFileContents(contents);
-    await saveValidationFileRecords(results);
+    await savePlayers(results);
     res.send({
       rowCount: results.length
     })
@@ -28,8 +28,8 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
 app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
-  const results: Competition = await parseCompetitionFileContents(contents);
-  const decoratedResults: Competition = decorateResultsWithWarnings(results);
+  const results: CompetitionResults = await parseCompetitionFileContents(contents);
+  const decoratedResults: CompetitionResults = decorateResultsWithWarnings(results);
   await saveCompetitionResults(decoratedResults);
   res.send({
     rowCount: results.results.length,
@@ -38,17 +38,17 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
 }));
 
 app.get('/api/competition', asyncHandler(async (req, res) => {
-  const contents: Competition[] = await findCompetitionResults();
+  const contents: CompetitionResults[] = await findCompetitionResults();
   res.send(contents)
 }));
 
 app.get('/api/competition/:id', asyncHandler(async (req, res) => {
-  const contents: Competition = await findCompetitionResult(req.params.id);
+  const contents: CompetitionResults = await findCompetitionResult(req.params.id);
   res.send(contents)
 }));
 
 app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
-  const contents: CompetitionParticipant = await findParticipantId(req.params.competitionId, req.params.participantId);
+  const contents: CompetitionParticipant = await findParticipant(req.params.competitionId, req.params.participantId);
   res.send(contents)
 }));
 

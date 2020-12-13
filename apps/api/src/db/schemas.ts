@@ -1,9 +1,8 @@
-import { Competition, Player } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
 
-
-const validationFileRecordSchema = new mongoose.Schema({
+const playerSchema = new mongoose.Schema({
   surname: {type: String, required: true},
   name: {type: String, required: true},
   yearOfBirth: {type: Number, required: true},
@@ -14,8 +13,6 @@ const validationFileRecordSchema = new mongoose.Schema({
   cffNumber: {type: String, required: true},
   validated: {type: String, required: true, enum: ['y', 'n']}
 });
-
-const ValidationFileRecord = mongoose.model<Player>('ValidationFileRecord', validationFileRecordSchema);
 
 const participantWarning = new mongoose.Schema({
   type: {type: String, required: true},
@@ -47,6 +44,10 @@ const competitionFileRecordSchema = new mongoose.Schema({
   results: {type: [competitionParticipant], validate: v => Array.isArray(v) && v.length > 0, }
 })
 
-const CompetitionResults = mongoose.model<Competition>('CompetitionResults', competitionFileRecordSchema);
+type CompetitionResultsType = CompetitionResults & mongoose.Document;
+const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
 
-export { ValidationFileRecord, CompetitionResults }
+type PlayerType = Player & mongoose.Document;
+const PlayerModel = mongoose.model<PlayerType>('Player', playerSchema);
+
+export { PlayerModel, CompetitionResultsModel }

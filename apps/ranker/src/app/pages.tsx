@@ -1,4 +1,4 @@
-import { UploadFile } from '@cff/ui';
+import { CompetitionHeader, UploadFile } from '@cff/ui';
 import React, { useState } from 'react';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -8,8 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { DataGrid } from '@material-ui/data-grid';
-import CompetitionHeader from '@cff/ui';
-import { Competition } from '@cff/api-interfaces';
+import { CompetitionResults } from '@cff/api-interfaces';
 
 export function ValidateFileUploadPage() {
   return (
@@ -23,7 +22,7 @@ export function ValidateFileUploadPage() {
 }
 
 export function CompetitionUploadPage() {
-  const [competition, setCompetition] = useState<Competition>(null);
+  const [competition, setCompetition] = useState<CompetitionResults>(null);
 
   return (
     <div>

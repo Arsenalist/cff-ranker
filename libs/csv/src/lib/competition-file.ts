@@ -1,11 +1,11 @@
 import { MultiMessageError } from '../../../../apps/api/src/multi-message-error';
-import { Competition, CompetitionParticipant } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionParticipant } from '@cff/api-interfaces';
 const csv = require('async-csv');
 
-async function parseCompetitionFileContents(fileContents: string): Competition {
+async function parseCompetitionFileContents(fileContents: string): Promise<CompetitionResults> {
   const { line1Values, line2Values } = parseHeaderRows(fileContents);
-  const records = await parseResults(fileContents);
-  const competition = {
+  const records: CompetitionParticipant[] = await parseResults(fileContents);
+  const competition: CompetitionResults = {
     creator: line1Values[3],
     competitionType: line1Values[4],
     competitionDate: line2Values[0],
@@ -24,7 +24,7 @@ async function parseCompetitionFileContents(fileContents: string): Competition {
   }
 }
 
-function decorateResultsWithWarnings(competition: Competition): Competition {
+function decorateResultsWithWarnings(competition: CompetitionResults): CompetitionResults {
   for (const r of competition.results) {
     const warnings = []
     if (!r.cffNumber) {
@@ -44,7 +44,7 @@ function parseHeaderRows(fileContents: string) {
   return { line1Values, line2Values };
 }
 
-function validateCompetition(competition: Competition) {
+function validateCompetition(competition: CompetitionResults) {
   const errors: string[] = []
   for (let i = 0; i < competition.results.length; i++) {
     const p = competition.results[i]
@@ -80,7 +80,7 @@ function validateCompetition(competition: Competition) {
   return errors
 }
 
-async function parseResults(fileContents: string): Promise<CompetitionParticipant> {
+async function parseResults(fileContents: string): Promise<CompetitionParticipant[]> {
   return await csv.parse(fileContents, {
     from_line: 3,
     delimiter: ';',

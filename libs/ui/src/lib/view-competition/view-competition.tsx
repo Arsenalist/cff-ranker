@@ -10,12 +10,12 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
-import { EditParticipant } from '@cff/ui'
-import CompetitionHeader from '@cff/ui';
+import EditParticipant from '../edit-participant/edit-participant'
+import CompetitionHeader from '../competition-header/competition-header';
 import Dialog from '@material-ui/core/Dialog';
-import { Competition } from '@cff/api-interfaces';
+import { CompetitionResults } from '@cff/api-interfaces';
 
-function checkHasWarnings(competition: Competition) {
+function checkHasWarnings(competition: CompetitionResults) {
   return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
 }
 
@@ -25,7 +25,7 @@ export function ViewCompetition() {
   const [hasWarnings, setHasWarnings] = useState(false);
   const [introMessage, setIntroMessage] = useState(null);
   const [participantId, setParticipantId] = useState(null);
-  const [competition, setCompetition] = useState<Competition>(null)
+  const [competition, setCompetition] = useState<CompetitionResults>(null)
   const [reload, setReload] = useState(0)
 
   const handleClose = () => {
@@ -141,6 +141,6 @@ export function ViewCompetition() {
       </Dialog>
     </div>
   )
-
-
 }
+
+export default ViewCompetition;
