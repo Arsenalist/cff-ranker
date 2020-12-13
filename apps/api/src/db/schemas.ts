@@ -1,4 +1,4 @@
-import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
+import { CompetitionResults, Player } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
 
