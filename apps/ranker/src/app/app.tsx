@@ -77,10 +77,10 @@ export const App = () => {
                   open={open}
                   onClose={handleClose}
                 >
-                  <MenuItem onClick={handleClose} component={Link} to="/validation-file-upload">Upload Validation File</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/competition-file-upload">Upload Competition File</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/validation-file-upload">Upload Players</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/competition-file-upload">Upload Competition Results</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/classification-file-upload">Upload Classification File</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Manage Competitions</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Competitions Results</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/view-rankings">View Rankings</MenuItem>
                 </Menu>
               </Toolbar>
