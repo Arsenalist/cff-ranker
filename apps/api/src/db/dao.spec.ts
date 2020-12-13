@@ -127,17 +127,5 @@ describe('CFF# validation from validation file', () => {
     };
   });
   it('invalid record is rejected', async () => {
-    jest.mock('./dao.js', () => (
-      {
-        ...(jest.requireActual('./dao.js')),
-        findPlayerByCffNumber: jest.fn(cffNumber => false)
-      }
-    ))
-    try {
-      await saveCompetitionResults(fields);
-    } catch (err) {
-      expect(err).toBeInstanceOf(MultiMessageError);
-      expect(err.errorMessages[0]).toBe("The CFF# INVALID was not found.")
-    }
   });
 });
