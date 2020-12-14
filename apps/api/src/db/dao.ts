@@ -1,13 +1,23 @@
 import { CompetitionResultsModel, PlayerModel } from './schemas';
 import { decorateResultsWithWarnings } from '@cff/csv';
 import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
+import { MultiMessageError } from '../multi-message-error';
 
 async function savePlayers(results: Player[]) {
     await PlayerModel.insertMany(results);
 }
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
+  await validateCffNumber(competitionResults)
   await new CompetitionResultsModel(competitionResults).save()
+}
+
+async function validateCffNumber(competitionResults: CompetitionResults) {
+  for (const r of competitionResults.results) {
+    if (r.cffNumber && !await findPlayerByCffNumber(r.cffNumber)) {
+      throw new MultiMessageError([`The CFF# ${r.cffNumber} was not found.`])
+    }
+  }
 }
 
 async function findCompetitionResults(): Promise<CompetitionResults[]> {
@@ -31,8 +41,8 @@ async function saveParticipantInCompetition(competitionId: string, participantId
   await save(competition)
 }
 
-function findPlayerByCffNumber(cffNumber: string): boolean {
-  return false
+async function findPlayerByCffNumber(cffNumber: string): Promise<Player> {
+  return PlayerModel.findOne({ cffNumber: cffNumber });
 }
 
 async function queryListById<T>(list: T[], id): Promise<T> {

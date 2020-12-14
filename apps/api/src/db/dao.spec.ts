@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 
 import {savePlayers, saveCompetitionResults} from './dao';
 import { MultiMessageError } from '../multi-message-error';
+import { PlayerModel } from './schemas';
+import { CompetitionResults } from '@cff/api-interfaces';
 
 describe('validation file fields are validated', () => {
   let fields;
@@ -101,7 +103,7 @@ describe('competition fields are validated', () => {
 });
 
 describe('CFF# validation from validation file', () => {
-  let fields;
+  let fields: CompetitionResults;
   beforeEach(() => {
     fields = {
       creator: "Bill Smith",
@@ -122,10 +124,24 @@ describe('CFF# validation from validation file', () => {
         branch: "QC",
         club: "OM",
         rank: 1,
-        validated: "t"
+        validated: "t",
+        warnings: []
       }]
     };
   });
-  it('invalid record is rejected', async () => {
+  it('participant with invalid CFF# is rejected', async () => {
+    PlayerModel.findOne = jest.fn((params) => null)
+    try {
+      await saveCompetitionResults(fields);
+    } catch (err) {
+      expect(err).toBeInstanceOf(MultiMessageError);
+      expect(err.errorMessages[0]).toBe("The CFF# INVALID was not found.")
+    }
+  });
+  it('blank CFF# is not rejected', async () => {
+    fields.results[0].cffNumber = ""
+    PlayerModel.findOne = jest.fn((params) => null)
+    mockOnce('insertOne');
+    await saveCompetitionResults(fields);
   });
 });
