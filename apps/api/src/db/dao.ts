@@ -1,59 +1,44 @@
-import { CompetitionResultsModel, PlayerModel } from './schemas';
 import { decorateResultsWithWarnings } from '@cff/csv';
 import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
 import { MultiMessageError } from '../multi-message-error';
+import * as mygoose from './mygoose'
 
 async function savePlayers(results: Player[]) {
-    await PlayerModel.insertMany(results);
+    await mygoose.savePlayers(results)
 }
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
   await validateCffNumber(competitionResults)
-  await new CompetitionResultsModel(competitionResults).save()
+  await mygoose.saveCompetitionResults(competitionResults)
 }
 
 async function validateCffNumber(competitionResults: CompetitionResults) {
   for (const r of competitionResults.results) {
-    if (r.cffNumber && !await findPlayerByCffNumber(r.cffNumber)) {
+    if (r.cffNumber && !await mygoose.findPlayerByCffNumber(r.cffNumber)) {
       throw new MultiMessageError([`The CFF# ${r.cffNumber} was not found.`])
     }
   }
 }
 
 async function findCompetitionResults(): Promise<CompetitionResults[]> {
-  return CompetitionResultsModel.find({});
+  return mygoose.findCompetitionResults()
 }
 
 async function findCompetitionResult(id): Promise<CompetitionResults> {
-  return await CompetitionResultsModel.findById(id).exec()
+  return mygoose.findCompetitionResult(id)
 }
 
 async function findParticipant(competitionId: string, participantId: string): Promise<CompetitionParticipant> {
-  const competition: CompetitionResults = await CompetitionResultsModel.findById(competitionId).exec()
-  return await queryListById(competition.results, participantId)
-
+  const competition: CompetitionResults = await mygoose.findCompetitionResult(competitionId)
+  return await mygoose.queryListById(competition.results, participantId)
 }
+
 async function saveParticipantInCompetition(competitionId: string, participantId: string, data: Partial<CompetitionParticipant>) {
-  let competition: CompetitionResults = await CompetitionResultsModel.findById(competitionId).exec()
-  const participant =  await queryListById(competition.results, participantId)
+  let competition: CompetitionResults = await mygoose.findCompetitionResult(competitionId)
+  const participant =  await mygoose.queryListById(competition.results, participantId)
   participant.cffNumber = data.cffNumber
   competition = decorateResultsWithWarnings(competition)
-  await save(competition)
+  await mygoose.save(competition)
 }
-
-async function findPlayerByCffNumber(cffNumber: string): Promise<Player> {
-  return PlayerModel.findOne({ cffNumber: cffNumber });
-}
-
-async function queryListById<T>(list: T[], id): Promise<T> {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return await list.id(id)
-}
-
-async function save(entity) {
-  entity.save()
-}
-
 
 export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition }
