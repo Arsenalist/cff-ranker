@@ -1,5 +1,11 @@
 import { decorateResultsWithWarnings } from '@cff/csv';
-import { CompetitionResults, CompetitionParticipant, Player, CompetitionStatus } from '@cff/api-interfaces';
+import {
+  CompetitionResults,
+  CompetitionParticipant,
+  Player,
+  CompetitionStatus,
+  Competition
+} from '@cff/api-interfaces';
 import { MultiMessageError } from '../multi-message-error';
 import * as mygoose from './mygoose'
 
@@ -47,4 +53,13 @@ export async function updateCompetitionStatus(competitionId: string, status: Com
   await mygoose.updateCompetitionResults(competitionResults)
 }
 
-export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition }
+async function createCompetition(competition: Competition) {
+  await mygoose.createCompetition(competition)
+}
+
+async function getCompetitions(): Promise<Competition[]> {
+  return await mygoose.getCompetitions()
+}
+
+
+export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions }

@@ -14,7 +14,7 @@ import { CompetitionResults } from '@cff/api-interfaces';
 export function CompetitionResultsList() {
   const [competitions, setCompetitions] = useState<CompetitionResults[]>([])
   useEffect(() => {
-    axios.get('/api/competition').then(response => {
+    axios.get('/api/competition-results').then(response => {
       setCompetitions(response.data)
     });
   }, []);

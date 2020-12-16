@@ -1,10 +1,16 @@
 import { mockOnce } from '../../mockgoose';
 
 const mongoose = require('mongoose');
-import { savePlayers, saveCompetitionResults, updateCompetitionStatus } from './dao';
+import {
+  savePlayers,
+  saveCompetitionResults,
+  updateCompetitionStatus,
+  createCompetition,
+  getCompetitions
+} from './dao';
 import { MultiMessageError } from '../multi-message-error';
 import { PlayerModel } from './schemas';
-import { CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
+import { Competition, CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
 
 describe('dao.ts', () => {
@@ -154,4 +160,24 @@ describe('dao.ts', () => {
         });
       });
     });
+    describe ('manage competitions', () => {
+      it('adds a competition successfully', async() => {
+        const competition: Competition = {
+          name: 'competition name',
+          code: 'COMP_CODE'
+        }
+        mockOnce('insertOne');
+        const createCompetitionMock = jest.spyOn(mygoose, 'createCompetition')
+        await createCompetition(competition)
+        expect(createCompetitionMock).toHaveBeenCalledWith(competition)
+      })
+      it('fails to add a competition as code already exists', async() => {})
+      it('deletes competition successfully', async() => {})
+      it('updates competition name', async() => {})
+      it('lists all competitions', async() => {
+        const getCompetitionsMock = jest.spyOn(mygoose, 'getCompetitions').mockImplementation()
+        await getCompetitions()
+        expect(getCompetitionsMock).toHaveBeenCalledWith()
+      })
+    })
   });

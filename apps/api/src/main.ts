@@ -1,7 +1,8 @@
 import {
+  createCompetition,
   findCompetitionResult,
   findCompetitionResults,
-  findParticipant,
+  findParticipant, getCompetitions,
   saveCompetitionResults,
   saveParticipantInCompetition,
   savePlayers,
@@ -12,7 +13,13 @@ import { decorateResultsWithWarnings, parseCompetitionFileContents, parseValidat
 import { handleErrors } from './middleware/errors';
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
-import { CompetitionParticipant, CompetitionResults, CompetitionStatus, Player } from '@cff/api-interfaces';
+import {
+  Competition,
+  CompetitionParticipant,
+  CompetitionResults,
+  CompetitionStatus,
+  Player
+} from '@cff/api-interfaces';
 
 const express = require('express')
 
@@ -45,7 +52,7 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   })
 }));
 
-app.get('/api/competition', asyncHandler(async (req, res) => {
+app.get('/api/competition-results', asyncHandler(async (req, res) => {
   const contents: CompetitionResults[] = await findCompetitionResults();
   res.send(contents)
 }));
@@ -70,6 +77,15 @@ app.post('/api/participant/:competitionId/:participantId', asyncHandler(async (r
   res.send(contents)
 }));
 
+app.put('/api/competition', asyncHandler(async (req, res) => {
+  await createCompetition(req.body)
+  res.send()
+}));
+
+app.get('/api/competition', asyncHandler(async (req, res) => {
+  const contents: Competition[] = await getCompetitions();
+  res.send(contents)
+}));
 
 const port = process.env.port || 3333;
 app.use(handleErrors);

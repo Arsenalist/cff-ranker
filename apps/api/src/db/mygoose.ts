@@ -1,6 +1,7 @@
 import { CompetitionResults, Player } from '@cff/api-interfaces';
-import { CompetitionResultsModel, PlayerModel } from './schemas';
+import { CompetitionModel, CompetitionResultsModel, PlayerModel } from './schemas';
 import { mongoose } from '@typegoose/typegoose';
+import { Competition } from '../../../../libs/api-interfaces/src/lib/api-interfaces';
 
 export async function findCompetitionResults(): Promise<CompetitionResults[]> {
   return CompetitionResultsModel.find({});
@@ -31,6 +32,14 @@ export async function queryListById<T>(list: T[], id): Promise<T> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return await list.id(id)
+}
+
+export async function createCompetition(competition: Competition) {
+  await new CompetitionModel(competition).save()
+}
+
+export async function getCompetitions(): Promise<Competition[]> {
+  return CompetitionModel.find({});
 }
 
 export async function save(entity) {

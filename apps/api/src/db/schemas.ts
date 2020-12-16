@@ -1,4 +1,4 @@
-import { CompetitionResults, CompetitionStatus, Player } from '@cff/api-interfaces';
+import { Competition, CompetitionResults, CompetitionStatus, Player } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
 
@@ -45,10 +45,19 @@ const competitionFileRecordSchema = new mongoose.Schema({
   results: {type: [competitionParticipant], validate: v => Array.isArray(v) && v.length > 0, }
 })
 
+const competitionSchema = new mongoose.Schema({
+  name: {type: String, required: true},
+  code: {type: String, required: true}
+});
+
+
 type CompetitionResultsType = CompetitionResults & mongoose.Document;
 const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
 
 type PlayerType = Player & mongoose.Document;
 const PlayerModel = mongoose.model<PlayerType>('Player', playerSchema);
 
-export { PlayerModel, CompetitionResultsModel }
+type CompetitionType = Competition & mongoose.Document;
+const CompetitionModel = mongoose.model<CompetitionType>('Competition', competitionSchema);
+
+export { PlayerModel, CompetitionResultsModel, CompetitionModel }

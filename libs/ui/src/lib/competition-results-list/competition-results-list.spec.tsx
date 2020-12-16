@@ -9,7 +9,7 @@ import '@testing-library/jest-dom';
 const mock = new MockAdapter(require('axios'));
 describe('<CompetitionList/>', () => {
   it('list is shown', async () => {
-    mock.onGet('/api/competition').reply(200, [
+    mock.onGet('/api/competition-results').reply(200, [
       {
         tournamentName: 'tourney name',
         competitionDate: '12/12/2030',

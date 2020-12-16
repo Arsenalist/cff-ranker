@@ -61,4 +61,9 @@ enum CompetitionStatus {
   pending = "pending"
 }
 
-export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus }
+interface Competition {
+  name: string
+  code: string
+}
+
+export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition }
