@@ -1,4 +1,4 @@
-import { CompetitionResults, Player } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionStatus, Player } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
 
@@ -41,6 +41,7 @@ const competitionFileRecordSchema = new mongoose.Schema({
   ageCategory: {type: String, required: true, lowercase: true, enum: ['cadet', 'junior', 'senior', 'veterans', 'minime', 'benjamin','pupille', 'poussin', 'u23']},
   tournamentName: {type: String, required: true},
   competitionShortName: {type: String, required: true},
+  status: {type: String, default: CompetitionStatus.pending, required: true, lowercase: true, enum: [CompetitionStatus.approved, CompetitionStatus.rejected, CompetitionStatus.pending]},
   results: {type: [competitionParticipant], validate: v => Array.isArray(v) && v.length > 0, }
 })
 

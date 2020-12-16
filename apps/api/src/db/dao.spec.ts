@@ -1,10 +1,10 @@
 import { mockOnce } from '../../mockgoose';
 
 const mongoose = require('mongoose');
-import { savePlayers, saveCompetitionResults } from './dao';
+import { savePlayers, saveCompetitionResults, updateCompetitionStatus } from './dao';
 import { MultiMessageError } from '../multi-message-error';
 import { PlayerModel } from './schemas';
-import { CompetitionResults } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
 
 describe('dao.ts', () => {
@@ -135,6 +135,22 @@ describe('dao.ts', () => {
           PlayerModel.findOne = jest.fn((params) => null);
           mockOnce('insertOne');
           await saveCompetitionResults(fields);
+        });
+      });
+      describe('competition results approval/rejection', () => {
+        it('competition is approved', async () => {
+          jest.resetAllMocks()
+          jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
+          const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
+          await updateCompetitionStatus(fields._id, CompetitionStatus.approved )
+          expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.approved}))
+        });
+        it('competition is rejected', async () => {
+          jest.resetAllMocks()
+          jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
+          const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
+          await updateCompetitionStatus(fields._id, CompetitionStatus.rejected )
+          expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.rejected}))
         });
       });
     });

@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 import EditParticipant from '../edit-participant/edit-participant'
 import CompetitionHeader from '../competition-header/competition-header';
 import Dialog from '@material-ui/core/Dialog';
-import { CompetitionResults } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
 
 function checkHasWarnings(competition: CompetitionResults) {
   return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
@@ -42,6 +42,12 @@ export function ViewCompetition() {
     setReload(reload + 1)
   }
 
+  const approve = () => {
+    axios.post(`/api/competition/status`, {competitionId: competition._id, status: CompetitionStatus.approved}).then(response => {
+      setReload(reload + 1)
+    });
+  }
+
 
   useEffect(() => {
     axios.get(`/api/competition/${id}`).then(response => {
@@ -61,9 +67,20 @@ export function ViewCompetition() {
     <div>
       <CompetitionHeader competition={competition} />
       <p>
-      <Button variant="contained" color="primary" data-testid="approve-button" disabled={hasWarnings} >
-        Approve
-      </Button>&nbsp;&nbsp;&nbsp;
+        {competition && competition.status !== CompetitionStatus.approved &&
+        <Button variant="contained" color="primary" data-testid="approve-button" disabled={hasWarnings}
+                onClick={approve}>
+          Approve
+        </Button>
+        }
+        {competition && competition.status === CompetitionStatus.approved &&
+        <Chip
+          data-testid="approved-chip"
+          label="Approved Competition"
+          color="primary"
+          variant="default"
+        />
+        }
       <Button variant="contained" data-testid="reject-button" color="secondary">
         Reject
       </Button>

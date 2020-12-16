@@ -1,11 +1,19 @@
-import { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition } from './db/dao'
-import { handleUpload } from './file-upload'
-import { parseValidationFileContents} from '@cff/csv'
-import { handleErrors } from './middleware/errors'
+import {
+  findCompetitionResult,
+  findCompetitionResults,
+  findParticipant,
+  saveCompetitionResults,
+  saveParticipantInCompetition,
+  savePlayers,
+  updateCompetitionStatus
+} from './db/dao';
+import { handleUpload } from './file-upload';
+import { decorateResultsWithWarnings, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
+import { handleErrors } from './middleware/errors';
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
-import { parseCompetitionFileContents, decorateResultsWithWarnings } from '@cff/csv';
-import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
+import { CompetitionParticipant, CompetitionResults, CompetitionStatus, Player } from '@cff/api-interfaces';
+
 const express = require('express')
 
 const asyncHandler = require('express-async-handler');
@@ -45,6 +53,11 @@ app.get('/api/competition', asyncHandler(async (req, res) => {
 app.get('/api/competition/:id', asyncHandler(async (req, res) => {
   const contents: CompetitionResults = await findCompetitionResult(req.params.id);
   res.send(contents)
+}));
+
+app.post('/api/competition/status', asyncHandler(async (req, res) => {
+  await updateCompetitionStatus(req.body.competitionId, CompetitionStatus[req.body.status]);
+  res.send()
 }));
 
 app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {

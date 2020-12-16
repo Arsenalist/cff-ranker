@@ -1,5 +1,5 @@
 import { decorateResultsWithWarnings } from '@cff/csv';
-import { CompetitionResults, CompetitionParticipant, Player } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionParticipant, Player, CompetitionStatus } from '@cff/api-interfaces';
 import { MultiMessageError } from '../multi-message-error';
 import * as mygoose from './mygoose'
 
@@ -39,6 +39,12 @@ async function saveParticipantInCompetition(competitionId: string, participantId
   participant.cffNumber = data.cffNumber
   competition = decorateResultsWithWarnings(competition)
   await mygoose.save(competition)
+}
+
+export async function updateCompetitionStatus(competitionId: string, status: CompetitionStatus) {
+  const competitionResults = await findCompetitionResult(competitionId)
+  competitionResults.status = status
+  await mygoose.updateCompetitionResults(competitionResults)
 }
 
 export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition }

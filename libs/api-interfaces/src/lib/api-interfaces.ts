@@ -37,6 +37,8 @@ interface CompetitionResults {
 
   competitionShortName: string
 
+  status?: CompetitionStatus
+
   results: CompetitionParticipant[]
 }
 
@@ -53,4 +55,10 @@ interface Player {
   validated?: string
 }
 
-export { CompetitionParticipant, Warning, CompetitionResults, Player }
+enum CompetitionStatus {
+  approved = "approved",
+  rejected = "rejected",
+  pending = "pending"
+}
+
+export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus }
