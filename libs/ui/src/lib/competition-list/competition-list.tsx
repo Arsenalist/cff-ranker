@@ -1,41 +1,39 @@
 import React, { useEffect, useState } from 'react';
 
-import styled from 'styled-components';
-import { Competition, CompetitionResults } from '@cff/api-interfaces';
+import { Competition } from '@cff/api-interfaces';
 import axios from 'axios';
 import { List, ListItem } from '@material-ui/core';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
+import { useForm } from 'react-hook-form';
 
-/* eslint-disable-next-line */
-export interface CompetitionListProps {}
 
-const StyledCompetitionList = styled.div`
-  color: pink;
-`;
-
-export function CompetitionList(props: CompetitionListProps) {
+export function CompetitionList() {
   const [competitions, setCompetitions] = useState<Competition[]>([])
-  const [openAddDialog, setOpenAddDialog] = useState(false)
+  const [openAddDialog, setAddDialogOpen] = useState(false)
+  const [reload, setReload] = useState(0)
+  const { register, handleSubmit } = useForm<Competition>();
   useEffect(() => {
     axios.get('/api/competition').then(response => {
       setCompetitions(response.data)
     });
-  }, []);
+  }, [reload]);
 
-  const doOpenAddDialog = () => {
-    setOpenAddDialog(true)
+  const onSubmit = (data: Competition) => {
+    axios.put('/api/competition', data).then(response => {
+      setReload(reload + 1)
+      setAddDialogOpen(false)
+    });
   }
 
   return (
     <div>
-      <Button data-testid="add-button" onClick={doOpenAddDialog}>Add Competition</Button>
+      <Button data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Competition</Button>
       <List>
       {competitions && competitions.map((row: Competition) =>
       <ListItem>
@@ -43,22 +41,26 @@ export function CompetitionList(props: CompetitionListProps) {
       </ListItem>
       )}
     </List>
-      <Dialog open={openAddDialog} aria-labelledby="form-dialog-title">
+      <Dialog open={openAddDialog}  onClose={() => setAddDialogOpen(false)} aria-labelledby="form-dialog-title">
+        <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle >Add a Competition</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            inputProps={{ "data-testid": "name" }}
             label="Name"
+            name="name"
+            inputRef={register}
             type="text"
             fullWidth
           />
           <TextField
-            autoFocus
             margin="dense"
-            id="code"
-            label="code"
+            inputProps={{ "data-testid": "code" }}
+            label="Code"
+            name="code"
+            inputRef={register}
             type="text"
             fullWidth
           />
@@ -67,10 +69,11 @@ export function CompetitionList(props: CompetitionListProps) {
           <Button color="primary">
             Cancel
           </Button>
-          <Button color="primary">
+          <Button type="submit" color="primary" data-testid="add-button-confirm">
             Add
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
     </div>
   );
