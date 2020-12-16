@@ -11,7 +11,7 @@ import { Chip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { CompetitionResults } from '@cff/api-interfaces';
 
-export function CompetitionList() {
+export function CompetitionResultsList() {
   const [competitions, setCompetitions] = useState<CompetitionResults[]>([])
   useEffect(() => {
     axios.get('/api/competition').then(response => {

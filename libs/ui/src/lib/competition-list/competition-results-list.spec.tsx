@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import { MemoryRouter } from 'react-router-dom';
-import { CompetitionList } from '@cff/ui';
+import { CompetitionResultsList } from '@cff/ui';
 import '@testing-library/jest-dom';
 
 const mock = new MockAdapter(require('axios'));
@@ -17,7 +17,7 @@ describe('<CompetitionList/>', () => {
       }
     ]);
     await act(async () => {
-      render(<MemoryRouter><CompetitionList/></MemoryRouter>);
+      render(<MemoryRouter><CompetitionResultsList/></MemoryRouter>);
     });
     expect(screen.getByText(/tourney name/i)).toBeInTheDocument();
     expect(screen.getByText(/12\/12\/2030/i)).toBeInTheDocument();

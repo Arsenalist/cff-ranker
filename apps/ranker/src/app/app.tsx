@@ -11,7 +11,7 @@ import { ClassificationUploadPage, CompetitionUploadPage, ValidateFileUploadPage
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { CompetitionList } from '@cff/ui';
+import { CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
 import { Messages } from './messages';
 import { MessagesProvider } from './messages-context';
@@ -93,7 +93,7 @@ export const App = () => {
               <Route path="/validation-file-upload" component={ValidateFileUploadPage} />
               <Route path="/competition-file-upload" component={CompetitionUploadPage} />
               <Route path="/classification-file-upload" component={ClassificationUploadPage} />
-              <Route path="/manage-competitions" component={CompetitionList} />
+              <Route path="/manage-competitions" component={CompetitionResultsList} />
               <Route path="/view-rankings" component={ViewRankingsPage} />
               <Route path="/competition/:id" component={ViewCompetition} />
             </Switch>
