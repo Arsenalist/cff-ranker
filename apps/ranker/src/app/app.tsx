@@ -11,7 +11,7 @@ import { ClassificationUploadPage, CompetitionUploadPage, ValidateFileUploadPage
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { CompetitionResultsList } from '@cff/ui';
+import { CompetitionList, CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
 import { Messages } from './messages';
 import { MessagesProvider } from './messages-context';
@@ -80,7 +80,8 @@ export const App = () => {
                   <MenuItem onClick={handleClose} component={Link} to="/validation-file-upload">Upload Players</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/competition-file-upload">Upload Competition Results</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/classification-file-upload">Upload Classification File</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Competitions Results</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Manage Competitions</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/manage-results">Competitions Results</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/view-rankings">View Rankings</MenuItem>
                 </Menu>
               </Toolbar>
@@ -93,7 +94,8 @@ export const App = () => {
               <Route path="/validation-file-upload" component={ValidateFileUploadPage} />
               <Route path="/competition-file-upload" component={CompetitionUploadPage} />
               <Route path="/classification-file-upload" component={ClassificationUploadPage} />
-              <Route path="/manage-competitions" component={CompetitionResultsList} />
+              <Route path="/manage-results" component={CompetitionResultsList} />
+              <Route path="/manage-competitions" component={CompetitionList} />
               <Route path="/view-rankings" component={ViewRankingsPage} />
               <Route path="/competition/:id" component={ViewCompetition} />
             </Switch>
