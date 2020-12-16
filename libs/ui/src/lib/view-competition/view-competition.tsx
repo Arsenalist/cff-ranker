@@ -42,12 +42,22 @@ export function ViewCompetition() {
     setReload(reload + 1)
   }
 
-  const approve = () => {
-    axios.post(`/api/competition/status`, {competitionId: competition._id, status: CompetitionStatus.approved}).then(response => {
-      setReload(reload + 1)
+  function changeStatus(status: CompetitionStatus) {
+    axios.post(`/api/competition/status`, {
+      competitionId: competition._id,
+      status: status
+    }).then(response => {
+      setReload(reload + 1);
     });
   }
 
+  const approve = () => {
+    changeStatus(CompetitionStatus.approved);
+  }
+
+  const reject = () => {
+    changeStatus(CompetitionStatus.rejected);
+  }
 
   useEffect(() => {
     axios.get(`/api/competition/${id}`).then(response => {
@@ -81,9 +91,19 @@ export function ViewCompetition() {
           variant="default"
         />
         }
-      <Button variant="contained" data-testid="reject-button" color="secondary">
-        Reject
-      </Button>
+        {competition && competition.status !== CompetitionStatus.rejected &&
+        <Button variant="contained" data-testid="reject-button" color="secondary" onClick={reject}>
+          Reject
+        </Button>
+        }
+        {competition && competition.status === CompetitionStatus.rejected &&
+        <Chip
+          data-testid="rejected-chip"
+          label="Rejected Competition"
+          color="secondary"
+          variant="default"
+        />
+        }
       </p>
       <p>
         {introMessage}
