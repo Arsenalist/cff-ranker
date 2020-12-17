@@ -11,7 +11,9 @@ import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import { useForm } from 'react-hook-form';
-
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 export function CompetitionList() {
   const [competitions, setCompetitions] = useState<Competition[]>([])
@@ -31,6 +33,13 @@ export function CompetitionList() {
     });
   }
 
+  const onDelete = (code: string) => {
+    axios.delete('/api/competition', {data: {code: code}}).then(() => {
+      setReload(reload + 1)
+      setAddDialogOpen(false)
+    });
+  }
+
   return (
     <div>
       <Button data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Competition</Button>
@@ -38,6 +47,11 @@ export function CompetitionList() {
       {competitions && competitions.map((row: Competition) =>
       <ListItem>
         <ListItemText primary={row.name} secondary={row.code} />
+        <ListItemSecondaryAction>
+          <IconButton edge="end" aria-label="delete" data-testid="delete-button" onClick={() => onDelete(row.code)}>
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
       </ListItem>
       )}
     </List>

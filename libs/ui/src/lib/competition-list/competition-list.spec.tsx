@@ -32,7 +32,7 @@ describe('CompetitionList', () => {
     });
     expect(screen.getByText(/big fencing tournament/i)).toBeInTheDocument();
   });
-  it('opens up add dialog', async() => {
+  it('adds a competition', async() => {
     mock.onPut('/api/competition').reply(200)
     await act(async () => {
       await render(<MemoryRouter><CompetitionList/></MemoryRouter>, { container: document.body } );
@@ -46,4 +46,33 @@ describe('CompetitionList', () => {
     });
     expect(screen.getByText(/my new competition/i)).toBeInTheDocument();
   });
+  it('deletes a competition', async() => {
+    jest.resetAllMocks()
+    mock.reset()
+    mock.onGet('/api/competition').replyOnce(200, [
+      {
+        name: 'big fencing tournament',
+        weapon: 'code'
+      },
+      {
+        name: 'my new competition',
+        weapon: 'COMPCODE'
+      }
+    ]).onGet('/api/competition').replyOnce(200, [
+      {
+        name: 'big fencing tournament',
+        weapon: 'code'
+      }
+    ]);
+    mock.onDelete('/api/competition').reply(200)
+    await act(async () => {
+      await render(<MemoryRouter><CompetitionList/></MemoryRouter>);
+    });
+    expect(screen.getByText(/my new competition/i)).toBeInTheDocument();
+    await act(async () => {
+      await userEvent.click(screen.getAllByTestId("delete-button")[1]);
+    });
+    expect(screen.queryByText(/my new competition/i)).toBeNull()
+  });
+
 });
