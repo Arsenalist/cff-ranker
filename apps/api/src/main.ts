@@ -1,5 +1,6 @@
 import {
   createCompetition,
+  deleteCompetition,
   findCompetitionResult,
   findCompetitionResults,
   findParticipant, getCompetitions,
@@ -85,6 +86,11 @@ app.put('/api/competition', asyncHandler(async (req, res) => {
 app.get('/api/competition', asyncHandler(async (req, res) => {
   const contents: Competition[] = await getCompetitions();
   res.send(contents)
+}));
+
+app.delete('/api/competition', asyncHandler(async (req, res) => {
+  await deleteCompetition(req.body.code);
+  res.send()
 }));
 
 const port = process.env.port || 3333;

@@ -57,9 +57,13 @@ async function createCompetition(competition: Competition) {
   await mygoose.createCompetition(competition)
 }
 
+async function deleteCompetition(code: string) {
+  await mygoose.deleteCompetition(code)
+}
+
 async function getCompetitions(): Promise<Competition[]> {
   return await mygoose.getCompetitions()
 }
 
 
-export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions }
+export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition }

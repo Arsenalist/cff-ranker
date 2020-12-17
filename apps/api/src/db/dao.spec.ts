@@ -6,7 +6,8 @@ import {
   saveCompetitionResults,
   updateCompetitionStatus,
   createCompetition,
-  getCompetitions
+  getCompetitions,
+  deleteCompetition
 } from './dao';
 import { MultiMessageError } from '../multi-message-error';
 import { PlayerModel } from './schemas';
@@ -172,12 +173,17 @@ describe('dao.ts', () => {
         expect(createCompetitionMock).toHaveBeenCalledWith(competition)
       })
       it('fails to add a competition as code already exists', async() => {})
-      it('deletes competition successfully', async() => {})
-      it('updates competition name', async() => {})
+      it('deletes competition successfully', async() => {
+        mockOnce('deleteOne');
+        const code = "myCompetitionCode"
+        const deleteCompetitionMock = jest.spyOn(mygoose, 'deleteCompetition')
+        await deleteCompetition(code)
+        expect(deleteCompetitionMock).toHaveBeenCalledWith(code)
+      })
       it('lists all competitions', async() => {
         const getCompetitionsMock = jest.spyOn(mygoose, 'getCompetitions').mockImplementation()
         await getCompetitions()
         expect(getCompetitionsMock).toHaveBeenCalledWith()
       })
     })
-  });
+});
