@@ -47,7 +47,7 @@ const competitionFileRecordSchema = new mongoose.Schema({
 
 const competitionSchema = new mongoose.Schema({
   name: {type: String, required: true},
-  code: {type: String, required: true}
+  code: {type: String, required: true, unique: true}
 });
 
 

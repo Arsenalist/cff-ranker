@@ -54,7 +54,15 @@ export async function updateCompetitionStatus(competitionId: string, status: Com
 }
 
 async function createCompetition(competition: Competition) {
-  await mygoose.createCompetition(competition)
+  try {
+    await mygoose.createCompetition(competition)
+  } catch (e) {
+    if (e.code && e.code === 11000) {
+      throw new MultiMessageError([`Competition with code "${competition.code}" already exists.`])
+    } else {
+      throw e
+    }
+}
 }
 
 async function deleteCompetition(code: string) {
