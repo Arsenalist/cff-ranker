@@ -6,8 +6,7 @@ import { act } from 'react-dom/test-utils';
 import MockAdapter from 'axios-mock-adapter';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
-const axios = require('axios')
-const mock = new MockAdapter(axios);
+const mock = new MockAdapter(require('axios'));
 describe('UploadCompetitionResults', () => {
   let competitions
   beforeEach(()=> {
