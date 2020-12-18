@@ -7,11 +7,11 @@ import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { createMuiTheme, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from '@material-ui/core/AppBar';
-import { ClassificationUploadPage, CompetitionUploadPage, ValidateFileUploadPage, ViewRankingsPage } from './pages';
+import { ClassificationUploadPage, ValidateFileUploadPage, ViewRankingsPage } from './pages';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { CompetitionList, CompetitionResultsList } from '@cff/ui';
+import { UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
 import { Messages } from './messages';
 import { MessagesProvider } from './messages-context';
@@ -92,7 +92,7 @@ export const App = () => {
             <Messages />
             <Switch>
               <Route path="/validation-file-upload" component={ValidateFileUploadPage} />
-              <Route path="/competition-file-upload" component={CompetitionUploadPage} />
+              <Route path="/competition-file-upload" component={UploadCompetitionResults} />
               <Route path="/classification-file-upload" component={ClassificationUploadPage} />
               <Route path="/manage-results" component={CompetitionResultsList} />
               <Route path="/manage-competitions" component={CompetitionList} />
