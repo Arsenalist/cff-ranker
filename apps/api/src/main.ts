@@ -46,6 +46,10 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const contents = await readFile(filePathOnDisk);
   const results: CompetitionResults = await parseCompetitionFileContents(contents);
   const decoratedResults: CompetitionResults = decorateResultsWithWarnings(results);
+  if (req.body && !req.body.code) {
+    throw new Error("Competition code is required.")
+  }
+  results.competitionShortName = req.body.code
   await saveCompetitionResults(decoratedResults);
   res.send({
     rowCount: results.results.length,

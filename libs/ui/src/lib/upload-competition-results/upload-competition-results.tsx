@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { CompetitionResults } from '@cff/api-interfaces';
+import { Competition, CompetitionResults } from '@cff/api-interfaces';
 import { CompetitionHeader, UploadFile } from '../..';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
@@ -9,19 +9,59 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
+import { Autocomplete } from '@material-ui/lab';
+import { TextField } from '@material-ui/core';
+import axios from 'axios';
+import { MessagesContext } from '../../../../../apps/ranker/src/app/messages-context';
 
 export function UploadCompetitionResults() {
-  const [competition, setCompetition] = useState<CompetitionResults>(null);
+  const [competitionResults, setCompetitionResults] = useState<CompetitionResults>(null);
+  const [competition, setCompetition] = useState<Competition>(null);
+  const [competitions, setCompetitions] = useState<Competition[]>([]);
+  const { addErrors } = useContext(MessagesContext);
+
+  useEffect(() => {
+    axios.get('/api/competition').then(response => {
+      setCompetitions(response.data)
+    });
+  }, []);
+
+  const collectFormData = () => {
+    if (competition) {
+      return { name: 'code', value: competition.code }
+    } else {
+      return null
+    }
+  }
+
+  const validate = () => {
+    if (competition == null) {
+      addErrors(["Please select a competition."])
+      return false
+    }
+    return true
+  }
 
   return (
     <div>
       <p>
+        Please select a competition code.
+      </p>
+      <Autocomplete
+        onChange={(event, value: Competition) => setCompetition(value)}
+        data-testid="competition-code"
+        options={competitions}
+        getOptionLabel={(option) => `${option.code} - ${option.name}`}
+        style={{ width: 300 }}
+        renderInput={(params) => <TextField inputProps={{"a": "b", "data-testid": "competitionResults-code-input"}} {...params} label="Competition" variant="outlined" />}
+      />
+      <p>
         Please specify a competition file.
       </p>
-      <UploadFile postUploadHandler={setCompetition} endpoint = "/api/upload-competition-file"/>
-      {competition &&
+      <UploadFile preUploadHandler={collectFormData} postUploadHandler={setCompetitionResults} endpoint = "/api/upload-competition-file" validate={validate}/>
+      {competitionResults &&
       <div>
-        <CompetitionHeader competition={competition} />
+        <CompetitionHeader competition={competitionResults} />
         <TableContainer component={Paper}>
           <Table>
             <TableHead>
@@ -38,7 +78,7 @@ export function UploadCompetitionResults() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {competition.results.map((row) => (
+              {competitionResults.results.map((row) => (
                 <TableRow key={row.cffNumber}>
                   <TableCell component="th" scope="row">
                     {row.name} {row.surname}

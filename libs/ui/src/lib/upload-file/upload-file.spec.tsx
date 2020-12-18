@@ -42,4 +42,24 @@ describe('UploadFile', () => {
     expect(screen.getByText(/No file selected/i)).toBeInTheDocument();
     expect(postUploadHandler).not.toHaveBeenCalled()
   });
+
+  it('pre-handler is called', async () => {
+    const preUploadHandler = jest.fn()
+    act(() => { render(<UploadFile preUploadHandler={preUploadHandler}  postUploadHandler={postUploadHandler} endpoint={ endpoint } />); });
+    await act(async() => {
+      await userEvent.upload(screen.getByTestId("file-select-button"), new File(['contents'], 'name.csv'));
+      await userEvent.click(screen.getByTestId("upload-button"));
+    });
+    expect(preUploadHandler).toHaveBeenCalled()
+  });
+
+  it('when validate fails, no file upload happens', async () => {
+    const validate = jest.fn().mockReturnValue(false)
+    act(() => { render(<UploadFile validate={validate}  postUploadHandler={postUploadHandler} endpoint={ endpoint } />); });
+    await act(async() => {
+      await userEvent.upload(screen.getByTestId("file-select-button"), new File(['contents'], 'name.csv'));
+      await userEvent.click(screen.getByTestId("upload-button"));
+    });
+    expect(postUploadHandler).not.toHaveBeenCalled()
+  });
 });

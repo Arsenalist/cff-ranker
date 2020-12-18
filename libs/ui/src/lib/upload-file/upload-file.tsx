@@ -31,6 +31,15 @@ export function UploadFile(props) {
       selectedFile,
       selectedFile.name
     );
+    if (props.preUploadHandler) {
+      const o = props.preUploadHandler()
+      if (o) {
+        formData.append(o.name, o.value)
+      }
+    }
+    if (props.validate && !props.validate()) {
+        return
+    }
     axios.post(props.endpoint, formData).then(response => {
       addMessages([`${response.data.rowCount} rows uploaded.`])
       props.postUploadHandler(response.data.competition)
