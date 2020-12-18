@@ -87,7 +87,6 @@ describe('dao.ts', () => {
         await savePlayers(fields);
       });
     });
-
     describe('competition fields are validated', () => {
       it('check for required fields at top level', async () => {
         try {
@@ -100,6 +99,7 @@ describe('dao.ts', () => {
           fields.tournamentName = null;
           fields.competitionShortName = null;
           jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b'})
           await saveCompetitionResults(fields);
           fail('should not reach here');
         } catch (err) {
@@ -118,9 +118,20 @@ describe('dao.ts', () => {
           expect(Object.keys(err.errors).length).toBe(1);
         }
       });
+      it('competition code does not exist', async () => {
+        jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({})
+        jest.spyOn(mygoose, 'getCompetition').mockResolvedValue(null)
+        try {
+          await saveCompetitionResults(fields)
+          fail("should not get here")
+        } catch (e) {
+          expect(e.errorMessages[0]).toBe(`The competition code "${fields.competitionShortName}" does not exist.`)
+        }
+      })
       it('results are valid', async () => {
         mockOnce('insertOne');
         jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+        jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b'})
         await saveCompetitionResults(fields);
       });
       describe('CFF# validation from validation file', () => {
@@ -140,6 +151,7 @@ describe('dao.ts', () => {
         it('blank CFF# is not rejected', async () => {
           fields.results[0].cffNumber = '';
           PlayerModel.findOne = jest.fn((params) => null);
+          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b'})
           mockOnce('insertOne');
           await saveCompetitionResults(fields);
         });

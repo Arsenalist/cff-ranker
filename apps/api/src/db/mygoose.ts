@@ -42,6 +42,10 @@ export async function getCompetitions(): Promise<Competition[]> {
   return CompetitionModel.find({});
 }
 
+export async function getCompetition(code: string): Promise<Competition> {
+  return CompetitionModel.findOne({code: code})
+}
+
 export async function deleteCompetition(code: string) {
   await CompetitionModel.deleteOne({code: code})
 }
