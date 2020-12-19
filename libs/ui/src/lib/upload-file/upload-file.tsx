@@ -3,7 +3,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import { Chip } from '@material-ui/core';
-import { MessagesContext } from '../../../../../apps/ranker/src/app/messages-context';
+import { MessagesContext } from '../messages/messages-context';
 
 export function UploadFile(props) {
   const [selectedFile, setSelectedFile] = useState(null);

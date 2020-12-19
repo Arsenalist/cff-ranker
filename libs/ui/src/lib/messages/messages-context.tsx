@@ -38,5 +38,3 @@ function MessagesProvider({ children }) {
     </MessagesContext.Provider>
   );
 }
-
-export {MessagesProvider, MessagesContext}

@@ -13,8 +13,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import { UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
-import { Messages } from './messages';
-import { MessagesProvider } from './messages-context';
+import { Messages } from '@cff/ui';
+import { MessagesProvider } from '@cff/ui';
 
 
 const theme = createMuiTheme({

@@ -12,7 +12,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { Autocomplete } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
 import axios from 'axios';
-import { MessagesContext } from '../../../../../apps/ranker/src/app/messages-context';
+import { MessagesContext } from '../messages/messages-context';
 
 export function UploadCompetitionResults() {
   const [competitionResults, setCompetitionResults] = useState<CompetitionResults>(null);
