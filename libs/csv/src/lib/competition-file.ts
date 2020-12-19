@@ -46,6 +46,21 @@ function parseHeaderRows(fileContents: string) {
 
 function validateCompetition(competition: CompetitionResults) {
   const errors: string[] = []
+  if (!competition.competitionDate) {
+    errors.push("The competition date is not specified.")
+  }
+  if (!competition.weapon) {
+    errors.push("The weapon is not specified.")
+  }
+  if (!competition.gender) {
+    errors.push("The gender is not specified.")
+  }
+  if (!competition.ageCategory) {
+    errors.push("The age category is not specified.")
+  }
+  if (!competition.tournamentName) {
+    errors.push("The tournament name is not specified.")
+  }
   for (let i = 0; i < competition.results.length; i++) {
     const p = competition.results[i]
     const row = i + 1

@@ -18,6 +18,43 @@ describe('competition file csv parsing', () => {
     expect(result.tournamentName).toBe("FM CHALLENGE DE LA VILLE DE LONGUEUIL")
     expect(result.competitionShortName).toBe("FM OM")
   });
+  it ('weapon is not provided', async() => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM"
+    try {
+      await parseCompetitionFileContents(csv);
+      fail("should not get here")
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("The weapon is not specified.")
+    }
+  })
+  it ('other header fields are not provided', async() => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      ";;;;;FM OM"
+    try {
+      await parseCompetitionFileContents(csv);
+      fail("should not get here")
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("The competition date is not specified.")
+      expect(e.errorMessages[1]).toBe("The weapon is not specified.")
+      expect(e.errorMessages[2]).toBe("The gender is not specified.")
+      expect(e.errorMessages[3]).toBe("The age category is not specified.")
+      expect(e.errorMessages[4]).toBe("The tournament name is not specified.")
+
+    }
+  })
+  it ('header and results are not able to be validated', async() => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+    "TEISSEIRE,Nicolas,,M,CAN,,;,,;C06-0516,QC,OM,,;1,t";
+    try {
+      await parseCompetitionFileContents(csv);
+      fail("should not get here")
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("The weapon is not specified.")
+      expect(e.errorMessages[1]).toBe("Line 1: Missing YOB.")
+    }
+  })
   it('parse player results', async () => {
     const result = await parseCompetitionFileContents(csv);
     expect(result.results[0].surname).toBe("TEISSEIRE")
@@ -105,8 +142,23 @@ describe('competition file errors', () => {
 describe('decorate competition results with warnings', () => {
   it('CFF#', async () => {
     const competiton = {
+      weapon: 'fleuret',
+      gender: 'M',
+      ageCategory: 'senior',
+      tournamentName: 'FM OM',
+      competitionShortName: 'FM OM',
       results: [{
-        name: 'johnny'
+        name: 'johnny',
+        surname: 'smith',
+        gender: 'M',
+        cffNumber: '',
+        country: 'CAN',
+        branch: 'ON',
+        club: 'CL',
+        yearOfBirth: 1980,
+        rank: 1,
+        validated: 'y',
+        warnings: []
       }]
     }
     const decorated = decorateResultsWithWarnings(competiton)
