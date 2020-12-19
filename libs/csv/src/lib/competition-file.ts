@@ -88,7 +88,7 @@ function validateCompetition(competition: CompetitionResults) {
     if (!p.rank) {
       errors.push(`Line ${row}: Missing Rank.`)
     }
-    if (!p.rank) {
+    if (!p.validated) {
       errors.push(`Line ${row}: Missing Validated.`)
     }
   }
