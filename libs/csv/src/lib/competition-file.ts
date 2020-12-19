@@ -46,51 +46,30 @@ function parseHeaderRows(fileContents: string) {
 
 function validateCompetition(competition: CompetitionResults) {
   const errors: string[] = []
-  if (!competition.competitionDate) {
-    errors.push("The competition date is not specified.")
-  }
-  if (!competition.weapon) {
-    errors.push("The weapon is not specified.")
-  }
-  if (!competition.gender) {
-    errors.push("The gender is not specified.")
-  }
-  if (!competition.ageCategory) {
-    errors.push("The age category is not specified.")
-  }
-  if (!competition.tournamentName) {
-    errors.push("The tournament name is not specified.")
-  }
+  addMessageToErrorsListIfTestFails(errors, () => !!competition.competitionDate, "The competition date is not specified.")
+  addMessageToErrorsListIfTestFails(errors, () => !!competition.weapon, "The weapon is not specified.")
+  addMessageToErrorsListIfTestFails(errors, () => !!competition.gender, "The gender is not specified.")
+  addMessageToErrorsListIfTestFails(errors, () => !!competition.ageCategory, "The age category is not specified.")
+  addMessageToErrorsListIfTestFails(errors, () => !!competition.tournamentName, "The tournament name is not specified.")
   for (let i = 0; i < competition.results.length; i++) {
     const p = competition.results[i]
     const row = i + 1
-    if (!p.surname) {
-      errors.push(`Line ${row}: Missing Surname.`)
-    }
-    if (!p.name) {
-      errors.push(`Line ${row}: Missing Name.`)
-    }
-    if (!p.yearOfBirth) {
-      errors.push(`Line ${row}: Missing YOB.`)
-    }
-    if (!p.gender) {
-      errors.push(`Line ${row}: Missing Gender.`)
-    }
-    if (!p.country) {
-      errors.push(`Line ${row}: Missing Country.`)
-    }
-    if (!p.branch) {
-      errors.push(`Line ${row}: Missing Branch.`)
-    }
-    if (!p.club) {
-      errors.push(`Line ${row}: Missing Club.`)
-    }
-    if (!p.rank) {
-      errors.push(`Line ${row}: Missing Rank.`)
-    }
-    if (!p.validated) {
-      errors.push(`Line ${row}: Missing Validated.`)
-    }
+    addMessageToErrorsListIfTestFails(errors, () => !!p.surname, `Line ${row}: Missing Surname.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.name, `Line ${row}: Missing Name.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.yearOfBirth, `Line ${row}: Missing YOB.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.gender, `Line ${row}: Missing Gender.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.country, `Line ${row}: Missing Country.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.branch, `Line ${row}: Missing Branch.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.club, `Line ${row}: Missing Club.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.rank, `Line ${row}: Missing Rank.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.validated, `Line ${row}: Missing Validated.`)
+  }
+  return errors
+}
+
+function addMessageToErrorsListIfTestFails(errors: string[], test: () => boolean, message: string): string[] {
+  if (!test()) {
+    errors.push(message)
   }
   return errors
 }
