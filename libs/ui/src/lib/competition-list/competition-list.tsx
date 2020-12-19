@@ -42,7 +42,7 @@ export function CompetitionList() {
 
   return (
     <div>
-      <Button data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Competition</Button>
+      <Button variant="contained" color="primary" data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Competition</Button>
       <List>
       {competitions && competitions.map((row: Competition) =>
       <ListItem>
