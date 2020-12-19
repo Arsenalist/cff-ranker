@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export function Messages() {
   const classes = useStyles();
-  const { errors, messages, addErrors } = useContext(MessagesContext);
+  const { errors, messages, addErrors, clear } = useContext(MessagesContext);
 
   axios.interceptors.response.use(function(response) {
     return response;
@@ -25,6 +25,15 @@ export function Messages() {
     if (error.response) {
       addErrors(error.response.data.messages);
     }
+    return Promise.reject(error);
+  });
+
+  axios.interceptors.request.use(function (config) {
+    // Do something before request is sent
+    clear()
+    return config;
+  }, function (error) {
+    // Do something with request error
     return Promise.reject(error);
   });
 

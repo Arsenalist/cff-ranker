@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
 import { Competition, CompetitionResults } from '@cff/api-interfaces';
-import { CompetitionHeader, UploadFile } from '../..';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -13,6 +12,9 @@ import { Autocomplete } from '@material-ui/lab';
 import { TextField } from '@material-ui/core';
 import axios from 'axios';
 import { MessagesContext } from '../messages/messages-context';
+import UploadFile from '../upload-file/upload-file';
+import CompetitionHeader from '../competition-header/competition-header';
+
 
 export function UploadCompetitionResults() {
   const [competitionResults, setCompetitionResults] = useState<CompetitionResults>(null);

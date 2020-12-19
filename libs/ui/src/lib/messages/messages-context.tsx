@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useState, useCallback  } from 'react';
 
-const MessagesContext = React.createContext(
+export const MessagesContext = React.createContext(
   {
     errors: [],
     messages: [],
@@ -11,7 +11,7 @@ const MessagesContext = React.createContext(
   }
 );
 
-function MessagesProvider({ children }) {
+export function MessagesProvider({ children }) {
   const [errors, setErrors] = useState([]);
   const [messages, setMessages] = useState([]);
 

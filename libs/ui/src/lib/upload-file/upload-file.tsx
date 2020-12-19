@@ -75,3 +75,5 @@ export function UploadFile(props) {
     </div>
   );
 }
+
+export default UploadFile
