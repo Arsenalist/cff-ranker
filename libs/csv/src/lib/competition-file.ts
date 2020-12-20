@@ -44,6 +44,10 @@ function parseHeaderRows(fileContents: string) {
   return { line1Values, line2Values };
 }
 
+function isCffNumberFormatValid(cffNumber: string) {
+  return cffNumber.match(/[A-Z]\d{2}-\d{4}/);
+}
+
 function validateCompetition(competition: CompetitionResults) {
   const errors: string[] = []
   addMessageToErrorsListIfTestFails(errors, () => !!competition.competitionDate, "The competition date is not specified.")
@@ -64,7 +68,7 @@ function validateCompetition(competition: CompetitionResults) {
     addMessageToErrorsListIfTestFails(errors, () => !!p.rank, `Line ${row}: Missing Rank.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.validated, `Line ${row}: Missing Validated.`)
     addMessageToErrorsListIfTestFails(errors, () => {
-      if (p.cffNumber && p.cffNumber.match(/[A-Z]\d{2}-\d{4}/)) {
+      if (p.cffNumber && isCffNumberFormatValid(p.cffNumber)) {
         return true
       } else {
         return !p.cffNumber;
