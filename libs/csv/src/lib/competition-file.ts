@@ -63,6 +63,13 @@ function validateCompetition(competition: CompetitionResults) {
     addMessageToErrorsListIfTestFails(errors, () => !!p.club, `Line ${row}: Missing Club.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.rank, `Line ${row}: Missing Rank.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.validated, `Line ${row}: Missing Validated.`)
+    addMessageToErrorsListIfTestFails(errors, () => {
+      if (p.cffNumber && p.cffNumber.match(/[A-Z]\d{2}-\d{4}/)) {
+        return true
+      } else {
+        return !p.cffNumber;
+      }
+    }, `Line ${row}: CFF# ${p.cffNumber} is of incorrect format.`)
   }
   return errors
 }

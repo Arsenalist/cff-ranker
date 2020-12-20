@@ -137,6 +137,56 @@ describe('competition file errors', () => {
       expect(e.errorMessages[9]).toBe("Line 2: Missing Name.")
     }
   });
+  it('Incorrect CFF# (all letters)', async () => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+      "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;LETTERS,QC,OM,,;1,t"
+    try {
+      await parseCompetitionFileContents(csv);
+      fail('it should not reach here');
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("Line 1: CFF# LETTERS is of incorrect format.")
+    }
+  });
+  it('Incorrect CFF# (two letters to start)', async () => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+      "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;CC12-123,QC,OM,,;1,t"
+    try {
+      await parseCompetitionFileContents(csv);
+      fail('it should not reach here');
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("Line 1: CFF# CC12-123 is of incorrect format.")
+    }
+  });
+  it('Incorrect CFF# (no dash)', async () => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+      "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;C12123,QC,OM,,;1,t"
+    try {
+      await parseCompetitionFileContents(csv);
+      fail('it should not reach here');
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("Line 1: CFF# C12123 is of incorrect format.")
+    }
+  });
+  it('Incorrect CFF# (not enough trailing digits)', async () => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+      "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;C12-123,QC,OM,,;1,t"
+    try {
+      await parseCompetitionFileContents(csv);
+      fail('it should not reach here');
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe("Line 1: CFF# C12-123 is of incorrect format.")
+    }
+  });
+  it('Correct CFF# format', async () => {
+    const csv = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+      "TEISSEIRE,Nicolas,1986,M,CAN,,;,,;C12-1234,QC,OM,,;1,t"
+    await parseCompetitionFileContents(csv);
+  });
 });
 
 describe('decorate competition results with warnings', () => {
