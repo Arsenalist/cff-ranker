@@ -66,4 +66,13 @@ interface Competition {
   code: string
 }
 
-export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition }
+interface PlayerClassification {
+  weapon: string
+  class: string
+  lastName: string
+  firstName: string
+  cffNumber: string
+  club: string
+  province: string
+}
+export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification }
