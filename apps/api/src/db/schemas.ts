@@ -1,4 +1,4 @@
-import { Competition, CompetitionResults, CompetitionStatus, Player } from '@cff/api-interfaces';
+import { Competition, CompetitionResults, CompetitionStatus, Player, PlayerClassification } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
 
@@ -50,6 +50,15 @@ const competitionSchema = new mongoose.Schema({
   code: {type: String, required: true, unique: true}
 });
 
+const playerClassificationSchema = new mongoose.Schema({
+  weapon:  {type: String, required: true},
+  class:  {type: String, required: true},
+  lastName:  {type: String, required: true},
+  firstName:  {type: String, required: true},
+  cffNumber:  {type: String, required: true},
+  club:  {type: String, required: true},
+  province:  {type: String, required: true}
+});
 
 type CompetitionResultsType = CompetitionResults & mongoose.Document;
 const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
@@ -60,4 +69,7 @@ const PlayerModel = mongoose.model<PlayerType>('Player', playerSchema);
 type CompetitionType = Competition & mongoose.Document;
 const CompetitionModel = mongoose.model<CompetitionType>('Competition', competitionSchema);
 
-export { PlayerModel, CompetitionResultsModel, CompetitionModel }
+type PlayerClassificationType = PlayerClassification & mongoose.Document;
+const PlayerClassificationModel = mongoose.model<PlayerClassificationType>('PlayerClassification', playerClassificationSchema);
+
+export { PlayerModel, CompetitionResultsModel, CompetitionModel, PlayerClassificationModel }

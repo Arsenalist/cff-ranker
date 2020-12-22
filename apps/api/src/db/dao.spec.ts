@@ -7,11 +7,12 @@ import {
   updateCompetitionStatus,
   createCompetition,
   getCompetitions,
-  deleteCompetition
+  deleteCompetition,
+  saveClassifications
 } from './dao';
 import { MultiMessageError } from '../multi-message-error';
 import { PlayerModel } from './schemas';
-import { Competition, CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
+import { Competition, CompetitionResults, CompetitionStatus, PlayerClassification } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
 
 describe('dao.ts', () => {
@@ -215,4 +216,13 @@ describe('dao.ts', () => {
         expect(getCompetitionsMock).toHaveBeenCalledWith()
       })
     })
+    describe('save classification file', () => {
+    it('classification record saving is successful', async () => {
+      mockOnce('insertMany');
+      const classifications: PlayerClassification[] = [
+        {weapon: 'ME', class: 'A', lastName: 'Jones', firstName: 'Jim', cffNumber: 'C06-1234', club: 'ABC', province: 'ON'}
+      ]
+      await saveClassifications(classifications);
+    });
+  });
 });

@@ -1,5 +1,5 @@
-import { CompetitionResults, Player } from '@cff/api-interfaces';
-import { CompetitionModel, CompetitionResultsModel, PlayerModel } from './schemas';
+import { CompetitionResults, Player, PlayerClassification } from '@cff/api-interfaces';
+import { CompetitionModel, CompetitionResultsModel, PlayerClassificationModel, PlayerModel } from './schemas';
 import { mongoose } from '@typegoose/typegoose';
 import { Competition } from '../../../../libs/api-interfaces/src/lib/api-interfaces';
 
@@ -48,6 +48,10 @@ export async function getCompetition(code: string): Promise<Competition> {
 
 export async function deleteCompetition(code: string) {
   await CompetitionModel.deleteOne({code: code})
+}
+
+export async function saveClassifications(classifications: PlayerClassification[]) {
+  await PlayerClassificationModel.insertMany(classifications);
 }
 
 export async function save(entity) {

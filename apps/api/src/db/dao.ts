@@ -4,7 +4,8 @@ import {
   CompetitionParticipant,
   Player,
   CompetitionStatus,
-  Competition
+  Competition,
+  PlayerClassification
 } from '@cff/api-interfaces';
 import { MultiMessageError } from '../multi-message-error';
 import * as mygoose from './mygoose'
@@ -81,5 +82,8 @@ async function getCompetitions(): Promise<Competition[]> {
   return await mygoose.getCompetitions()
 }
 
+async function saveClassifications(classifications: PlayerClassification[]) {
+  return await mygoose.saveClassifications(classifications)
+}
 
-export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition }
+export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition, saveClassifications }
