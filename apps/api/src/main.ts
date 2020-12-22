@@ -7,10 +7,11 @@ import {
   saveCompetitionResults,
   saveParticipantInCompetition,
   savePlayers,
-  updateCompetitionStatus
+  updateCompetitionStatus,
+  saveClassifications
 } from './db/dao';
 import { handleUpload } from './file-upload';
-import { decorateResultsWithWarnings, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
+import { decorateResultsWithWarnings, parseCompetitionFileContents, parseValidationFileContents, parseClassificationFileContents } from '@cff/csv';
 import { handleErrors } from './middleware/errors';
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
@@ -19,7 +20,8 @@ import {
   CompetitionParticipant,
   CompetitionResults,
   CompetitionStatus,
-  Player
+  Player,
+  PlayerClassification
 } from '@cff/api-interfaces';
 
 const express = require('express')
@@ -54,6 +56,16 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   res.send({
     rowCount: results.results.length,
     competition: results
+  })
+}));
+
+app.post('/api/upload-classification-file', asyncHandler(async (req, res) => {
+  const filePathOnDisk = await handleUpload(req, 'uploadedFile');
+  const contents = await readFile(filePathOnDisk);
+  const results: PlayerClassification[] = await parseClassificationFileContents(contents);
+  await saveClassifications(results);
+  res.send({
+    rowCount: results.length
   })
 }));
 
