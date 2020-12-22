@@ -75,6 +75,10 @@ function validateCompetition(competition: CompetitionResults) {
       }
     }, `Line ${row}: CFF# ${p.cffNumber} is of incorrect format.`)
   }
+  const minimumNumberOfPlayersRequired = 6
+  if (errors.length === 0 && competition.results.length < minimumNumberOfPlayersRequired) {
+    errors.push("Not enough entrants.")
+  }
   return errors
 }
 
