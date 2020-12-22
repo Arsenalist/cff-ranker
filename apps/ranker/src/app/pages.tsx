@@ -27,7 +27,7 @@ export function ClassificationUploadPage() {
       <p>
         Please specify a classification file.
       </p>
-      <UploadFile endpoint = "/api/upload-competition-file"/>
+      <UploadFile endpoint = "/api/upload-classification-file"/>
     </div>
   )
 }
