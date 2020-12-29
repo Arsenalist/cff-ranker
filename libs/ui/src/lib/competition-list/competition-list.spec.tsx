@@ -10,6 +10,7 @@ const mock = new MockAdapter(require('axios'));
 
 describe('CompetitionList', () => {
   beforeEach(() => {
+    mock.reset()
     mock.onGet('/api/competition').replyOnce(200, [
       {
         name: 'big fencing tournament',
