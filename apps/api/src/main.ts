@@ -24,6 +24,8 @@ import {
   PlayerClassification
 } from '@cff/api-interfaces';
 
+const jwt = require('express-jwt');
+const jwksRsa = require('jwks-rsa');
 const express = require('express')
 
 const asyncHandler = require('express-async-handler');
@@ -31,9 +33,22 @@ const app = express();
 app.use(require('express-fileupload')());
 app.use(express.json());
 app.use(express.urlencoded());
+
+const checkJwt = jwt({
+  secret: jwksRsa.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://cff.us.auth0.com/.well-known/jwks.json'
+  }),
+  audience: 'https://localhost:3000/api',
+  issuer: 'https://cff.us.auth0.com/',
+  algorithms: ['RS256']
+});
+
 openMongo();
 
-app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
+app.post('/api/upload-validation-file', checkJwt, asyncHandler(async (req, res) => {
     const filePathOnDisk = await handleUpload(req, 'uploadedFile');
     const contents = await readFile(filePathOnDisk);
     const results: Player[] = await parseValidationFileContents(contents);
@@ -43,7 +58,7 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
     })
 }));
 
-app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
+app.post('/api/upload-competition-file', checkJwt, asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results: CompetitionResults = await parseCompetitionFileContents(contents);
@@ -59,7 +74,7 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   })
 }));
 
-app.post('/api/upload-classification-file', asyncHandler(async (req, res) => {
+app.post('/api/upload-classification-file', checkJwt, asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results: PlayerClassification[] = await parseClassificationFileContents(contents);
@@ -69,42 +84,42 @@ app.post('/api/upload-classification-file', asyncHandler(async (req, res) => {
   })
 }));
 
-app.get('/api/competition-results', asyncHandler(async (req, res) => {
+app.get('/api/competition-results', checkJwt, asyncHandler(async (req, res) => {
   const contents: CompetitionResults[] = await findCompetitionResults();
   res.send(contents)
 }));
 
-app.get('/api/competition/:id', asyncHandler(async (req, res) => {
+app.get('/api/competition/:id', checkJwt, asyncHandler(async (req, res) => {
   const contents: CompetitionResults = await findCompetitionResult(req.params.id);
   res.send(contents)
 }));
 
-app.post('/api/competition/status', asyncHandler(async (req, res) => {
+app.post('/api/competition/status', checkJwt, asyncHandler(async (req, res) => {
   await updateCompetitionStatus(req.body.competitionId, CompetitionStatus[req.body.status]);
   res.send()
 }));
 
-app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
+app.get('/api/participant/:competitionId/:participantId', checkJwt, asyncHandler(async (req, res) => {
   const contents: CompetitionParticipant = await findParticipant(req.params.competitionId, req.params.participantId);
   res.send(contents)
 }));
 
-app.post('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
+app.post('/api/participant/:competitionId/:participantId', checkJwt, asyncHandler(async (req, res) => {
   const contents = await saveParticipantInCompetition(req.params.competitionId, req.params.participantId, req.body);
   res.send(contents)
 }));
 
-app.put('/api/competition', asyncHandler(async (req, res) => {
+app.put('/api/competition', checkJwt, asyncHandler(async (req, res) => {
   await createCompetition(req.body)
   res.send()
 }));
 
-app.get('/api/competition', asyncHandler(async (req, res) => {
+app.get('/api/competition', checkJwt, asyncHandler(async (req, res) => {
   const contents: Competition[] = await getCompetitions();
   res.send(contents)
 }));
 
-app.delete('/api/competition', asyncHandler(async (req, res) => {
+app.delete('/api/competition', checkJwt,  asyncHandler(async (req, res) => {
   await deleteCompetition(req.body.code);
   res.send()
 }));
