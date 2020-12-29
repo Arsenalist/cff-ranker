@@ -1,3 +1,6 @@
+export * from './lib/profile/profile';
+export * from './lib/logout-button/logout-button';
+export * from './lib/login-button/login-button';
 export * from './lib/messages/messages';
 export * from './lib/messages/messages-context';
 export * from './lib/upload-competition-results/upload-competition-results';

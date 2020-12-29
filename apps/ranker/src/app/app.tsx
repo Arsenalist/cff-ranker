@@ -11,11 +11,12 @@ import { ClassificationUploadPage, ValidateFileUploadPage, ViewRankingsPage } fr
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
+import { Profile, LoginButton, LogoutButton, UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
 import { Messages } from '@cff/ui';
 import { MessagesProvider } from '@cff/ui';
 
+import { Auth0Provider } from '@auth0/auth0-react';
 
 const theme = createMuiTheme({
   typography: {
@@ -49,6 +50,13 @@ export const App = () => {
   };
   return (
     <Router>
+      <Auth0Provider
+        domain="cff.us.auth0.com"
+        audience="https://localhost:3000/api"
+        scope="openid email profile"
+        clientId="UlTsuEYfjGc2sqBo8dHxLEDpdOIUBJ32"
+        redirectUri={window.location.origin}
+      >
       <MuiThemeProvider theme={theme}>
         <MessagesProvider>
         <CssBaseline/>
@@ -62,6 +70,7 @@ export const App = () => {
                 <Typography variant="h6" className={classes.title}>
                   CFF
                 </Typography>
+                <LoginButton/>
                 <Menu
                   id="menu-appbar"
                   anchorEl={anchorEl}
@@ -84,6 +93,8 @@ export const App = () => {
                   <MenuItem onClick={handleClose} component={Link} to="/manage-results">Competitions Results</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/view-rankings">View Rankings</MenuItem>
                 </Menu>
+                <Profile />
+                <LogoutButton />
               </Toolbar>
             </AppBar>
           </Grid>
@@ -104,6 +115,7 @@ export const App = () => {
         </Grid>
         </MessagesProvider>
       </MuiThemeProvider>
+      </Auth0Provider>
     </Router>
   );
 };
