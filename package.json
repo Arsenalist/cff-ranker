@@ -27,6 +27,7 @@
   },
   "private": true,
   "dependencies": {
+    "@auth0/auth0-react": "^1.2.0",
     "@material-ui/core": "^4.11.1",
     "@material-ui/data-grid": "^4.0.0-alpha.10",
     "@material-ui/icons": "^4.9.1",
@@ -40,6 +41,8 @@
     "express": "4.17.1",
     "express-async-handler": "^1.1.4",
     "express-fileupload": "^1.2.0",
+    "express-jwt": "^6.0.0",
+    "jwks-rsa": "^1.12.0",
     "mongoose": "^5.11.7",
     "react": "17.0.1",
     "react-dom": "17.0.1",
