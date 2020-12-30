@@ -55,7 +55,7 @@ export function UploadCompetitionResults() {
         options={competitions}
         getOptionLabel={(option) => `${option.code} - ${option.zone}/${option.name}`}
         style={{ width: 300 }}
-        renderInput={(params) => <TextField inputProps={{"a": "b", "data-testid": "competitionResults-code-input"}} {...params} label="Competition" variant="outlined" />}
+        renderInput={(params) => <TextField inputProps={{"data-testid": "competitionResults-code-input"}} {...params} label="Competition" variant="outlined" />}
       />
       <p>
         Please specify a competition file.
