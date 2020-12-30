@@ -53,7 +53,7 @@ export function UploadCompetitionResults() {
         onChange={(event, value: Competition) => setCompetition(value)}
         data-testid="competition-code"
         options={competitions}
-        getOptionLabel={(option) => `${option.code} - ${option.name}`}
+        getOptionLabel={(option) => `${option.code} - ${option.zone}/${option.name}`}
         style={{ width: 300 }}
         renderInput={(params) => <TextField inputProps={{"a": "b", "data-testid": "competitionResults-code-input"}} {...params} label="Competition" variant="outlined" />}
       />
