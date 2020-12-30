@@ -1,19 +1,25 @@
 import { mockOnce } from '../../mockgoose';
-
-const mongoose = require('mongoose');
 import {
-  savePlayers,
-  saveCompetitionResults,
-  updateCompetitionStatus,
   createCompetition,
-  getCompetitions,
   deleteCompetition,
-  saveClassifications
+  getCompetitions,
+  saveClassifications,
+  saveCompetitionResults,
+  savePlayers,
+  updateCompetitionStatus
 } from './dao';
 import { MultiMessageError } from '../multi-message-error';
 import { PlayerModel } from './schemas';
-import { Competition, CompetitionResults, CompetitionStatus, PlayerClassification } from '@cff/api-interfaces';
+import {
+  Competition,
+  CompetitionResults,
+  CompetitionStatus,
+  CompetitionZone,
+  PlayerClassification
+} from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
+
+const mongoose = require('mongoose');
 
 describe('dao.ts', () => {
   let fields: CompetitionResults;
@@ -100,7 +106,7 @@ describe('dao.ts', () => {
           fields.tournamentName = null;
           fields.competitionShortName = null;
           jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
-          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b'})
+          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
           await saveCompetitionResults(fields);
           fail('should not reach here');
         } catch (err) {
@@ -132,7 +138,7 @@ describe('dao.ts', () => {
       it('results are valid', async () => {
         mockOnce('insertOne');
         jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
-        jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b'})
+        jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
         await saveCompetitionResults(fields);
       });
       describe('CFF# validation from validation file', () => {
@@ -152,7 +158,7 @@ describe('dao.ts', () => {
         it('blank CFF# is not rejected', async () => {
           fields.results[0].cffNumber = '';
           PlayerModel.findOne = jest.fn((params) => null);
-          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b'})
+          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
           mockOnce('insertOne');
           await saveCompetitionResults(fields);
         });
@@ -177,7 +183,8 @@ describe('dao.ts', () => {
     describe ('manage competitions', () => {
       const competition: Competition = {
         name: 'competition name',
-        code: 'COMP_CODE'
+        code: 'COMP_CODE',
+        zone: CompetitionZone.cff
       }
       it('adds a competition successfully', async() => {
         mockOnce('insertOne');
