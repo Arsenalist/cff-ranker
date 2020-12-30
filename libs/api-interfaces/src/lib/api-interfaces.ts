@@ -63,7 +63,8 @@ enum CompetitionStatus {
 
 enum CompetitionZone {
   national = "national",
-  regional = "regional",
+  regionalEast = "regional - east",
+  regionalWest = "regional - west",
   cff = "cff"
 }
 
