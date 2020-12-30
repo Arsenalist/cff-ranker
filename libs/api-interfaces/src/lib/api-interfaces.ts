@@ -61,9 +61,16 @@ enum CompetitionStatus {
   pending = "pending"
 }
 
+enum CompetitionZone {
+  national = "national",
+  regional = "regional",
+  cff = "cff"
+}
+
 interface Competition {
   name: string
   code: string
+  zone: CompetitionZone
 }
 
 interface PlayerClassification {
@@ -75,4 +82,4 @@ interface PlayerClassification {
   club: string
   province: string
 }
-export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification }
+export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone }

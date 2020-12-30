@@ -14,16 +14,19 @@ describe('CompetitionList', () => {
     mock.onGet('/api/competition').replyOnce(200, [
       {
         name: 'big fencing tournament',
-        weapon: 'code'
+        weapon: 'code',
+        zone: 'cff'
       }
     ]).onGet('/api/competition').replyOnce(200, [
       {
         name: 'big fencing tournament',
-        weapon: 'code'
+        weapon: 'code',
+        zone: 'cff'
       },
       {
         name: 'my new competition',
-        weapon: 'COMPCODE'
+        weapon: 'COMPCODE',
+        zone: 'national'
       }
     ]);
   })
@@ -43,9 +46,10 @@ describe('CompetitionList', () => {
     await act(async () => {
       await fireEvent.change(screen.getByTestId("name"), {target: {value: "my new competition"}});
       await fireEvent.change(screen.getByTestId("code"), {target: {value: "COMPCODE"}});
+      await fireEvent.click(screen.getByLabelText("national"));
       await userEvent.click(screen.getByTestId("add-button-confirm"));
     });
-    expect(screen.getByText(/my new competition/i)).toBeInTheDocument();
+    expect(screen.getByText(/national\/my new competition/i)).toBeInTheDocument();
   });
   it('deletes a competition', async() => {
     jest.resetAllMocks()

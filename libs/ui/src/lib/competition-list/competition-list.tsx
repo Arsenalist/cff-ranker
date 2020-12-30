@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import { Competition } from '@cff/api-interfaces';
+import { Competition, CompetitionZone } from '@cff/api-interfaces';
 import axios from 'axios';
-import { List, ListItem } from '@material-ui/core';
+import {
+  FormControlLabel,
+  FormLabel,
+  List,
+  ListItem,
+  Radio,
+  RadioGroup
+} from '@material-ui/core';
 import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -46,7 +53,7 @@ export function CompetitionList() {
       <List>
       {competitions && competitions.map((row: Competition) =>
       <ListItem>
-        <ListItemText primary={row.name} secondary={row.code} />
+        <ListItemText primary={row.zone + "/" + row.name} secondary={row.code} />
         <ListItemSecondaryAction>
           <IconButton edge="end" aria-label="delete" data-testid="delete-button" onClick={() => onDelete(row.code)}>
             <DeleteIcon />
@@ -78,6 +85,13 @@ export function CompetitionList() {
             type="text"
             fullWidth
           />
+          <br/><br/>
+          <FormLabel component="legend">Zone</FormLabel>
+          <RadioGroup aria-label="gender" name="zone" defaultValue={CompetitionZone.cff}>
+            {Object.values(CompetitionZone).map(value =>
+              (<FormControlLabel control={<Radio value={value}  inputRef={register} />} label={value} />)
+            )}
+          </RadioGroup>
         </DialogContent>
         <DialogActions>
           <Button color="primary">
