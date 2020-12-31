@@ -12,10 +12,9 @@ function minimumForce(ageCategory: AgeCategory) {
 
 
 function emptyPlayerClassCountMap() {
-  const classMap = Object.values(PlayerClass).reduce((accumulator, currentValue) => {
+  return Object.values(PlayerClass).reduce((accumulator, currentValue) => {
     return { ...accumulator, [currentValue]: 0 };
   }, {});
-  return classMap;
 }
 
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
