@@ -68,6 +68,20 @@ enum CompetitionZone {
   cff = "cff"
 }
 
+enum AgeCategory {
+  Cadet = "cadet",
+  Junior = "junior",
+  Senior = "senior",
+  Veterans = "veterans",
+  Minime = "minime",
+  Masters = "masters",
+  Benjamin = "benjamin",
+  Pupille = "pupille",
+  Poussin = "poussin",
+  U23 = "u23",
+  Open = "open"
+}
+
 interface Competition {
   name: string
   code: string
@@ -83,4 +97,4 @@ interface PlayerClassification {
   club?: string
   province?: string
 }
-export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone }
+export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory }
