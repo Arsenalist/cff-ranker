@@ -21,6 +21,15 @@ export function calculateForce(participants: CompetitionParticipant[], classific
   return Math.max(force, minimumForce(ageCategory))
 }
 
+export function calculatePointsForParticipant(place: number, force: number, numberOfParticipants: number): number {
+  const actual =  force * (1.006 - (Math.log10(place) / Math.log10(numberOfParticipants)))
+  return roundToOneDecimal(actual)
+}
+
+function roundToOneDecimal(x: number): number {
+  return Math.round(x * 10) / 10
+}
+
 function findClass(cffNumber: string, classifications: PlayerClassification[]): string {
   return classifications.find(c => c.cffNumber === cffNumber).class
 }

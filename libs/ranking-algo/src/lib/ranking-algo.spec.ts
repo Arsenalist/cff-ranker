@@ -1,4 +1,4 @@
-import { calculateForce } from './ranking-algo';
+import { calculateForce, calculatePointsForParticipant } from './ranking-algo';
 import { AgeCategory, CompetitionParticipant, PlayerClassification } from '@cff/api-interfaces';
 
 describe('calculate force', () => {
@@ -97,3 +97,18 @@ describe('calculate force', () => {
     expect(calculateForce(results, classification, AgeCategory.Cadet)).toEqual(10);
   });
 });
+
+describe('calculate points earned by a participant in a competition', () => {
+  it('P = 5, F = 30, N = 10 => 9.2', () => {
+    expect(calculatePointsForParticipant(5, 30, 10)).toBe(9.2)
+  })
+  it('P = 20, F = 65, N = 50 => 7.1', () => {
+    expect(calculatePointsForParticipant(20, 65, 50)).toBe(15.6)
+  })
+  it('P = 1, F = 30, N = 10 => 30.2', () => {
+    expect(calculatePointsForParticipant(1, 30, 10)).toBe(30.2)
+  })
+  it('P = 10, F = 30, N = 10 => 0.2', () => {
+    expect(calculatePointsForParticipant(10, 30, 10)).toBe(0.2)
+  })
+})
