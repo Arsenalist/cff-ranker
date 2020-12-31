@@ -1,4 +1,4 @@
-import { AgeCategory, CompetitionParticipant, PlayerClassification } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionParticipant, PlayerClass, PlayerClassification } from '@cff/api-interfaces';
 
 function minimumForce(ageCategory: AgeCategory) {
   const minimums = {
@@ -11,13 +11,20 @@ function minimumForce(ageCategory: AgeCategory) {
 }
 
 
+function emptyPlayerClassCountMap() {
+  const classMap = Object.values(PlayerClass).reduce((accumulator, currentValue) => {
+    return { ...accumulator, [currentValue]: 0 };
+  }, {});
+  return classMap;
+}
+
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
-  const classMap = { 'A': 0, 'B': 0, 'C': 0, 'D': 0 }
+  const classMap = emptyPlayerClassCountMap();
   for (const p of participants) {
     const clazz = findClass(p.cffNumber, classification)
     classMap[clazz] = classMap[clazz] + 1
   }
-  const force = 15 * classMap['A'] + 10 * classMap['B'] + 5 * classMap['C'] + 3 * classMap['D']
+  const force = 15 * classMap[PlayerClass.A] + 10 * classMap[PlayerClass.B] + 5 * classMap[PlayerClass.C] + 3 * classMap[PlayerClass.D]
   return Math.max(force, minimumForce(ageCategory))
 }
 

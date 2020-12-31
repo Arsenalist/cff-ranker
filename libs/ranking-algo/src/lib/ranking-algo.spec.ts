@@ -1,5 +1,5 @@
 import { calculateForce, calculatePointsForParticipant } from './ranking-algo';
-import { AgeCategory, CompetitionParticipant, PlayerClassification } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionParticipant, PlayerClass, PlayerClassification } from '@cff/api-interfaces';
 
 describe('calculate force', () => {
   const results: CompetitionParticipant[] = [
@@ -13,72 +13,72 @@ describe('calculate force', () => {
 
   it('2xA, 2xB, 1xC, 1xD = 58', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'A'},
-      {cffNumber: "#2", 'class': 'A'},
-      {cffNumber: "#3", 'class': 'B'},
-      {cffNumber: "#4", 'class': 'B'},
-      {cffNumber: "#5", 'class': 'C'},
-      {cffNumber: "#6", 'class': 'D'}
+      {cffNumber: "#1", 'class': PlayerClass.A},
+      {cffNumber: "#2", 'class': PlayerClass.A},
+      {cffNumber: "#3", 'class': PlayerClass.B},
+      {cffNumber: "#4", 'class': PlayerClass.B},
+      {cffNumber: "#5", 'class': PlayerClass.C},
+      {cffNumber: "#6", 'class': PlayerClass.D}
     ]
     expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(58);
   });
 
   it('6xA = 90', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'A'},
-      {cffNumber: "#2", 'class': 'A'},
-      {cffNumber: "#3", 'class': 'A'},
-      {cffNumber: "#4", 'class': 'A'},
-      {cffNumber: "#5", 'class': 'A'},
-      {cffNumber: "#6", 'class': 'A'}
+      {cffNumber: "#1", 'class': PlayerClass.A},
+      {cffNumber: "#2", 'class': PlayerClass.A},
+      {cffNumber: "#3", 'class': PlayerClass.A},
+      {cffNumber: "#4", 'class': PlayerClass.A},
+      {cffNumber: "#5", 'class': PlayerClass.A},
+      {cffNumber: "#6", 'class': PlayerClass.A}
     ]
     expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(90);
   });
 
   it('3xA, 3XB = 75', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'A'},
-      {cffNumber: "#2", 'class': 'A'},
-      {cffNumber: "#3", 'class': 'A'},
-      {cffNumber: "#4", 'class': 'B'},
-      {cffNumber: "#5", 'class': 'B'},
-      {cffNumber: "#6", 'class': 'B'}
+      {cffNumber: "#1", 'class': PlayerClass.A},
+      {cffNumber: "#2", 'class': PlayerClass.A},
+      {cffNumber: "#3", 'class': PlayerClass.A},
+      {cffNumber: "#4", 'class': PlayerClass.B},
+      {cffNumber: "#5", 'class': PlayerClass.B},
+      {cffNumber: "#6", 'class': PlayerClass.B}
     ]
     expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(75);
   });
 
   it('minimum invoked for open as 6XD < 30', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'D'},
-      {cffNumber: "#2", 'class': 'D'},
-      {cffNumber: "#3", 'class': 'D'},
-      {cffNumber: "#4", 'class': 'D'},
-      {cffNumber: "#5", 'class': 'D'},
-      {cffNumber: "#6", 'class': 'D'}
+      {cffNumber: "#1", 'class': PlayerClass.D},
+      {cffNumber: "#2", 'class': PlayerClass.D},
+      {cffNumber: "#3", 'class': PlayerClass.D},
+      {cffNumber: "#4", 'class': PlayerClass.D},
+      {cffNumber: "#5", 'class': PlayerClass.D},
+      {cffNumber: "#6", 'class': PlayerClass.D}
     ]
     expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(30);
   });
 
   it('minimum invoked for masters as 6XD = 18 which is < 20', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'D'},
-      {cffNumber: "#2", 'class': 'D'},
-      {cffNumber: "#3", 'class': 'D'},
-      {cffNumber: "#4", 'class': 'D'},
-      {cffNumber: "#5", 'class': 'D'},
-      {cffNumber: "#6", 'class': 'D'}
+      {cffNumber: "#1", 'class': PlayerClass.D},
+      {cffNumber: "#2", 'class': PlayerClass.D},
+      {cffNumber: "#3", 'class': PlayerClass.D},
+      {cffNumber: "#4", 'class': PlayerClass.D},
+      {cffNumber: "#5", 'class': PlayerClass.D},
+      {cffNumber: "#6", 'class': PlayerClass.D}
     ]
     expect(calculateForce(results, classification, AgeCategory.Masters)).toEqual(20);
   });
 
   it('minimum invoked for junior as 6XD = 18 which is < 20', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'D'},
-      {cffNumber: "#2", 'class': 'D'},
-      {cffNumber: "#3", 'class': 'D'},
-      {cffNumber: "#4", 'class': 'D'},
-      {cffNumber: "#5", 'class': 'D'},
-      {cffNumber: "#6", 'class': 'D'}
+      {cffNumber: "#1", 'class': PlayerClass.D},
+      {cffNumber: "#2", 'class': PlayerClass.D},
+      {cffNumber: "#3", 'class': PlayerClass.D},
+      {cffNumber: "#4", 'class': PlayerClass.D},
+      {cffNumber: "#5", 'class': PlayerClass.D},
+      {cffNumber: "#6", 'class': PlayerClass.D}
     ]
     expect(calculateForce(results, classification, AgeCategory.Junior)).toEqual(20);
   });
@@ -90,9 +90,9 @@ describe('calculate force', () => {
       {cffNumber: "#3" }
     ]
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': 'D'},
-      {cffNumber: "#2", 'class': 'D'},
-      {cffNumber: "#3", 'class': 'D'}
+      {cffNumber: "#1", 'class': PlayerClass.D},
+      {cffNumber: "#2", 'class': PlayerClass.D},
+      {cffNumber: "#3", 'class': PlayerClass.D}
     ]
     expect(calculateForce(results, classification, AgeCategory.Cadet)).toEqual(10);
   });

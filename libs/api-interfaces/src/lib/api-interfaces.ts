@@ -68,6 +68,13 @@ enum CompetitionZone {
   cff = "cff"
 }
 
+enum PlayerClass {
+  A = "A",
+  B = "B",
+  C = "C",
+  D = "D"
+}
+
 enum AgeCategory {
   Cadet = "cadet",
   Junior = "junior",
@@ -90,11 +97,11 @@ interface Competition {
 
 interface PlayerClassification {
   weapon?: string
-  class?: string
+  class?: PlayerClass
   lastName?: string
   firstName?: string
   cffNumber?: string
   club?: string
   province?: string
 }
-export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory }
+export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }
