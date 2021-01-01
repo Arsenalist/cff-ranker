@@ -17,6 +17,8 @@ export async function findPlayerByCffNumber(cffNumber: string): Promise<Player> 
 }
 
 export async function saveCompetitionResults(competitionResults: CompetitionResults) {
+  const competition = await getCompetition(competitionResults.competitionShortName)
+  competitionResults.competition = competition._id
   await new CompetitionResultsModel(competitionResults).save()
 }
 

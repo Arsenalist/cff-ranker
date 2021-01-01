@@ -33,6 +33,7 @@ const competitionParticipant = new mongoose.Schema({
 });
 
 const competitionFileRecordSchema = new mongoose.Schema({
+  competition: {type: mongoose.Schema.Types.ObjectId, ref: 'Competition'},
   creator: {type: String, required: true},
   competitionType: {type: String, required: true},
   competitionDate: {type: String, required: true},
