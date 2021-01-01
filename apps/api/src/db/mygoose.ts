@@ -1,7 +1,7 @@
 import { CompetitionResults, Player, PlayerClassification } from '@cff/api-interfaces';
 import { CompetitionModel, CompetitionResultsModel, PlayerClassificationModel, PlayerModel } from './schemas';
 import { mongoose } from '@typegoose/typegoose';
-import { Competition } from '../../../../libs/api-interfaces/src/lib/api-interfaces';
+import { Competition } from '@cff/api-interfaces';
 
 export async function findCompetitionResults(): Promise<CompetitionResults[]> {
   return CompetitionResultsModel.find({});
