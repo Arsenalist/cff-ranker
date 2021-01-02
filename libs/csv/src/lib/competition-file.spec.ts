@@ -1,4 +1,5 @@
 import { decorateResultsWithWarnings, parseCompetitionFileContents } from '@cff/csv';
+import { AgeCategory } from '@cff/api-interfaces';
 
 const validCsvContents = "FFF;WIN;competition;sylvie clement;individuel\n" +
   "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
@@ -18,7 +19,7 @@ describe('competition file csv parsing', () => {
     expect(result.competitionDate).toBe("10/12/2011")
     expect(result.weapon).toBe("fleuret")
     expect(result.gender).toBe("M")
-    expect(result.ageCategory).toBe("senior")
+    expect(result.ageCategory).toBe(AgeCategory.Senior)
     expect(result.tournamentName).toBe("FM CHALLENGE DE LA VILLE DE LONGUEUIL")
     expect(result.competitionShortName).toBe("FM OM")
   });
@@ -206,7 +207,7 @@ describe('decorate competition results with warnings', () => {
     const competiton = {
       weapon: 'fleuret',
       gender: 'M',
-      ageCategory: 'senior',
+      ageCategory: AgeCategory.Senior,
       tournamentName: 'FM OM',
       competitionShortName: 'FM OM',
       results: [{

@@ -33,7 +33,7 @@ interface CompetitionResults {
 
   gender?:string
 
-  ageCategory?: string
+  ageCategory?: AgeCategory
 
   tournamentName?: string
 

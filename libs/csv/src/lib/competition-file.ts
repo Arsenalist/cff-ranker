@@ -1,6 +1,12 @@
 import { MultiMessageError } from '../../../../apps/api/src/multi-message-error';
-import { CompetitionResults, CompetitionParticipant } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionParticipant, CompetitionResults } from '@cff/api-interfaces';
+
 const csv = require('async-csv');
+
+function getEnumKeyByEnumValue(myEnum, enumValue:string): any {
+  let keys = Object.keys(myEnum).filter(x => myEnum[x] == enumValue);
+  return keys.length > 0 ? myEnum[keys[0]] : null;
+}
 
 async function parseCompetitionFileContents(fileContents: string): Promise<CompetitionResults> {
   const { line1Values, line2Values } = parseHeaderRows(fileContents);
@@ -11,7 +17,7 @@ async function parseCompetitionFileContents(fileContents: string): Promise<Compe
     competitionDate: line2Values[0],
     weapon: line2Values[1],
     gender: line2Values[2],
-    ageCategory: line2Values[3],
+    ageCategory: getEnumKeyByEnumValue(AgeCategory, line2Values[3]),
     tournamentName: line2Values[4],
     competitionShortName: line2Values[5],
     results: records

@@ -11,6 +11,7 @@ import {
 import { MultiMessageError } from '../multi-message-error';
 import { PlayerModel } from './schemas';
 import {
+  AgeCategory,
   Competition,
   CompetitionResults,
   CompetitionStatus,
@@ -31,7 +32,7 @@ describe('dao.ts', () => {
         competitionDate: '10/12/2011',
         weapon: 'fleuret',
         gender: 'M',
-        ageCategory: 'senior',
+        ageCategory: AgeCategory.Senior,
         tournamentName: 'FM CHALLENGE DE LA VILLE DE LONGUEUIL',
         competitionShortName: 'FM OM',
         results: [{
