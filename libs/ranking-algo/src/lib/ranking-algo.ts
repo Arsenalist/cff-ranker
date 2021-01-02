@@ -1,4 +1,10 @@
-import { AgeCategory, CompetitionParticipant, PlayerClass, PlayerClassification } from '@cff/api-interfaces';
+import {
+  AgeCategory,
+  CompetitionParticipant, CompetitionResults,
+  CompetitionZone,
+  PlayerClass,
+  PlayerClassification
+} from '@cff/api-interfaces';
 
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
   const classMap = emptyPlayerClassCountMap();
@@ -13,6 +19,10 @@ export function calculateForce(participants: CompetitionParticipant[], classific
 export function calculatePointsForParticipant(place: number, force: number, numberOfParticipants: number): number {
   const actual =  force * (1.006 - (Math.log10(place) / Math.log10(numberOfParticipants)))
   return roundToOneDecimal(actual)
+}
+
+export function getCompetitionResultsByZone(competitionResults: CompetitionResults[], zone: CompetitionZone): CompetitionResults[] {
+  return competitionResults.filter(v => v.competition.zone === zone)
 }
 
 function minimumForce(ageCategory: AgeCategory) {

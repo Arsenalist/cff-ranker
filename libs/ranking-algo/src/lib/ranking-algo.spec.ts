@@ -1,5 +1,12 @@
-import { calculateForce, calculatePointsForParticipant } from './ranking-algo';
-import { AgeCategory, CompetitionParticipant, PlayerClass, PlayerClassification } from '@cff/api-interfaces';
+import { calculateForce, calculatePointsForParticipant, getCompetitionResultsByZone } from './ranking-algo';
+import {
+  AgeCategory,
+  CompetitionParticipant,
+  CompetitionResults,
+  CompetitionZone,
+  PlayerClass,
+  PlayerClassification
+} from '@cff/api-interfaces';
 
 describe('calculate force', () => {
   const results: CompetitionParticipant[] = [
@@ -110,5 +117,23 @@ describe('calculate points earned by a participant in a competition', () => {
   })
   it('P = 10, F = 30, N = 10 => 0.2', () => {
     expect(calculatePointsForParticipant(10, 30, 10)).toBe(0.2)
+  })
+})
+
+describe('get competitions by zone', () => {
+  it('gets all CFF competitions', () => {
+    const competitionResults: CompetitionResults[] = [
+      {
+        competitionShortName: 'CFF1',
+        competition: {zone: CompetitionZone.cff}
+      },
+      {
+        competitionShortName: 'NAT1',
+        competition: {zone: CompetitionZone.national}
+      }
+    ]
+    const actual = getCompetitionResultsByZone(competitionResults, CompetitionZone.cff)
+    expect(actual.length).toBe(1)
+    expect(actual[0].competitionShortName).toBe('CFF1')
   })
 })

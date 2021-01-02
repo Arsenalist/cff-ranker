@@ -21,25 +21,27 @@ interface CompetitionResults {
 
   _id?: string
 
+  competition?: any
+
   creator?: string;
 
   competitionType?: string;
 
   competitionDate?: string;
 
-  weapon:string
+  weapon?:string
 
-  gender:string
+  gender?:string
 
-  ageCategory: string
+  ageCategory?: string
 
-  tournamentName: string
+  tournamentName?: string
 
-  competitionShortName: string
+  competitionShortName?: string
 
   status?: CompetitionStatus
 
-  results: CompetitionParticipant[]
+  results?: CompetitionParticipant[]
 }
 
 interface Player {
@@ -90,9 +92,10 @@ enum AgeCategory {
 }
 
 interface Competition {
-  name: string
-  code: string
-  zone: CompetitionZone
+  _id?: any
+  name?: string
+  code?: string
+  zone?: CompetitionZone
 }
 
 interface PlayerClassification {
