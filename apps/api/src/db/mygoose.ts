@@ -17,8 +17,6 @@ export async function findPlayerByCffNumber(cffNumber: string): Promise<Player> 
 }
 
 export async function saveCompetitionResults(competitionResults: CompetitionResults) {
-  const competition = await getCompetition(competitionResults.competitionShortName)
-  competitionResults.competition = competition._id
   await new CompetitionResultsModel(competitionResults).save()
 }
 
@@ -54,6 +52,14 @@ export async function deleteCompetition(code: string) {
 
 export async function saveClassifications(classifications: PlayerClassification[]) {
   await PlayerClassificationModel.insertMany(classifications);
+}
+
+export async function getCompetitionResultsInLast12Months(): Promise<CompetitionResults[]> {
+  return CompetitionResultsModel.find({}).populate('competition');
+}
+
+export async function getPlayerClassifications(): Promise<PlayerClassification[]> {
+  return PlayerClassificationModel.find({});
 }
 
 export async function save(entity) {

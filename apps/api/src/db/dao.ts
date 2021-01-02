@@ -14,16 +14,18 @@ async function savePlayers(results: Player[]) {
     await mygoose.savePlayers(results)
 }
 
-async function validateCompetitionCode(code: string) {
+async function getCompetitionByCode(code: string): Promise<Competition> {
   const competition: Competition = await mygoose.getCompetition(code)
   if (!competition) {
     throw new MultiMessageError([`The competition code "${code}" does not exist.`])
   }
+  return competition
 }
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
   await validateCffNumber(competitionResults)
-  await validateCompetitionCode(competitionResults.competitionShortName)
+  const competition = await getCompetitionByCode(competitionResults.competitionShortName)
+  competitionResults.competition = competition._id
   await mygoose.saveCompetitionResults(competitionResults)
 }
 
