@@ -1,11 +1,12 @@
-import { calculateForce, calculatePointsForParticipant, filterCompetitionResults } from './ranking-algo';
+import { calculateForce, calculatePointsForParticipant, filterCompetitionResults, rank } from './ranking-algo';
 import {
   AgeCategory,
   CompetitionParticipant,
   CompetitionResults,
   CompetitionZone,
   PlayerClass,
-  PlayerClassification
+  PlayerClassification,
+  Ranking
 } from '@cff/api-interfaces';
 
 describe('calculate force', () => {
@@ -158,5 +159,93 @@ describe('get competitions by zone for a player', () => {
     const player: PlayerClassification = {cffNumber: '789'}
     const actual = filterCompetitionResults(competitionResults, player, CompetitionZone.cff)
     expect(actual.length).toBe(0)
+  })
+})
+
+describe('calculate points for players in many tournaments', () => {
+  const players: PlayerClassification[] = [
+    {cffNumber: '001', 'class': PlayerClass.A},
+    {cffNumber: '002', 'class': PlayerClass.B},
+    {cffNumber: '003', 'class': PlayerClass.B},
+    {cffNumber: '004', 'class': PlayerClass.C},
+    {cffNumber: '005', 'class': PlayerClass.C},
+    {cffNumber: '006', 'class': PlayerClass.C},
+    {cffNumber: '007', 'class': PlayerClass.D},
+    {cffNumber: '008', 'class': PlayerClass.D},
+    {cffNumber: '009', 'class': PlayerClass.D},
+    {cffNumber: '010', 'class': PlayerClass.D}
+  ]
+  const competitionResults: CompetitionResults[] = [
+    {
+      competitionShortName: 'CFF1',
+      ageCategory: AgeCategory.Senior,
+      competition: {zone: CompetitionZone.cff},
+      results: [
+        {cffNumber: '001', rank: 1},
+        {cffNumber: '002', rank: 2},
+        {cffNumber: '003', rank: 3},
+        {cffNumber: '004', rank: 4},
+        {cffNumber: '005', rank: 5},
+        {cffNumber: '006', rank: 6}
+      ]
+    },
+    {
+      competitionShortName: 'REG1',
+      ageCategory: AgeCategory.Cadet,
+      competition: {zone: CompetitionZone.regionalEast},
+      results: [
+        {cffNumber: '007', rank: 1},
+        {cffNumber: '008', rank: 2},
+        {cffNumber: '009', rank: 3},
+        {cffNumber: '001', rank: 4},
+        {cffNumber: '002', rank: 5},
+        {cffNumber: '003', rank: 6}
+      ]
+    },
+    {
+      competitionShortName: 'NAT1',
+      ageCategory: AgeCategory.Junior,
+      competition: {zone: CompetitionZone.national},
+      results: [
+        {cffNumber: '001', rank: 1},
+        {cffNumber: '002', rank: 2},
+        {cffNumber: '004', rank: 3},
+        {cffNumber: '008', rank: 4},
+        {cffNumber: '009', rank: 5},
+        {cffNumber: '010', rank: 6}
+      ]
+    }
+  ]
+  it('calculate points for multiple players in three tournaments', () => {
+    const rankings: Ranking = rank(competitionResults, players)
+    expect(rankings.ranks[0].player.cffNumber).toBe("001")
+    expect(rankings.ranks[0].points).toBe(99.7)
+
+    expect(rankings.ranks[1].player.cffNumber).toBe("002")
+    expect(rankings.ranks[1].points).toBe(59.8)
+
+    expect(rankings.ranks[2].player.cffNumber).toBe("007")
+    expect(rankings.ranks[2].points).toBe(44.3)
+
+    expect(rankings.ranks[3].player.cffNumber).toBe("008")
+    expect(rankings.ranks[3].points).toBe(36.3)
+
+    expect(rankings.ranks[4].player.cffNumber).toBe("004")
+    expect(rankings.ranks[4].points).toBe(26.9)
+
+    expect(rankings.ranks[5].player.cffNumber).toBe("009")
+    expect(rankings.ranks[5].points).toBe(21.5)
+
+    expect(rankings.ranks[6].player.cffNumber).toBe("003")
+    expect(rankings.ranks[6].points).toBe(19.9)
+
+    expect(rankings.ranks[7].player.cffNumber).toBe("005")
+    expect(rankings.ranks[7].points).toBe(5.4)
+
+    expect(rankings.ranks[8].player.cffNumber).toBe("006")
+    expect(rankings.ranks[8].points).toBe(0.3)
+
+    expect(rankings.ranks[9].player.cffNumber).toBe("010")
+    expect(rankings.ranks[9].points).toBe(0.2)
   })
 })

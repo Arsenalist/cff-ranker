@@ -107,4 +107,17 @@ interface PlayerClassification {
   club?: string
   province?: string
 }
+
+export interface PlayerAndCompetition {
+  player: PlayerClassification,
+  competition: Competition
+}
+
+export interface Rank {
+  player: PlayerClassification
+  points: number
+}
+export interface Ranking {
+  ranks: Rank[]
+}
 export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }

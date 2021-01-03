@@ -4,8 +4,9 @@ import {
   CompetitionResults,
   CompetitionZone,
   PlayerClass,
-  PlayerClassification
+  PlayerClassification, Rank, Ranking
 } from '@cff/api-interfaces';
+var hash = require('object-hash');
 
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
   const classMap = emptyPlayerClassCountMap();
@@ -25,6 +26,58 @@ export function calculatePointsForParticipant(place: number, force: number, numb
 export function filterCompetitionResults(competitionResults: CompetitionResults[], player: PlayerClassification, zone: CompetitionZone): CompetitionResults[] {
   return competitionResults.filter(v => v.competition.zone === zone &&
     v.results.filter(p => p.cffNumber === player.cffNumber).length !== 0)
+}
+
+export function rank(competitionResults: CompetitionResults[], players: PlayerClassification[]): Ranking {
+  const forceMap = createForceMap(competitionResults, players)
+  let allPlayersPointsMap = new Map<string, number>()
+  const ranks: Rank[] = []
+  for (const p of players) {
+    allPlayersPointsMap = new Map([...allPlayersPointsMap, ...createPlayerPointsMap(competitionResults, p, forceMap)])
+    ranks.push({
+      points: roundToOneDecimal(collectPoints(p, competitionResults, allPlayersPointsMap)),
+      player: p
+    })
+  }
+  ranks.sort((a, b) => b.points - a.points)
+  return {ranks: ranks}
+}
+
+function collectPoints(player: PlayerClassification,
+                       results: CompetitionResults[],
+                       playerPointsMap: Map<string, number>): number {
+  return results.reduce( (acc, value) => {
+    const points = playerPointsMap.get(hash({player: player, competition: value.competition}));
+    // not every player participates in every competition
+    return points ? acc + points : acc
+  }, 0)
+}
+
+function createForceMap(competitionResults: CompetitionResults[], players: PlayerClassification[]): Map<string, number> {
+  const forceMap = new Map<string, number>()
+  for (const c of competitionResults) {
+    forceMap[c.competitionShortName] = calculateForce(c.results, players, c.ageCategory)
+  }
+  return forceMap
+}
+
+function createPlayerPointsMap(competitionResults: CompetitionResults[], player: PlayerClassification, forceMap): Map<string, number> {
+  const map = new Map<string, number>()
+  for(const c of competitionResults) {
+    const placeForPlayer = getPlaceForPlayer(player, c.results);
+    // not every player participates in every competition
+    if (placeForPlayer) {
+      const points = calculatePointsForParticipant(placeForPlayer, forceMap[c.competitionShortName], c.results.length);
+      map.set(hash({player: player, competition: c.competition}), points)
+    }
+
+  }
+  return map
+}
+
+function getPlaceForPlayer(player: PlayerClassification, results: CompetitionParticipant[]): number {
+  const p = results.filter(r => r.cffNumber === player.cffNumber)
+  return p.length > 0 ? p[0].rank : null
 }
 
 function minimumForce(ageCategory: AgeCategory) {
