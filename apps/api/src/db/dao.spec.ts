@@ -235,24 +235,3 @@ describe('dao.ts', () => {
     });
   });
 });
-
-/*
-for each player in classification file, p
-  competitionsPlayedIn = rankingCriteria(p, age, province....anything)
-  cffCompetitions = getCffCompetitions(competitionsPlayedIn)
-  bestCffCompetitions = getBestCffCompetitions(cffCompetitions)
-  regionalCompetitions = getRegionalCompetitions(competitionsPlayedIn)
-  nationalCompetitions = getNationalCompetitions(competitionsPlayedIn)
-  allCompetitionsUsedForRanking = [bestCffCompetitions, regionalCompetitions, nationalCompetitions]
-  points = 0
-  for each competition in allCompetitionsUsedForRanking, c
-    force = calculateForce(c)
-    points += calculatePointsForParticipant(c.place, force, c.results.length)
-
-
-
-
-
-
-
- */

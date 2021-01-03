@@ -133,30 +133,20 @@ describe('calculate points earned by a participant in a competition', () => {
   })
 })
 
-describe('get competitions by zone for a player', () => {
-  const competitionResults: CompetitionResults[] = [
-    {
-      competitionShortName: 'CFF1',
-      competition: {zone: CompetitionZone.cff},
-      results: [
-        {cffNumber: '123'},
-        {cffNumber: '456'},
-      ]
-    },
-    {
-      competitionShortName: 'NAT1',
-      competition: {zone: CompetitionZone.national}
-    }
-  ]
+describe('get competitions by zone', () => {
   it('gets all CFF competitions', () => {
-    const player: PlayerClassification = {cffNumber: '123'}
-    const actual = filterCompetitionResults(competitionResults, player, CompetitionZone.cff)
+    const competitionResults: CompetitionResults[] = [
+      {
+        competitionShortName: 'CFF1',
+        competition: {zone: CompetitionZone.cff}
+      },
+      {
+        competitionShortName: 'NAT1',
+        competition: {zone: CompetitionZone.national}
+      }
+    ]
+    const actual = getCompetitionResultsByZone(competitionResults, CompetitionZone.cff)
     expect(actual.length).toBe(1)
     expect(actual[0].competitionShortName).toBe('CFF1')
-  })
-  it('no competitions found for player', () => {
-    const player: PlayerClassification = {cffNumber: '789'}
-    const actual = filterCompetitionResults(competitionResults, player, CompetitionZone.cff)
-    expect(actual.length).toBe(0)
   })
 })
