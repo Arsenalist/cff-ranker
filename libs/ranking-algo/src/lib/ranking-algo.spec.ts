@@ -177,9 +177,8 @@ describe('calculate points for players in many tournaments', () => {
   ]
   const competitionResults: CompetitionResults[] = [
     {
-      competitionShortName: 'CFF1',
       ageCategory: AgeCategory.Senior,
-      competition: {zone: CompetitionZone.cff},
+      competition: {zone: CompetitionZone.cff, code: 'CFF1'},
       results: [
         {cffNumber: '001', rank: 1},
         {cffNumber: '002', rank: 2},
@@ -190,9 +189,8 @@ describe('calculate points for players in many tournaments', () => {
       ]
     },
     {
-      competitionShortName: 'REG1',
       ageCategory: AgeCategory.Cadet,
-      competition: {zone: CompetitionZone.regionalEast},
+      competition: {zone: CompetitionZone.regionalEast, code: 'REG1'},
       results: [
         {cffNumber: '007', rank: 1},
         {cffNumber: '008', rank: 2},
@@ -203,9 +201,8 @@ describe('calculate points for players in many tournaments', () => {
       ]
     },
     {
-      competitionShortName: 'NAT1',
       ageCategory: AgeCategory.Junior,
-      competition: {zone: CompetitionZone.national},
+      competition: {zone: CompetitionZone.national, code: 'NAT1'},
       results: [
         {cffNumber: '001', rank: 1},
         {cffNumber: '002', rank: 2},

@@ -47,7 +47,7 @@ function collectPoints(player: PlayerClassification,
                        results: CompetitionResults[],
                        playerPointsMap: Map<string, number>): number {
   return results.reduce( (acc, value) => {
-    const points = playerPointsMap.get(hash({player: player, competition: value.competition}));
+     const points = playerPointsMap.get(player.cffNumber + value.competition.code);
     // not every player participates in every competition
     return points ? acc + points : acc
   }, 0)
@@ -56,7 +56,7 @@ function collectPoints(player: PlayerClassification,
 function createForceMap(competitionResults: CompetitionResults[], players: PlayerClassification[]): Map<string, number> {
   const forceMap = new Map<string, number>()
   for (const c of competitionResults) {
-    forceMap[c.competitionShortName] = calculateForce(c.results, players, c.ageCategory)
+    forceMap[c.competition.code] = calculateForce(c.results, players, c.ageCategory)
   }
   return forceMap
 }
@@ -67,8 +67,8 @@ function createPlayerPointsMap(competitionResults: CompetitionResults[], player:
     const placeForPlayer = getPlaceForPlayer(player, c.results);
     // not every player participates in every competition
     if (placeForPlayer) {
-      const points = calculatePointsForParticipant(placeForPlayer, forceMap[c.competitionShortName], c.results.length);
-      map.set(hash({player: player, competition: c.competition}), points)
+      const points = calculatePointsForParticipant(placeForPlayer, forceMap[c.competition.code], c.results.length);
+      map.set(player.cffNumber + c.competition.code, points)
     }
 
   }
