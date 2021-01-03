@@ -1,6 +1,7 @@
 import {
   AgeCategory,
-  CompetitionParticipant, CompetitionResults,
+  CompetitionParticipant,
+  CompetitionResults,
   CompetitionZone,
   PlayerClass,
   PlayerClassification
@@ -49,5 +50,7 @@ function roundToOneDecimal(x: number): number {
 }
 
 function findClass(cffNumber: string, classifications: PlayerClassification[]): string {
-  return classifications.find(c => c.cffNumber === cffNumber).class
+  // TODO: Don't just return a default like this
+  const player = classifications.find(c => c.cffNumber === cffNumber)
+  return player == null ? PlayerClass.A : player.class
 }
