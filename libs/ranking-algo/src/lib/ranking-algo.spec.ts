@@ -1,4 +1,4 @@
-import { calculateForce, calculatePointsForParticipant, getCompetitionResultsByZone } from './ranking-algo';
+import { calculateForce, calculatePointsForParticipant, filterCompetitionResults } from './ranking-algo';
 import {
   AgeCategory,
   CompetitionParticipant,
@@ -102,6 +102,19 @@ describe('calculate force', () => {
       {cffNumber: "#3", 'class': PlayerClass.D}
     ]
     expect(calculateForce(results, classification, AgeCategory.Cadet)).toEqual(10);
+  });
+  it('default minimum invoked for an age category which does not have a minimum defined', () => {
+    const results: CompetitionParticipant[] = [
+      {cffNumber: "#1" },
+      {cffNumber: "#2" },
+      {cffNumber: "#3" }
+    ]
+    const classification: PlayerClassification[] = [
+      {cffNumber: "#1", 'class': PlayerClass.D},
+      {cffNumber: "#2", 'class': PlayerClass.D},
+      {cffNumber: "#3", 'class': PlayerClass.D}
+    ]
+    expect(calculateForce(results, classification, AgeCategory.Veterans)).toEqual(25);
   });
 });
 

@@ -21,18 +21,21 @@ export function calculatePointsForParticipant(place: number, force: number, numb
   return roundToOneDecimal(actual)
 }
 
-export function getCompetitionResultsByZone(competitionResults: CompetitionResults[], zone: CompetitionZone): CompetitionResults[] {
-  return competitionResults.filter(v => v.competition.zone === zone)
+export function filterCompetitionResults(competitionResults: CompetitionResults[], player: PlayerClassification, zone: CompetitionZone): CompetitionResults[] {
+  return competitionResults.filter(v => v.competition.zone === zone &&
+    v.results.filter(p => p.cffNumber === player.cffNumber).length !== 0)
 }
 
 function minimumForce(ageCategory: AgeCategory) {
+  const defaultMinimum = 25
   const minimums = {
     [AgeCategory.Open]: 30,
+    [AgeCategory.Senior]: 30,
     [AgeCategory.Masters]: 20,
     [AgeCategory.Junior]: 20,
     [AgeCategory.Cadet]: 10
   }
-  return minimums[ageCategory]
+  return minimums[ageCategory] ? minimums[ageCategory] : defaultMinimum
 }
 
 function emptyPlayerClassCountMap() {
