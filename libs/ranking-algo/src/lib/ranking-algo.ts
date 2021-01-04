@@ -61,16 +61,37 @@ function createForceMap(competitionResults: CompetitionResults[], players: Playe
   return forceMap
 }
 
+function sortCompetitionsByPointsInDescendingOrder(cffCompetitionPoints: { code: string; points: number }[]) {
+  cffCompetitionPoints.sort((a, b) => b.points - a.points);
+}
+
+function takeTopCompetitions(cffCompetitionPoints: { code: string; points: number }[]) {
+  const maximumCffCompetitionsToConsiderPerPlayer = 5
+  if (cffCompetitionPoints.length > maximumCffCompetitionsToConsiderPerPlayer) {
+    cffCompetitionPoints = cffCompetitionPoints.slice(0, maximumCffCompetitionsToConsiderPerPlayer);
+  }
+  return cffCompetitionPoints;
+}
+
 function createPlayerPointsMap(competitionResults: CompetitionResults[], player: PlayerClassification, forceMap): Map<string, number> {
   const map = new Map<string, number>()
+  let cffCompetitionPoints: {code: string, points: number}[] = []
   for(const c of competitionResults) {
     const placeForPlayer = getPlaceForPlayer(player, c.results);
     // not every player participates in every competition
     if (placeForPlayer) {
       const points = calculatePointsForParticipant(placeForPlayer, forceMap[c.competition.code], c.results.length);
-      map.set(player.cffNumber + c.competition.code, points)
+      if (c.competition.zone == CompetitionZone.cff) {
+        cffCompetitionPoints.push({code: c.competition.code, points: points})
+      } else {
+        map.set(player.cffNumber + c.competition.code, points)
+      }
     }
-
+  }
+  sortCompetitionsByPointsInDescendingOrder(cffCompetitionPoints);
+  cffCompetitionPoints = takeTopCompetitions(cffCompetitionPoints);
+  for (const c of cffCompetitionPoints) {
+    map.set(player.cffNumber + c.code, c.points)
   }
   return map
 }

@@ -246,3 +246,42 @@ describe('calculate points for players in many tournaments', () => {
     expect(rankings.ranks[9].points).toBe(0.2)
   })
 })
+
+describe('only top five cff competitions are considered', () => {
+  const players: PlayerClassification[] = [
+    {cffNumber: '001', 'class': PlayerClass.A},
+    {cffNumber: '002', 'class': PlayerClass.B},
+    {cffNumber: '003', 'class': PlayerClass.B},
+    {cffNumber: '004', 'class': PlayerClass.C},
+    {cffNumber: '005', 'class': PlayerClass.C},
+    {cffNumber: '006', 'class': PlayerClass.C}
+  ]
+  function createCompetitionResults(code: string, placeFor001: number): CompetitionResults {
+    const competitionResult: CompetitionResults = {
+      ageCategory: AgeCategory.Senior,
+      competition: {zone: CompetitionZone.cff, code: code},
+      results: [
+        {cffNumber: '001', rank: placeFor001},
+        {cffNumber: '002', rank: 2},
+        {cffNumber: '003', rank: 3},
+        {cffNumber: '004', rank: 4},
+        {cffNumber: '005', rank: 5},
+        {cffNumber: '006', rank: 6}
+      ]
+    }
+    return competitionResult
+  }
+  it('calculate points for multiple players in three tournaments', () => {
+    const competitionResults = [
+      createCompetitionResults('CFF1', 1),
+      createCompetitionResults('CFF2', 2),
+      createCompetitionResults('CFF3', 3),
+      createCompetitionResults('CFF4', 4),
+      createCompetitionResults('CFF5', 5),
+      createCompetitionResults('CFF6', 6),
+    ]
+    const rankings: Ranking = rank(competitionResults, players)
+    expect(rankings.ranks[1].player.cffNumber).toBe("001")
+    expect(rankings.ranks[1].points).toBe(117.9)
+  })
+})
