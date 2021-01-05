@@ -7,7 +7,13 @@ import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
 import { createMuiTheme, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from '@material-ui/core/AppBar';
-import { ClassificationUploadPage, ValidateFileUploadPage, ViewRankingsPage } from './pages';
+import {
+  ClassificationUploadPage, Home,
+  RankingsHistory,
+  SingleRankingsPage,
+  ValidateFileUploadPage,
+  ViewRankingsPage
+} from './pages';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
@@ -102,6 +108,7 @@ export const App = () => {
           <Grid item xs={8}>
             <Messages />
             <Switch>
+              <Route path="/" exact component={Home} />
               <Route path="/validation-file-upload" component={ValidateFileUploadPage} />
               <Route path="/competition-file-upload" component={UploadCompetitionResults} />
               <Route path="/classification-file-upload" component={ClassificationUploadPage} />
@@ -109,6 +116,8 @@ export const App = () => {
               <Route path="/manage-competitions" component={CompetitionList} />
               <Route path="/view-rankings" component={ViewRankingsPage} />
               <Route path="/competition/:id" component={ViewCompetition} />
+              <Route path="/view-ranking/:id" component={SingleRankingsPage} />
+              <Route path="/view-ranking-history/:id" component={RankingsHistory} />
             </Switch>
           </Grid>
           <Grid item xs={2}/>
