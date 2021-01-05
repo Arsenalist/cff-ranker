@@ -4,7 +4,7 @@ import {
   deleteCompetition,
   getCompetitions,
   saveClassifications,
-  saveCompetitionResults,
+  saveCompetitionResults, saveParticipantInCompetition,
   savePlayers,
   updateCompetitionStatus
 } from './dao';
@@ -179,6 +179,23 @@ describe('dao.ts', () => {
           const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
           await updateCompetitionStatus(fields._id, CompetitionStatus.rejected )
           expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.rejected}))
+        });
+      });
+      describe('CFF# format is considered when saving a participant in a competition', () => {
+        it('save a participant is rejected', async () => {
+          const invalidCffNumber = "ABC"
+          try {
+            await saveParticipantInCompetition("competitionId", "participantId", {cffNumber: invalidCffNumber} )
+            fail("should not get here")
+          } catch (e) {
+            expect(e.errorMessages[0]).toBe(`Invalid CFF# format: ${invalidCffNumber}`)
+          }
+        });
+        it('save a participant works', async () => {
+          jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
+          jest.spyOn(mygoose, 'queryListById').mockResolvedValue({ } )
+          jest.spyOn(mygoose, 'save').mockResolvedValue(null)
+          await saveParticipantInCompetition("competitionId", "participantId", {cffNumber: "C06-0516"} )
         });
       });
     });

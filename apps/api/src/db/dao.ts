@@ -1,4 +1,4 @@
-import { decorateResultsWithWarnings } from '@cff/csv';
+import { decorateResultsWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import {
   CompetitionResults,
   CompetitionParticipant,
@@ -51,6 +51,9 @@ async function findParticipant(competitionId: string, participantId: string): Pr
 }
 
 async function saveParticipantInCompetition(competitionId: string, participantId: string, data: Partial<CompetitionParticipant>) {
+  if (!isCffNumberFormatValid(data.cffNumber)) {
+    throw new MultiMessageError([`Invalid CFF# format: ${data.cffNumber}`])
+  }
   let competition: CompetitionResults = await mygoose.findCompetitionResult(competitionId)
   const participant =  await mygoose.queryListById(competition.results, participantId)
   participant.cffNumber = data.cffNumber

@@ -1,5 +1,6 @@
 import { MultiMessageError } from '../../../../apps/api/src/multi-message-error';
 import { AgeCategory, CompetitionParticipant, CompetitionResults } from '@cff/api-interfaces';
+import { isCffNumberFormatValid } from '@cff/common';
 
 const csv = require('async-csv');
 
@@ -48,10 +49,6 @@ function parseHeaderRows(fileContents: string) {
   const line1Values = lines[0].split(/;/);
   const line2Values = lines[1].split(/;/);
   return { line1Values, line2Values };
-}
-
-function isCffNumberFormatValid(cffNumber: string) {
-  return cffNumber.match(/[A-Z]\d{2}-\d{4}/);
 }
 
 function validateCompetition(competition: CompetitionResults) {

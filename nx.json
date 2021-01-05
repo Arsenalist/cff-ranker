@@ -47,6 +47,9 @@
     },
     "ranking-algo": {
       "tags": []
+    },
+    "common": {
+      "tags": []
     }
   }
 }

@@ -6,5 +6,6 @@ module.exports = {
     '<rootDir>/libs/ui',
     '<rootDir>/libs/csv',
     '<rootDir>/libs/ranking-algo',
+    '<rootDir>/libs/common',
   ],
 };
