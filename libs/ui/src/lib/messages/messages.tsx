@@ -32,7 +32,7 @@ export function Messages() {
 
   axios.interceptors.request.use(function (config) {
     // Do something before request is sent
-    clear()
+    //clear()
     return config;
   }, function (error) {
     // Do something with request error
