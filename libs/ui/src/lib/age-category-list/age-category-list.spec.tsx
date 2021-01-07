@@ -9,30 +9,32 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { AgeCategory } from '@cff/api-interfaces';
 
 const mock = new MockAdapter(require('axios'));
-describe('AgeCategoryList', () => {
-  const record1: AgeCategory = {
-    _id: '1',
-    name: 'Senior',
-    code: 'senior',
-    yearOfBirth: 2020
-  };
-  const record2: AgeCategory = {
-    _id: '2',
-    name: 'Junior',
-    code: 'junior',
-    yearOfBirth: 2019
-  };
-  const record2Updated: AgeCategory = {
-    _id: '2',
-    name: 'JuniorEdited',
-    code: 'junior-edited',
-    yearOfBirth: 2025
-  };
-  function verifyRecordIsInDocument(record: AgeCategory) {
-    expect(screen.getByText(record.name)).toBeInTheDocument();
-    expect(screen.getByText(record.code)).toBeInTheDocument();
-    expect(screen.getByText(record.yearOfBirth)).toBeInTheDocument();
-  }
+const record1: AgeCategory = {
+  _id: '1',
+  name: 'Senior',
+  code: 'senior',
+  yearOfBirth: 2020
+};
+const record2: AgeCategory = {
+  _id: '2',
+  name: 'Junior',
+  code: 'junior',
+  yearOfBirth: 2019
+};
+const record2Updated: AgeCategory = {
+  _id: '2',
+  name: 'JuniorEdited',
+  code: 'junior-edited',
+  yearOfBirth: 2025
+};
+
+function verifyRecordIsInDocument(record: AgeCategory) {
+  expect(screen.getByText(record.name)).toBeInTheDocument();
+  expect(screen.getByText(record.code)).toBeInTheDocument();
+  expect(screen.getByText(record.yearOfBirth)).toBeInTheDocument();
+}
+
+describe('AgeCategoryList - edit and save', () => {
   beforeEach(() => {
     mock.reset()
     mock.onGet('/api/age-category').replyOnce(200, [
