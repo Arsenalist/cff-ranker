@@ -50,7 +50,7 @@ describe('AgeCategoryList', () => {
     verifyRecordIsInDocument(record1)
     verifyRecordIsInDocument(record2)
   });
-  it('category is allowed to be edited', async () => {
+  it('edit and save a record', async () => {
     await act(async () => {
       render(<MemoryRouter><AgeCategoryList/></MemoryRouter>);
     });
