@@ -97,3 +97,31 @@ describe('AgeCategoryList - delete', () => {
     verifyRecordIsNotInDocument(record2)
   });
 });
+
+describe('AgeCategoryList - add a record', () => {
+  beforeEach(() => {
+    mock.reset()
+    mock.onGet('/api/age-category').replyOnce(200, [
+      record1
+    ]).onGet('/api/age-category').replyOnce(200, [
+      record1,
+      record2
+    ]).onPut('/api/age-category').reply(200);
+  })
+  it('should add an age category', async () => {
+    await act(async () => {
+      render(<MemoryRouter><AgeCategoryList/></MemoryRouter>);
+    });
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsNotInDocument(record2)
+    await act(async () => {
+      await userEvent.click(screen.getByTestId("add-button"));
+      await fireEvent.change(screen.getByTestId("name"), {target: {value: record2.name}});
+      await fireEvent.change(screen.getByTestId("code"), {target: {value: record2.code}});
+      await fireEvent.change(screen.getByTestId("yearOfBirth"), {target: {value: record2.yearOfBirth}});
+      await userEvent.click(screen.getByTestId("add-button-confirm"));
+    });
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsInDocument(record2)
+  });
+});

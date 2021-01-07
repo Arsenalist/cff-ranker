@@ -2,13 +2,31 @@ import React, { useEffect, useState } from 'react';
 
 import { AgeCategory } from '@cff/api-interfaces';
 import axios from 'axios';
-import { IconButton, Table, TableBody, TableCell, TableHead, TableRow, TextField } from '@material-ui/core';
+import {
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField
+} from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import Button from '@material-ui/core/Button';
+import { useForm } from 'react-hook-form';
+
 
 export function AgeCategoryList() {
   const [ageCategories, setAgeCategories] = useState<AgeCategory[]>([])
   const [editMode, setEditMode] = useState<{_id: null | string, editMode: null | boolean} >({_id: null, editMode: null});
   const [updated, setUpdated] = useState({});
   const [reload, setReload] = useState(0)
+  const [addDialog, setAddDialogOpen] = useState(false)
+  const { register, handleSubmit } = useForm<AgeCategory>();
+
   useEffect(() => {
     axios.get('/api/age-category').then(response => {
       response.data.forEach(c => {
@@ -62,6 +80,14 @@ export function AgeCategoryList() {
     axios.post('/api/age-category', updated[id]).then(response => setReload(state => state + 1) )
   };
 
+  const onSubmit = (data: AgeCategory) => {
+    axios.put("/api/age-category", data).then(response => {
+      setAddDialogOpen(false)
+      setReload(state => state + 1)
+    });
+  };
+
+
   const onRevert = id => {
     ageCategories.forEach(row => {
       if (row._id === id) {
@@ -75,6 +101,8 @@ export function AgeCategoryList() {
   }
 
   return (
+    <>
+      <Button variant="contained" color="primary" data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Age Category</Button>
       <Table>
         <TableHead>
           <TableRow>
@@ -130,7 +158,51 @@ export function AgeCategoryList() {
           )}
         </TableBody>
       </Table>
-  );
+  <Dialog open={addDialog}  onClose={() => setAddDialogOpen(false)} aria-labelledby="form-dialog-title">
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogTitle >Add a Competition</DialogTitle>
+      <DialogContent>
+        <TextField
+          autoFocus
+          margin="dense"
+          inputProps={{ "data-testid": "name" }}
+          label="Name"
+          name="name"
+          inputRef={register}
+          type="text"
+          fullWidth
+        />
+        <TextField
+          margin="dense"
+          inputProps={{ "data-testid": "code" }}
+          label="Code"
+          name="code"
+          inputRef={register}
+          type="text"
+          fullWidth
+        />
+        <TextField
+          margin="dense"
+          inputProps={{ "data-testid": "yearOfBirth" }}
+          label="Year of Birth"
+          name="yearOfBirth"
+          inputRef={register}
+          type="text"
+          fullWidth
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button color="primary" onClick={e => setAddDialogOpen(false)}>
+          Cancel
+        </Button>
+        <Button type="submit" color="primary" data-testid="add-button-confirm">
+          Add
+        </Button>
+      </DialogActions>
+    </form>
+  </Dialog>
+  </>
+);
 }
 
 export default AgeCategoryList;
