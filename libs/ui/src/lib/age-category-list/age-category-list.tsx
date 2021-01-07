@@ -46,6 +46,10 @@ export function AgeCategoryList() {
     setUpdated(state => ({ ...state, [row._id]: { ...row, [name]: value } }));
   };
 
+  const deleteRecord = (id) => {
+    axios.delete('/api/age-category', {data: {id: id}}).then(response => setReload(state => state + 1) )
+  }
+
   const onSave = (id) => {
     const newRows = ageCategories.map(row => {
       if (row._id === id) {
@@ -101,6 +105,7 @@ export function AgeCategoryList() {
                     </IconButton>
                   </>
                 ) : (
+                  <>
                   <IconButton
                     aria-label="edit"
                     data-testid={`edit-button-${row["_id"]}`}
@@ -108,6 +113,14 @@ export function AgeCategoryList() {
                   >
                     Edit
                   </IconButton>
+                  <IconButton
+                  aria-label="delete"
+                  data-testid={`delete-button-${row["_id"]}`}
+                  onClick={() => deleteRecord(row._id)}
+                  >
+                  Delete
+                  </IconButton>
+                  </>
                 )}
               </TableCell>
               <CustomTableCell {...{ row, name: "code", onChange }} />

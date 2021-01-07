@@ -34,6 +34,12 @@ function verifyRecordIsInDocument(record: AgeCategory) {
   expect(screen.getByText(record.yearOfBirth)).toBeInTheDocument();
 }
 
+function verifyRecordIsNotInDocument(record: AgeCategory) {
+  expect(screen.queryByText(record.name)).toBeNull();
+  expect(screen.queryByText(record.code)).toBeNull();
+  expect(screen.queryByText(record.yearOfBirth)).toBeNull();
+}
+
 describe('AgeCategoryList - edit and save', () => {
   beforeEach(() => {
     mock.reset()
@@ -65,5 +71,29 @@ describe('AgeCategoryList - edit and save', () => {
     });
     verifyRecordIsInDocument(record1)
     verifyRecordIsInDocument(record2Updated)
+  });
+});
+
+describe('AgeCategoryList - delete', () => {
+  beforeEach(() => {
+    mock.reset()
+    mock.onGet('/api/age-category').replyOnce(200, [
+      record1,
+      record2
+    ]).onGet('/api/age-category').replyOnce(200, [
+      record1
+    ]).onDelete('/api/age-category').reply(200);
+  })
+  it('should delete an age category', async () => {
+    await act(async () => {
+      render(<MemoryRouter><AgeCategoryList/></MemoryRouter>);
+    });
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsInDocument(record2)
+    await act(async () => {
+      await userEvent.click(screen.getByTestId("delete-button-2"));
+    });
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsNotInDocument(record2)
   });
 });
