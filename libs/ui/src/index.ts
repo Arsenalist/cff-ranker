@@ -1,3 +1,4 @@
+export * from './lib/age-category-list/age-category-list';
 export * from './lib/profile/profile';
 export * from './lib/logout-button/logout-button';
 export * from './lib/login-button/login-button';

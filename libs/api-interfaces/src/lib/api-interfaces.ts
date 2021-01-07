@@ -77,18 +77,10 @@ enum PlayerClass {
   D = "D"
 }
 
-enum AgeCategory {
-  Cadet = "cadet",
-  Junior = "junior",
-  Senior = "senior",
-  Veterans = "veterans",
-  Minime = "minime",
-  Masters = "masters",
-  Benjamin = "benjamin",
-  Pupille = "pupille",
-  Poussin = "poussin",
-  U23 = "u23",
-  Open = "open"
+interface AgeCategory {
+  name: string
+  code: string
+  yearOfBirth: number
 }
 
 interface Competition {
