@@ -1,4 +1,4 @@
-import { MultiMessageError } from '../multi-message-error';
+import { MultiMessageError } from '@cff/common';
 
 const handleErrors = (err, req, res, next) => {
   let messages

@@ -7,7 +7,7 @@ import {
   Competition,
   PlayerClassification
 } from '@cff/api-interfaces';
-import { MultiMessageError } from '../multi-message-error';
+import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose'
 
 async function savePlayers(results: Player[]) {

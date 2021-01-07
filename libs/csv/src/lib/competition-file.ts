@@ -1,4 +1,4 @@
-import { MultiMessageError } from '../../../../apps/api/src/multi-message-error';
+import { MultiMessageError } from '@cff/common';
 import { AgeCategory, CompetitionParticipant, CompetitionResults } from '@cff/api-interfaces';
 import { isCffNumberFormatValid } from '@cff/common';
 

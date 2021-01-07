@@ -1,4 +1,4 @@
-class MultiMessageError extends Error {
+export class MultiMessageError extends Error {
   _errorMessages: string[] = []
   constructor(errorMessages) {
     super("MultiMessageError");
@@ -10,5 +10,3 @@ class MultiMessageError extends Error {
     return this._errorMessages
   }
 }
-
-export { MultiMessageError }

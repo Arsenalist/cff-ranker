@@ -8,7 +8,7 @@ import {
   savePlayers,
   updateCompetitionStatus
 } from './dao';
-import { MultiMessageError } from '../multi-message-error';
+import { MultiMessageError } from '@cff/common';
 import { PlayerModel } from './schemas';
 import {
   AgeCategory,
