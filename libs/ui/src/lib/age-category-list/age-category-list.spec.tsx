@@ -40,6 +40,13 @@ function verifyRecordIsNotInDocument(record: AgeCategory) {
   expect(screen.queryByText(record.yearOfBirth)).toBeNull();
 }
 
+async function editInlineRecordButDoNotSave(record: AgeCategory) {
+  await userEvent.click(screen.getByTestId(`edit-button-${record._id}`));
+  await fireEvent.change(screen.getByTestId(`name-${record._id}`), {target: {value: record.name}});
+  await fireEvent.change(screen.getByTestId(`code-${record._id}`), {target: {value: record.code}});
+  await fireEvent.change(screen.getByTestId(`yearOfBirth-${record._id}`), {target: {value: record.yearOfBirth}});
+}
+
 describe('AgeCategoryList - edit and save', () => {
   beforeEach(() => {
     mock.reset()
@@ -63,10 +70,7 @@ describe('AgeCategoryList - edit and save', () => {
       render(<MemoryRouter><AgeCategoryList/></MemoryRouter>);
     });
     await act(async () => {
-      await userEvent.click(screen.getByTestId("edit-button-2"));
-      await fireEvent.change(screen.getByTestId("name-2"), {target: {value: record2Updated.name}});
-      await fireEvent.change(screen.getByTestId("code-2"), {target: {value: record2Updated.code}});
-      await fireEvent.change(screen.getByTestId("yearOfBirth-2"), {target: {value: record2Updated.yearOfBirth}});
+      await editInlineRecordButDoNotSave(record2Updated)
       await userEvent.click(screen.getByTestId("save-button-2"));
     });
     verifyRecordIsInDocument(record1)
@@ -79,10 +83,7 @@ describe('AgeCategoryList - edit and save', () => {
     verifyRecordIsInDocument(record1)
     verifyRecordIsInDocument(record2)
     await act(async () => {
-      await userEvent.click(screen.getByTestId("edit-button-2"));
-      await fireEvent.change(screen.getByTestId("name-2"), {target: {value: record2Updated.name}});
-      await fireEvent.change(screen.getByTestId("code-2"), {target: {value: record2Updated.code}});
-      await fireEvent.change(screen.getByTestId("yearOfBirth-2"), {target: {value: record2Updated.yearOfBirth}});
+      await editInlineRecordButDoNotSave(record2Updated)
       await userEvent.click(screen.getByTestId("cancel-button-2"));
     });
     verifyRecordIsInDocument(record1)
