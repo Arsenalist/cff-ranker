@@ -88,7 +88,7 @@ export function AgeCategoryList() {
   };
 
 
-  const onRevert = id => {
+  const onCancel = id => {
     ageCategories.forEach(row => {
       if (row._id === id) {
         setUpdated(state => ({ ...state, [row._id]: row }))
@@ -126,8 +126,9 @@ export function AgeCategoryList() {
                       Save
                     </IconButton>
                     <IconButton
-                      aria-label="revert"
-                      onClick={() => onRevert(row._id)}
+                      aria-label="cancel"
+                      data-testid={`cancel-button-${row["_id"]}`}
+                      onClick={() => onCancel(row._id)}
                     >
                       Cancel
                     </IconButton>

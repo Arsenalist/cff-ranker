@@ -72,6 +72,23 @@ describe('AgeCategoryList - edit and save', () => {
     verifyRecordIsInDocument(record1)
     verifyRecordIsInDocument(record2Updated)
   });
+  it('want to edit but changes mind', async () => {
+    await act(async () => {
+      render(<MemoryRouter><AgeCategoryList/></MemoryRouter>);
+    });
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsInDocument(record2)
+    await act(async () => {
+      await userEvent.click(screen.getByTestId("edit-button-2"));
+      await fireEvent.change(screen.getByTestId("name-2"), {target: {value: record2Updated.name}});
+      await fireEvent.change(screen.getByTestId("code-2"), {target: {value: record2Updated.code}});
+      await fireEvent.change(screen.getByTestId("yearOfBirth-2"), {target: {value: record2Updated.yearOfBirth}});
+      await userEvent.click(screen.getByTestId("cancel-button-2"));
+    });
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsInDocument(record2)
+    verifyRecordIsNotInDocument(record2Updated)
+  });
 });
 
 describe('AgeCategoryList - delete', () => {
