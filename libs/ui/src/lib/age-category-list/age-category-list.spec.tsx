@@ -6,50 +6,49 @@ import { act } from 'react-dom/test-utils';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { AgeCategory } from '@cff/api-interfaces';
 
 const mock = new MockAdapter(require('axios'));
 describe('AgeCategoryList', () => {
+  const record1: AgeCategory = {
+    _id: '1',
+    name: 'Senior',
+    code: 'senior',
+    yearOfBirth: 2020
+  };
+  const record2: AgeCategory = {
+    _id: '2',
+    name: 'Junior',
+    code: 'junior',
+    yearOfBirth: 2019
+  };
+  const record2Updated: AgeCategory = {
+    _id: '2',
+    name: 'JuniorEdited',
+    code: 'junior-edited',
+    yearOfBirth: 2025
+  };
+  function verifyRecordIsInDocument(record: AgeCategory) {
+    expect(screen.getByText(record.name)).toBeInTheDocument();
+    expect(screen.getByText(record.code)).toBeInTheDocument();
+    expect(screen.getByText(record.yearOfBirth)).toBeInTheDocument();
+  }
   beforeEach(() => {
     mock.reset()
     mock.onGet('/api/age-category').replyOnce(200, [
-      {
-        _id: '1',
-        name: 'Senior',
-        code: 'senior',
-        yearOfBirth: 2020
-      },
-      {
-        _id: '2',
-        name: 'Junior',
-        code: 'junior',
-        yearOfBirth: 2019
-      }
-
+      record1,
+      record2
     ]).onGet('/api/age-category').replyOnce(200, [
-      {
-        _id: '1',
-        name: 'Senior',
-        code: 'senior',
-        yearOfBirth: 2020
-      },
-      {
-        _id: '2',
-        name: 'JuniorEdited',
-        code: 'junior-edited',
-        yearOfBirth: 2025
-      },
+      record1,
+      record2Updated,
     ]).onPost('/api/age-category').reply(200);
   })
   it('should show all age categories', async () => {
     await act(async () => {
       render(<MemoryRouter><AgeCategoryList/></MemoryRouter>);
     });
-    expect(screen.getByText(/Senior/)).toBeInTheDocument();
-    expect(screen.getByText(/senior/)).toBeInTheDocument();
-    expect(screen.getByText(/2020/)).toBeInTheDocument();
-    expect(screen.getByText(/Junior/)).toBeInTheDocument();
-    expect(screen.getByText(/junior/)).toBeInTheDocument();
-    expect(screen.getByText(/2019/)).toBeInTheDocument();
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsInDocument(record2)
   });
   it('category is allowed to be edited', async () => {
     await act(async () => {
@@ -57,16 +56,12 @@ describe('AgeCategoryList', () => {
     });
     await act(async () => {
       await userEvent.click(screen.getByTestId("edit-button-2"));
-      await fireEvent.change(screen.getByTestId("name-2"), {target: {value: "JuniorEdited"}});
-      await fireEvent.change(screen.getByTestId("code-2"), {target: {value: "juniorEdited"}});
-      await fireEvent.change(screen.getByTestId("yearOfBirth-2"), {target: {value: "2025"}});
+      await fireEvent.change(screen.getByTestId("name-2"), {target: {value: record2Updated.name}});
+      await fireEvent.change(screen.getByTestId("code-2"), {target: {value: record2Updated.code}});
+      await fireEvent.change(screen.getByTestId("yearOfBirth-2"), {target: {value: record2Updated.yearOfBirth}});
       await userEvent.click(screen.getByTestId("save-button-2"));
     });
-    expect(screen.getByText(/Senior/)).toBeInTheDocument();
-    expect(screen.getByText(/senior/)).toBeInTheDocument();
-    expect(screen.getByText(/2020/)).toBeInTheDocument();
-    expect(screen.getByText(/JuniorEdited/)).toBeInTheDocument();
-    expect(screen.getByText(/junior-edited/)).toBeInTheDocument();
-    expect(screen.getByText(/2025/)).toBeInTheDocument();
+    verifyRecordIsInDocument(record1)
+    verifyRecordIsInDocument(record2Updated)
   });
 });
