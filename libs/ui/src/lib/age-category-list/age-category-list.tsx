@@ -119,7 +119,7 @@ export function AgeCategoryList() {
                 {editMode[row._id] ? (
                   <>
                     <IconButton
-                      aria-label="done"
+                      aria-label="save"
                       data-testid={`save-button-${row["_id"]}`}
                       onClick={() => onSave(row._id)}
                     >
