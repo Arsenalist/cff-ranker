@@ -4,6 +4,7 @@ import { AgeCategory } from '@cff/api-interfaces';
 import axios from 'axios';
 import {
   IconButton,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -35,23 +36,6 @@ export function AgeCategoryList() {
       setAgeCategories(response.data)
     });
   }, [reload])
-
-  const CustomTableCell = ({ row, name, onChange }) => {
-    return (
-      <TableCell>
-        {editMode[row._id] ? (
-          <TextField
-            inputProps={{ "data-testid": `${name}-${row["_id"]}` }}
-            value={row[name]}
-            name={name}
-            onChange={e => onChange(e, row)}
-          />
-        ) : (
-          row[name]
-        )}
-      </TableCell>
-    );
-  };
 
   const onToggleEditMode = id => {
     setEditMode(state => ({...state, [id]: !state[id]}))
@@ -114,7 +98,7 @@ export function AgeCategoryList() {
   }
 
   return (
-    <>
+    <Paper>
       <Button variant="contained" color="primary" data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Age Category</Button>
       <Table>
         <TableHead>
@@ -165,9 +149,42 @@ export function AgeCategoryList() {
                   </>
                 )}
               </TableCell>
-              <CustomTableCell {...{ row, name: "name", onChange }} />
-              <CustomTableCell {...{ row, name: "code", onChange }} />
-              <CustomTableCell {...{ row, name: "yearOfBirth", onChange }} />
+              <TableCell>
+                {editMode[row._id] ? (
+                  <TextField
+                    inputProps={{ "data-testid": `name-${row["_id"]}` }}
+                    value={row.name}
+                    name="name"
+                    onChange={e => onChange(e, row)}
+                  />
+                ) : (
+                  row.name
+                )}
+              </TableCell>
+              <TableCell>
+                {editMode[row._id] ? (
+                  <TextField
+                    inputProps={{ "data-testid": `code-${row["_id"]}` }}
+                    value={row.code}
+                    name="code"
+                    onChange={e => onChange(e, row)}
+                  />
+                ) : (
+                  row.code
+                )}
+              </TableCell>
+              <TableCell>
+                {editMode[row._id] ? (
+                  <TextField
+                    inputProps={{ "data-testid": `yearOfBirth-${row["_id"]}` }}
+                    value={row.yearOfBirth}
+                    name="yearOfBirth"
+                    onChange={e => onChange(e, row)}
+                  />
+                ) : (
+                  row.yearOfBirth
+                )}
+              </TableCell>
             </TableRow>
           )}
         </TableBody>
@@ -215,7 +232,7 @@ export function AgeCategoryList() {
       </DialogActions>
     </form>
   </Dialog>
-  </>
+    </Paper>
 );
 }
 
