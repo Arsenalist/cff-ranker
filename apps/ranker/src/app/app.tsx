@@ -17,7 +17,7 @@ import {
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { Profile, LoginButton, LogoutButton, UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
+import { AgeCategoryList, Profile, LoginButton, LogoutButton, UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
 import { Messages } from '@cff/ui';
 import { MessagesProvider } from '@cff/ui';
@@ -98,6 +98,7 @@ export const App = () => {
                   <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Manage Competitions</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/manage-results">Competitions Results</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/view-rankings">View Rankings</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/manage-age-categories">Age Categories</MenuItem>
                 </Menu>
                 <Profile />
                 <LogoutButton />
@@ -117,6 +118,7 @@ export const App = () => {
               <Route path="/view-rankings" component={ViewRankingsPage} />
               <Route path="/competition/:id" component={ViewCompetition} />
               <Route path="/view-ranking/:id" component={SingleRankingsPage} />
+              <Route path="/manage-age-categories" component={AgeCategoryList} />
               <Route path="/view-ranking-history/:id" component={RankingsHistory} />
             </Switch>
           </Grid>

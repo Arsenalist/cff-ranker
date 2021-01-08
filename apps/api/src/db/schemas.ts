@@ -1,4 +1,11 @@
-import { Competition, CompetitionResults, CompetitionStatus, Player, PlayerClassification } from '@cff/api-interfaces';
+import {
+  AgeCategory,
+  Competition,
+  CompetitionResults,
+  CompetitionStatus,
+  Player,
+  PlayerClassification
+} from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
 
@@ -52,6 +59,13 @@ const competitionSchema = new mongoose.Schema({
   zone: {type: String, required: true, lowercase: true, enum: ['national', 'regional - east', 'regional - west', 'cff']}
 });
 
+const ageCategorySchema = new mongoose.Schema({
+  name: {type: String, required: true},
+  code: {type: String, required: true, unique: true},
+  yearOfBirth: {type: Number, required: true}
+});
+
+
 const playerClassificationSchema = new mongoose.Schema({
   weapon:  {type: String, required: true},
   class:  {type: String, required: true},
@@ -74,4 +88,7 @@ const CompetitionModel = mongoose.model<CompetitionType>('Competition', competit
 type PlayerClassificationType = PlayerClassification & mongoose.Document;
 const PlayerClassificationModel = mongoose.model<PlayerClassificationType>('PlayerClassification', playerClassificationSchema);
 
-export { PlayerModel, CompetitionResultsModel, CompetitionModel, PlayerClassificationModel }
+type AgeCategoryType = AgeCategory & mongoose.Document;
+const AgeCategoryModel = mongoose.model<AgeCategoryType>('AgeCategory', ageCategorySchema);
+
+export { PlayerModel, CompetitionResultsModel, CompetitionModel, PlayerClassificationModel, AgeCategoryModel }

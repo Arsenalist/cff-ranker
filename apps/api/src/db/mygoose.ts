@@ -1,5 +1,11 @@
-import { CompetitionResults, Player, PlayerClassification } from '@cff/api-interfaces';
-import { CompetitionModel, CompetitionResultsModel, PlayerClassificationModel, PlayerModel } from './schemas';
+import { AgeCategory, CompetitionResults, Player, PlayerClassification } from '@cff/api-interfaces';
+import {
+  AgeCategoryModel,
+  CompetitionModel,
+  CompetitionResultsModel,
+  PlayerClassificationModel,
+  PlayerModel
+} from './schemas';
 import { mongoose } from '@typegoose/typegoose';
 import { Competition } from '@cff/api-interfaces';
 
@@ -48,6 +54,22 @@ export async function getCompetition(code: string): Promise<Competition> {
 
 export async function deleteCompetition(code: string) {
   await CompetitionModel.deleteOne({code: code})
+}
+
+export async function deleteAgeCategory(id: string) {
+  await AgeCategoryModel.findByIdAndDelete(id)
+}
+
+export async function updateAgeCategory(ageCategory: AgeCategory) {
+  await AgeCategoryModel.findByIdAndUpdate(ageCategory._id, ageCategory)
+}
+
+export async function createAgeCategory(ageCategory: AgeCategory) {
+  await new AgeCategoryModel(ageCategory).save()
+}
+
+export async function getAgeCategories(): Promise<AgeCategory[]> {
+  return AgeCategoryModel.find({})
 }
 
 export async function saveClassifications(classifications: PlayerClassification[]) {

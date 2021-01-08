@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form';
 export function AgeCategoryList() {
   const [ageCategories, setAgeCategories] = useState<AgeCategory[]>([])
   const [editMode, setEditMode] = useState<{_id: null | string, editMode: null | boolean} >({_id: null, editMode: null});
-  const [updated, setUpdated] = useState({});
+  const [previous, setPrevious] = useState({});
   const [reload, setReload] = useState(0)
   const [addDialog, setAddDialogOpen] = useState(false)
   const { register, handleSubmit } = useForm<AgeCategory>();
@@ -31,7 +31,6 @@ export function AgeCategoryList() {
     axios.get('/api/age-category').then(response => {
       response.data.forEach(c => {
         setEditMode(state => ({...state, [c._id]: false}))
-        setUpdated(state => ({ ...state, [c._id]: c }));
       })
       setAgeCategories(response.data)
     });
@@ -59,25 +58,31 @@ export function AgeCategoryList() {
   };
 
   const onChange = (e, row) => {
+    if (!previous[row._id]) {
+      setPrevious((state) => ({ ...state, [row._id]: row }));
+    }
     const value = e.target.value;
     const name = e.target.name;
-    setUpdated(state => ({ ...state, [row._id]: { ...row, [name]: value } }));
+    const { _id } = row;
+    const newRows = ageCategories.map((row) => {
+      if (row._id === _id) {
+        return { ...row, [name]: value };
+      }
+      return row;
+    });
+    setAgeCategories(newRows);
   };
 
   const deleteRecord = (id) => {
-    axios.delete('/api/age-category', {data: {id: id}}).then(response => setReload(state => state + 1) )
+    axios.delete('/api/age-category', {data: {_id: id}}).then(response => setReload(state => state + 1) )
   }
 
   const onSave = (id) => {
-    const newRows = ageCategories.map(row => {
-      if (row._id === id) {
-        return updated[id]
-      } else {
-        return row
-      }
-    });
-    setAgeCategories(newRows)
-    axios.post('/api/age-category', updated[id]).then(response => setReload(state => state + 1) )
+    const toSave = ageCategories.filter(row => row._id === id)[0]
+    axios.post('/api/age-category', toSave).then(response => {
+      onToggleEditMode(id)
+      setReload(state => state + 1)
+    } )
   };
 
   const onSubmit = (data: AgeCategory) => {
@@ -89,15 +94,23 @@ export function AgeCategoryList() {
 
 
   const onCancel = id => {
-    ageCategories.forEach(row => {
+    const newRows = ageCategories.map((row) => {
       if (row._id === id) {
-        setUpdated(state => ({ ...state, [row._id]: row }))
+        return previous[id] ? previous[id] : row;
       }
+      return row;
+    });
+    setAgeCategories(newRows);
+    setPrevious((state) => {
+      delete state[id];
+      return state;
     });
     onToggleEditMode(id);
   };
+
+  const AddButton = () => (<Button variant="contained" color="primary" data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Age Category</Button>)
   if (!ageCategories) {
-    return <div>Loading...</div>
+    return AddButton
   }
 
   return (
@@ -152,8 +165,8 @@ export function AgeCategoryList() {
                   </>
                 )}
               </TableCell>
-              <CustomTableCell {...{ row, name: "code", onChange }} />
               <CustomTableCell {...{ row, name: "name", onChange }} />
+              <CustomTableCell {...{ row, name: "code", onChange }} />
               <CustomTableCell {...{ row, name: "yearOfBirth", onChange }} />
             </TableRow>
           )}
@@ -161,7 +174,7 @@ export function AgeCategoryList() {
       </Table>
   <Dialog open={addDialog}  onClose={() => setAddDialogOpen(false)} aria-labelledby="form-dialog-title">
     <form onSubmit={handleSubmit(onSubmit)}>
-      <DialogTitle >Add a Competition</DialogTitle>
+      <DialogTitle >Add Age Category</DialogTitle>
       <DialogContent>
         <TextField
           autoFocus

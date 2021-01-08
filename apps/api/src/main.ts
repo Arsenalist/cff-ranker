@@ -8,7 +8,7 @@ import {
   saveParticipantInCompetition,
   savePlayers,
   updateCompetitionStatus,
-  saveClassifications
+  saveClassifications, getAgeCategories, updateAgeCategory, deleteAgeCategory, createAgeCategory
 } from './db/dao';
 import { handleUpload } from './file-upload';
 import { decorateResultsWithWarnings, parseCompetitionFileContents, parseValidationFileContents, parseClassificationFileContents } from '@cff/csv';
@@ -131,6 +131,26 @@ app.get('/api/rank', asyncHandler(async (req, res) => {
   const allCompetitionResults = await getCompetitionResultsInLast12Months()
   res.send(rank(allCompetitionResults, playerClassifications))
 }));
+
+app.get('/api/age-category',  asyncHandler(async (req, res) => {
+  res.send(await getAgeCategories())
+}));
+
+app.put('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+  await createAgeCategory(req.body)
+  res.send()
+}));
+
+app.post('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+  await updateAgeCategory(req.body)
+  res.send()
+}));
+
+app.delete('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+  await deleteAgeCategory(req.body._id)
+  res.send()
+}));
+
 
 const port = process.env.port || 3333;
 app.use(handleErrors);

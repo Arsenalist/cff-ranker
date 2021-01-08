@@ -5,7 +5,7 @@ import {
   Player,
   CompetitionStatus,
   Competition,
-  PlayerClassification
+  PlayerClassification, AgeCategory
 } from '@cff/api-interfaces';
 import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose'
@@ -91,4 +91,21 @@ async function saveClassifications(classifications: PlayerClassification[]) {
   return await mygoose.saveClassifications(classifications)
 }
 
-export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition, saveClassifications }
+export async function updateAgeCategory(ageCategory: AgeCategory) {
+  await mygoose.updateAgeCategory(ageCategory)
+}
+
+export async function deleteAgeCategory(code: string) {
+  await mygoose.deleteAgeCategory(code)
+}
+
+export async function createAgeCategory(ageCategory: AgeCategory) {
+  await mygoose.createAgeCategory(ageCategory)
+}
+
+async function getAgeCategories(): Promise<AgeCategory[]> {
+  return mygoose.getAgeCategories()
+}
+
+
+export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition, saveClassifications, getAgeCategories }
