@@ -13,18 +13,21 @@ const record1: AgeCategory = {
   _id: '1',
   name: 'Senior',
   code: 'senior',
+  minimumForce: 30,
   yearOfBirth: 2020
 };
 const record2: AgeCategory = {
   _id: '2',
   name: 'Junior',
   code: 'junior',
+  minimumForce: 40,
   yearOfBirth: 2019
 };
 const record2Updated: AgeCategory = {
   _id: '2',
   name: 'JuniorEdited',
   code: 'junior-edited',
+  minimumForce: 50,
   yearOfBirth: 2025
 };
 
@@ -32,12 +35,14 @@ function verifyRecordIsInDocument(record: AgeCategory) {
   expect(screen.getByText(record.name)).toBeInTheDocument();
   expect(screen.getByText(record.code)).toBeInTheDocument();
   expect(screen.getByText(record.yearOfBirth)).toBeInTheDocument();
+  expect(screen.getByText(record.minimumForce)).toBeInTheDocument();
 }
 
 function verifyRecordIsNotInDocument(record: AgeCategory) {
   expect(screen.queryByText(record.name)).toBeNull();
   expect(screen.queryByText(record.code)).toBeNull();
   expect(screen.queryByText(record.yearOfBirth)).toBeNull();
+  expect(screen.queryByText(record.minimumForce)).toBeNull();
 }
 
 async function editInlineRecordButDoNotSave(record: AgeCategory) {
@@ -45,6 +50,7 @@ async function editInlineRecordButDoNotSave(record: AgeCategory) {
   await fireEvent.change(screen.getByTestId(`name-${record._id}`), {target: {value: record.name}});
   await fireEvent.change(screen.getByTestId(`code-${record._id}`), {target: {value: record.code}});
   await fireEvent.change(screen.getByTestId(`yearOfBirth-${record._id}`), {target: {value: record.yearOfBirth}});
+  await fireEvent.change(screen.getByTestId(`minimumForce-${record._id}`), {target: {value: record.minimumForce}});
 }
 
 describe('AgeCategoryList - edit and save', () => {
@@ -137,6 +143,7 @@ describe('AgeCategoryList - add a record', () => {
       await fireEvent.change(screen.getByTestId("name"), {target: {value: record2.name}});
       await fireEvent.change(screen.getByTestId("code"), {target: {value: record2.code}});
       await fireEvent.change(screen.getByTestId("yearOfBirth"), {target: {value: record2.yearOfBirth}});
+      await fireEvent.change(screen.getByTestId("minimumForce"), {target: {value: record2.minimumForce}});
       await userEvent.click(screen.getByTestId("add-button-confirm"));
     });
     verifyRecordIsInDocument(record1)

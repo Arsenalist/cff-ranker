@@ -72,6 +72,11 @@ export async function getAgeCategories(): Promise<AgeCategory[]> {
   return AgeCategoryModel.find({})
 }
 
+export async function getAgeCategoryByCode(code: string): Promise<AgeCategory> {
+  return AgeCategoryModel.findOne({code: code})
+}
+
+
 export async function saveClassifications(classifications: PlayerClassification[]) {
   await PlayerClassificationModel.insertMany(classifications);
 }

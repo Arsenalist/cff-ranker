@@ -1,14 +1,15 @@
 import { decorateResultsWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import {
-  CompetitionResults,
-  CompetitionParticipant,
-  Player,
-  CompetitionStatus,
+  AgeCategory,
   Competition,
-  PlayerClassification, AgeCategory
+  CompetitionParticipant,
+  CompetitionResults,
+  CompetitionStatus,
+  Player,
+  PlayerClassification
 } from '@cff/api-interfaces';
 import { MultiMessageError } from '@cff/common';
-import * as mygoose from './mygoose'
+import * as mygoose from './mygoose';
 
 async function savePlayers(results: Player[]) {
     await mygoose.savePlayers(results)
@@ -24,7 +25,12 @@ async function getCompetitionByCode(code: string): Promise<Competition> {
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
   await validateCffNumber(competitionResults)
+  const ageCategory = await mygoose.getAgeCategoryByCode(competitionResults.ageCategory as string);
+  if (!ageCategory) {
+    throw new MultiMessageError([`Age Category is invalid: ${competitionResults.ageCategory}`])
+  }
   const competition = await getCompetitionByCode(competitionResults.competitionShortName)
+  competitionResults.ageCategory = ageCategory
   competitionResults.competition = competition._id
   await mygoose.saveCompetitionResults(competitionResults)
 }

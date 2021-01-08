@@ -15,7 +15,7 @@ export function calculateForce(participants: CompetitionParticipant[], classific
     classMap[clazz] = classMap[clazz] + 1
   }
   const force = 15 * classMap[PlayerClass.A] + 10 * classMap[PlayerClass.B] + 5 * classMap[PlayerClass.C] + 3 * classMap[PlayerClass.D]
-  return Math.max(force, minimumForce(ageCategory))
+  return Math.max(force, ageCategory.minimumForce)
 }
 
 export function calculatePointsForParticipant(place: number, force: number, numberOfParticipants: number): number {
@@ -56,7 +56,7 @@ function collectPoints(player: PlayerClassification,
 function createForceMap(competitionResults: CompetitionResults[], players: PlayerClassification[]): Map<string, number> {
   const forceMap = new Map<string, number>()
   for (const c of competitionResults) {
-    forceMap[c.competition.code] = calculateForce(c.results, players, c.ageCategory)
+    forceMap[c.competition.code] = calculateForce(c.results, players, c.ageCategory as AgeCategory)
   }
   return forceMap
 }
@@ -99,18 +99,6 @@ function createPlayerPointsMap(competitionResults: CompetitionResults[], player:
 function getPlaceForPlayer(player: PlayerClassification, results: CompetitionParticipant[]): number {
   const p = results.filter(r => r.cffNumber === player.cffNumber)
   return p.length > 0 ? p[0].rank : null
-}
-
-function minimumForce(ageCategory: AgeCategory) {
-  const defaultMinimum = 25
-  const minimums = {
-    [AgeCategory.Open]: 30,
-    [AgeCategory.Senior]: 30,
-    [AgeCategory.Masters]: 20,
-    [AgeCategory.Junior]: 20,
-    [AgeCategory.Cadet]: 10
-  }
-  return minimums[ageCategory] ? minimums[ageCategory] : defaultMinimum
 }
 
 function emptyPlayerClassCountMap() {

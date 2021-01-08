@@ -13,6 +13,7 @@ describe('<CompetitionList/>', () => {
       {
         tournamentName: 'tourney name',
         competitionDate: '12/12/2030',
+        ageCategory: {name: 'Senior'},
         weapon: 'sword'
       }
     ]);

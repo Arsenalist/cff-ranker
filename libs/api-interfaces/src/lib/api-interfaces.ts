@@ -33,7 +33,7 @@ interface CompetitionResults {
 
   gender?:string
 
-  ageCategory?: AgeCategory
+  ageCategory?: AgeCategory | string
 
   tournamentName?: string
 
@@ -82,6 +82,7 @@ interface AgeCategory {
   name: string
   code: string
   yearOfBirth: number
+  minimumForce: number
 }
 
 interface Competition {

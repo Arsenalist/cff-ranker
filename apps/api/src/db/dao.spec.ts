@@ -23,6 +23,13 @@ import * as mygoose from './mygoose';
 
 const mongoose = require('mongoose');
 
+const ageCategory: AgeCategory = {
+  code: 'senior',
+  name: 'Senior',
+  minimumForce: 40,
+  yearOfBirth: 1980
+}
+
 describe('dao.ts', () => {
   let fields: CompetitionResults;
     beforeEach(() => {
@@ -32,7 +39,7 @@ describe('dao.ts', () => {
         competitionDate: '10/12/2011',
         weapon: 'fleuret',
         gender: 'M',
-        ageCategory: AgeCategory.Senior,
+        ageCategory: 'senior',
         tournamentName: 'FM CHALLENGE DE LA VILLE DE LONGUEUIL',
         competitionShortName: 'FM OM',
         results: [{
@@ -108,12 +115,13 @@ describe('dao.ts', () => {
           fields.tournamentName = null;
           fields.competitionShortName = null;
           jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+          jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
           jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
           await saveCompetitionResults(fields);
           fail('should not reach here');
         } catch (err) {
           expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-          expect(Object.keys(err.errors).length).toBe(8);
+          expect(Object.keys(err.errors).length).toBe(7); // age category is handled separately
         }
       });
       it('at least one result must be provided', async () => {
@@ -127,9 +135,21 @@ describe('dao.ts', () => {
           expect(Object.keys(err.errors).length).toBe(1);
         }
       });
+      it('age category is invalid', async () => {
+        jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+        jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({})
+        jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(null);
+        try {
+          await saveCompetitionResults(fields);
+          fail('should not reach here');
+        } catch (err) {
+          expect(err.errorMessages[0]).toBe(`Age Category is invalid: ${fields.ageCategory}`)
+        }
+      });
       it('competition code does not exist', async () => {
         jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({})
         jest.spyOn(mygoose, 'getCompetition').mockResolvedValue(null)
+        jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
         try {
           await saveCompetitionResults(fields)
           fail("should not get here")
@@ -141,6 +161,7 @@ describe('dao.ts', () => {
         mockOnce('insertOne');
         jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
         jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
+        jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
         await saveCompetitionResults(fields);
       });
       describe('CFF# validation from validation file', () => {
@@ -161,6 +182,7 @@ describe('dao.ts', () => {
           fields.results[0].cffNumber = '';
           PlayerModel.findOne = jest.fn((params) => null);
           jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
+          jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
           mockOnce('insertOne');
           await saveCompetitionResults(fields);
         });

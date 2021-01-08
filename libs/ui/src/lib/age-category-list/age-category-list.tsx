@@ -107,6 +107,7 @@ export function AgeCategoryList() {
             <TableCell>Name</TableCell>
             <TableCell>Code</TableCell>
             <TableCell>Year of Birth</TableCell>
+            <TableCell>Minimum Force</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -185,6 +186,18 @@ export function AgeCategoryList() {
                   row.yearOfBirth
                 )}
               </TableCell>
+              <TableCell>
+                {editMode[row._id] ? (
+                  <TextField
+                    inputProps={{ "data-testid": `minimumForce-${row["_id"]}` }}
+                    value={row.minimumForce}
+                    name="minimumForce"
+                    onChange={e => onChange(e, row)}
+                  />
+                ) : (
+                  row.minimumForce
+                )}
+              </TableCell>
             </TableRow>
           )}
         </TableBody>
@@ -217,6 +230,15 @@ export function AgeCategoryList() {
           inputProps={{ "data-testid": "yearOfBirth" }}
           label="Year of Birth"
           name="yearOfBirth"
+          inputRef={register}
+          type="text"
+          fullWidth
+        />
+        <TextField
+          margin="dense"
+          inputProps={{ "data-testid": "minimumForce" }}
+          label="Minimum Force"
+          name="minimumForce"
           inputRef={register}
           type="text"
           fullWidth

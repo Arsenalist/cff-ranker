@@ -18,7 +18,7 @@ async function parseCompetitionFileContents(fileContents: string): Promise<Compe
     competitionDate: line2Values[0],
     weapon: line2Values[1],
     gender: line2Values[2],
-    ageCategory: getEnumKeyByEnumValue(AgeCategory, line2Values[3]),
+    ageCategory: line2Values[3],
     tournamentName: line2Values[4],
     competitionShortName: line2Values[5],
     results: records

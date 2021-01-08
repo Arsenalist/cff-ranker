@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { CompetitionResults } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionResults } from '@cff/api-interfaces';
 
 interface CompetitionHeaderProps {
   competition: CompetitionResults
@@ -29,7 +29,7 @@ export function CompetitionHeader(props: CompetitionHeaderProps) {
               {competition.tournamentName} ({competition.competitionShortName})
             </Typography>
             <Typography variant="body2" component="p">
-              Age Category {competition.ageCategory}
+              Age Category {competition.ageCategory.name}
             </Typography>
             <Typography variant="body2" component="p">
               Competition Type {competition.competitionType}

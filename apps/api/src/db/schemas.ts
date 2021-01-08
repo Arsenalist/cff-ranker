@@ -39,6 +39,13 @@ const competitionParticipant = new mongoose.Schema({
   warnings: {type: [participantWarning]}
 });
 
+const ageCategorySchema = new mongoose.Schema({
+  name: {type: String, required: true},
+  code: {type: String, required: true, unique: true},
+  yearOfBirth: {type: Number, required: true},
+  minimumForce: {type: Number, required: true}
+});
+
 const competitionFileRecordSchema = new mongoose.Schema({
   competition: {type: mongoose.Schema.Types.ObjectId, ref: 'Competition'},
   creator: {type: String, required: true},
@@ -46,7 +53,7 @@ const competitionFileRecordSchema = new mongoose.Schema({
   competitionDate: {type: String, required: true},
   weapon: {type: String, required: true, lowercase: true, enum: ['fleuret', 'epee', 'sabre']},
   gender: {type: String, enum: ['M', 'F', '']},
-  ageCategory: {type: String, required: true, lowercase: true, enum: ['cadet', 'junior', 'senior', 'veterans', 'minime', 'benjamin','pupille', 'poussin', 'u23', 'open', 'masters']},
+  ageCategory: {type: ageCategorySchema, required: true},
   tournamentName: {type: String, required: true},
   competitionShortName: {type: String, required: true},
   status: {type: String, default: CompetitionStatus.pending, required: true, lowercase: true, enum: [CompetitionStatus.approved, CompetitionStatus.rejected, CompetitionStatus.pending]},
@@ -59,11 +66,7 @@ const competitionSchema = new mongoose.Schema({
   zone: {type: String, required: true, lowercase: true, enum: ['national', 'regional - east', 'regional - west', 'cff']}
 });
 
-const ageCategorySchema = new mongoose.Schema({
-  name: {type: String, required: true},
-  code: {type: String, required: true, unique: true},
-  yearOfBirth: {type: Number, required: true}
-});
+
 
 
 const playerClassificationSchema = new mongoose.Schema({

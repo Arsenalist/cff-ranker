@@ -9,6 +9,50 @@ import {
   Ranking
 } from '@cff/api-interfaces';
 
+const openAgeCategory: AgeCategory = {
+  code: "open",
+  name: "Open",
+  minimumForce: 30,
+  yearOfBirth: 1980
+}
+
+const juniorAgeCategory: AgeCategory = {
+  code: "junior",
+  name: "Junior",
+  minimumForce: 20,
+  yearOfBirth: 1978
+}
+
+const seniorAgeCategory: AgeCategory = {
+  code: "senior",
+  name: "Senior",
+  minimumForce: 30,
+  yearOfBirth: 1954
+}
+
+const mastersAgeCategory: AgeCategory = {
+  code: "masters",
+  name: "Masters",
+  minimumForce: 20,
+  yearOfBirth: 1975
+}
+
+const cadetAgeCategory: AgeCategory = {
+  code: "cadet",
+  name: "Cadet",
+  minimumForce: 10,
+  yearOfBirth: 1989
+}
+
+const veteransAgeCategory: AgeCategory = {
+  code: "veteran",
+  name: "Veterans",
+  minimumForce: 30,
+  yearOfBirth: 1970
+}
+
+
+
 describe('calculate force', () => {
   const results: CompetitionParticipant[] = [
     {cffNumber: "#1" },
@@ -28,7 +72,7 @@ describe('calculate force', () => {
       {cffNumber: "#5", 'class': PlayerClass.C},
       {cffNumber: "#6", 'class': PlayerClass.D}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(58);
+    expect(calculateForce(results, classification, openAgeCategory)).toEqual(58);
   });
 
   it('6xA = 90', () => {
@@ -40,7 +84,7 @@ describe('calculate force', () => {
       {cffNumber: "#5", 'class': PlayerClass.A},
       {cffNumber: "#6", 'class': PlayerClass.A}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(90);
+    expect(calculateForce(results, classification, openAgeCategory)).toEqual(90);
   });
 
   it('3xA, 3XB = 75', () => {
@@ -52,7 +96,7 @@ describe('calculate force', () => {
       {cffNumber: "#5", 'class': PlayerClass.B},
       {cffNumber: "#6", 'class': PlayerClass.B}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(75);
+    expect(calculateForce(results, classification, openAgeCategory)).toEqual(75);
   });
 
   it('minimum invoked for open as 6XD < 30', () => {
@@ -64,7 +108,7 @@ describe('calculate force', () => {
       {cffNumber: "#5", 'class': PlayerClass.D},
       {cffNumber: "#6", 'class': PlayerClass.D}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Open)).toEqual(30);
+    expect(calculateForce(results, classification, openAgeCategory)).toEqual(30);
   });
 
   it('minimum invoked for masters as 6XD = 18 which is < 20', () => {
@@ -76,7 +120,7 @@ describe('calculate force', () => {
       {cffNumber: "#5", 'class': PlayerClass.D},
       {cffNumber: "#6", 'class': PlayerClass.D}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Masters)).toEqual(20);
+    expect(calculateForce(results, classification, mastersAgeCategory)).toEqual(20);
   });
 
   it('minimum invoked for junior as 6XD = 18 which is < 20', () => {
@@ -88,7 +132,7 @@ describe('calculate force', () => {
       {cffNumber: "#5", 'class': PlayerClass.D},
       {cffNumber: "#6", 'class': PlayerClass.D}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Junior)).toEqual(20);
+    expect(calculateForce(results, classification, juniorAgeCategory)).toEqual(20);
   });
 
   it('minimum invoked for cadet as 3XD = 9 which is < 10', () => {
@@ -102,20 +146,7 @@ describe('calculate force', () => {
       {cffNumber: "#2", 'class': PlayerClass.D},
       {cffNumber: "#3", 'class': PlayerClass.D}
     ]
-    expect(calculateForce(results, classification, AgeCategory.Cadet)).toEqual(10);
-  });
-  it('default minimum invoked for an age category which does not have a minimum defined', () => {
-    const results: CompetitionParticipant[] = [
-      {cffNumber: "#1" },
-      {cffNumber: "#2" },
-      {cffNumber: "#3" }
-    ]
-    const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.D},
-      {cffNumber: "#2", 'class': PlayerClass.D},
-      {cffNumber: "#3", 'class': PlayerClass.D}
-    ]
-    expect(calculateForce(results, classification, AgeCategory.Veterans)).toEqual(25);
+    expect(calculateForce(results, classification, cadetAgeCategory)).toEqual(10);
   });
 });
 
@@ -177,7 +208,7 @@ describe('calculate points for players in many tournaments', () => {
   ]
   const competitionResults: CompetitionResults[] = [
     {
-      ageCategory: AgeCategory.Senior,
+      ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: 'CFF1'},
       results: [
         {cffNumber: '001', rank: 1},
@@ -189,7 +220,7 @@ describe('calculate points for players in many tournaments', () => {
       ]
     },
     {
-      ageCategory: AgeCategory.Cadet,
+      ageCategory: cadetAgeCategory,
       competition: {zone: CompetitionZone.regionalEast, code: 'REG1'},
       results: [
         {cffNumber: '007', rank: 1},
@@ -201,7 +232,7 @@ describe('calculate points for players in many tournaments', () => {
       ]
     },
     {
-      ageCategory: AgeCategory.Junior,
+      ageCategory: juniorAgeCategory,
       competition: {zone: CompetitionZone.national, code: 'NAT1'},
       results: [
         {cffNumber: '001', rank: 1},
@@ -258,7 +289,7 @@ describe('only top five cff competitions are considered', () => {
   ]
   function createCompetitionResults(code: string, placeFor001: number): CompetitionResults {
     const competitionResult: CompetitionResults = {
-      ageCategory: AgeCategory.Senior,
+      ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: code},
       results: [
         {cffNumber: '001', rank: placeFor001},

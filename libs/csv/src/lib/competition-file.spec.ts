@@ -19,7 +19,7 @@ describe('competition file csv parsing', () => {
     expect(result.competitionDate).toBe("10/12/2011")
     expect(result.weapon).toBe("fleuret")
     expect(result.gender).toBe("M")
-    expect(result.ageCategory).toBe(AgeCategory.Senior)
+    expect(result.ageCategory).toBe("senior")
     expect(result.tournamentName).toBe("FM CHALLENGE DE LA VILLE DE LONGUEUIL")
     expect(result.competitionShortName).toBe("FM OM")
   });
@@ -207,7 +207,7 @@ describe('decorate competition results with warnings', () => {
     const competiton = {
       weapon: 'fleuret',
       gender: 'M',
-      ageCategory: AgeCategory.Senior,
+      ageCategory: 'senior',
       tournamentName: 'FM OM',
       competitionShortName: 'FM OM',
       results: [{

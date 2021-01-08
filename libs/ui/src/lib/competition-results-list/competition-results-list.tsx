@@ -53,7 +53,7 @@ export function CompetitionResultsList() {
                 {row.gender}
               </TableCell>
               <TableCell scope="row">
-                {row.ageCategory}
+                {row.ageCategory.name}
               </TableCell>
               <TableCell scope="row">
                 <Chip
