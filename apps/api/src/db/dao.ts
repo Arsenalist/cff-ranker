@@ -106,6 +106,10 @@ export async function deleteAgeCategory(code: string) {
 }
 
 export async function createAgeCategory(ageCategory: AgeCategory) {
+  const existing = await mygoose.getAgeCategoryByCode(ageCategory.code)
+  if (existing) {
+    throw new MultiMessageError([`Code already exists: ${ageCategory.code}`])
+  }
   await mygoose.createAgeCategory(ageCategory)
 }
 

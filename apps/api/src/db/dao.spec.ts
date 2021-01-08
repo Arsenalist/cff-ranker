@@ -1,5 +1,6 @@
 import { mockOnce } from '../../mockgoose';
 import {
+  createAgeCategory,
   createCompetition,
   deleteCompetition,
   getCompetitions,
@@ -274,3 +275,15 @@ describe('dao.ts', () => {
     });
   });
 });
+
+describe('age categories', () => {
+  it('code already exists', async () => {
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory)
+    try {
+      await createAgeCategory(ageCategory)
+      fail("should not get here")
+    } catch(e) {
+      expect(e.errorMessages[0]).toBe(`Code already exists: ${ageCategory.code}`)
+    }
+  });
+})
