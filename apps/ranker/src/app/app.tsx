@@ -9,15 +9,12 @@ import MenuIcon from '@material-ui/icons/Menu';
 import AppBar from '@material-ui/core/AppBar';
 import {
   ClassificationUploadPage, Home,
-  RankingsHistory,
-  SingleRankingsPage,
   ValidateFileUploadPage,
-  ViewRankingsPage
 } from './pages';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { AgeCategoryList, Profile, LoginButton, LogoutButton, UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
+import { Ranking, Rankings, RankingJobs, AgeCategoryList, Profile, LoginButton, LogoutButton, UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
 import { ViewCompetition } from '@cff/ui';
 import { Messages } from '@cff/ui';
 import { MessagesProvider } from '@cff/ui';
@@ -115,11 +112,11 @@ export const App = () => {
               <Route path="/classification-file-upload" component={ClassificationUploadPage} />
               <Route path="/manage-results" component={CompetitionResultsList} />
               <Route path="/manage-competitions" component={CompetitionList} />
-              <Route path="/view-rankings" component={ViewRankingsPage} />
               <Route path="/competition/:id" component={ViewCompetition} />
-              <Route path="/view-ranking/:id" component={SingleRankingsPage} />
               <Route path="/manage-age-categories" component={AgeCategoryList} />
-              <Route path="/view-ranking-history/:id" component={RankingsHistory} />
+              <Route path="/rankings/jobs" exact component={RankingJobs} />
+              <Route path="/rankings/jobs/:id" exact component={Rankings} />
+              <Route path="/rankings/ranking/:id" component={Ranking} />
             </Switch>
           </Grid>
           <Grid item xs={2}/>
