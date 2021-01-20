@@ -97,7 +97,7 @@ export const App = () => {
                   <MenuItem onClick={handleClose} component={Link} to="/classification-file-upload">Upload Classification File</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Manage Competitions</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/manage-results">Competitions Results</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/view-rankings">View Rankings</MenuItem>
+                  <MenuItem onClick={handleClose} component={Link} to="/rankings/jobs">Rankings</MenuItem>
                   <MenuItem onClick={handleClose} component={Link} to="/manage-age-categories">Age Categories</MenuItem>
                 </Menu>
                 <Profile />
