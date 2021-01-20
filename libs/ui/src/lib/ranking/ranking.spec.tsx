@@ -16,7 +16,7 @@ const ranking: Ranking = {
   ranks: [
     {
       points: 100,
-      player: {firstName: 'Jim', lastName: 'Jimborie', cffNumber: 'CF01-1234'}
+      player: {_id: "id", firstName: 'Jim', lastName: 'Jimborie', cffNumber: 'CF01-1234'}
     }
   ]
 }

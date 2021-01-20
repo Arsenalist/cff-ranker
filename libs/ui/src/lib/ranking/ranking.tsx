@@ -31,7 +31,7 @@ export function Ranking() {
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
-            <TableRow>
+            <TableRow key="header">
               <TableCell>Name</TableCell>
               <TableCell>CFF Number</TableCell>
               <TableCell>Points</TableCell>
@@ -40,7 +40,7 @@ export function Ranking() {
           <TableBody>
             {
               ranking.ranks.map(row => (
-                <TableRow>
+                <TableRow key={row.player._id}>
                   <TableCell>{row.player.firstName} {row.player.lastName}</TableCell>
                   <TableCell>{row.player.cffNumber}</TableCell>
                   <TableCell>{row.points}</TableCell>

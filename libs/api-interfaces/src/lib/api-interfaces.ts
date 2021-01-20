@@ -93,6 +93,7 @@ interface Competition {
 }
 
 interface PlayerClassification {
+  _id?: string
   weapon?: string
   class?: PlayerClass
   lastName?: string
