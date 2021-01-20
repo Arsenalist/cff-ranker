@@ -1,4 +1,4 @@
-import { AgeCategory, CompetitionResults, Player, PlayerClassification } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionResults, Player, PlayerClassification, Weapon } from '@cff/api-interfaces';
 import {
   AgeCategoryModel,
   CompetitionModel,
@@ -81,8 +81,8 @@ export async function saveClassifications(classifications: PlayerClassification[
   await PlayerClassificationModel.insertMany(classifications);
 }
 
-export async function getCompetitionResultsInLast12Months(): Promise<CompetitionResults[]> {
-  return CompetitionResultsModel.find({}).populate('competition');
+export async function getCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResults[]> {
+  return CompetitionResultsModel.find({weapon: weapon}).populate('competition');
 }
 
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {

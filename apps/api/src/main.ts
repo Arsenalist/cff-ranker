@@ -19,12 +19,13 @@ import {
   Competition,
   CompetitionParticipant,
   CompetitionResults,
-  CompetitionStatus, CompetitionZone,
+  CompetitionStatus,
   Player,
-  PlayerClassification
+  PlayerClassification, Weapon
 } from '@cff/api-interfaces';
 import { getCompetitionResultsInLast12Months, getPlayerClassifications } from './db/mygoose';
 import { rank } from '@cff/ranking-algo';
+import { AgeCategoryModel, RankingJobModel, RankingModel } from './db/schemas';
 
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
@@ -126,10 +127,40 @@ app.delete('/api/competition', checkJwt,  asyncHandler(async (req, res) => {
   res.send()
 }));
 
+app.get('/api/rankings/jobs', asyncHandler(async (req, res) => {
+  res.send(await RankingJobModel.find({}))
+}));
+
+app.get('/api/rankings/jobs/:id', asyncHandler(async (req, res) => {
+  res.send(await RankingModel.find({rankingJob: req.params.id}).populate("ageCategory").select("weapon ageCategory"))
+}));
+
+app.get('/api/rankings/ranking/:id', asyncHandler(async (req, res) => {
+  res.send(await RankingModel.findById(req.params.id))
+}));
+
+
 app.get('/api/rank', asyncHandler(async (req, res) => {
   const playerClassifications = await getPlayerClassifications()
-  const allCompetitionResults = await getCompetitionResultsInLast12Months()
-  res.send(rank(allCompetitionResults, playerClassifications))
+  const rankingJobModel = await new RankingJobModel({
+    user: "zarar",
+    dateGenerated: Date.now()
+  }).save()
+
+  const ageCategories = await AgeCategoryModel.find({})
+  for (const key of Object.keys(Weapon)) {
+    for(const ageCategory of ageCategories) {
+      const allCompetitionResults = await getCompetitionResultsInLast12Months(Weapon[key])
+      const ranking = rank(allCompetitionResults, playerClassifications);
+      ranking.weapon = Weapon[key];
+      ranking.ageCategory = ageCategory
+      await new RankingModel({...ranking, rankingJob: rankingJobModel}).save()
+    }
+  }
+
+  res.send({
+    id: rankingJobModel._id
+  })
 }));
 
 app.get('/api/age-category',  asyncHandler(async (req, res) => {
