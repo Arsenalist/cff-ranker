@@ -34,10 +34,13 @@ export function rank(competitionResults: CompetitionResults[], players: PlayerCl
   const ranks: Rank[] = []
   for (const p of players) {
     allPlayersPointsMap = new Map([...allPlayersPointsMap, ...createPlayerPointsMap(competitionResults, p, forceMap)])
-    ranks.push({
-      points: roundToOneDecimal(collectPoints(p, competitionResults, allPlayersPointsMap)),
-      player: p
-    })
+    const points = roundToOneDecimal(collectPoints(p, competitionResults, allPlayersPointsMap));
+    if (points != 0) {
+      ranks.push({
+        points: points,
+        player: p
+      })
+    }
   }
   ranks.sort((a, b) => b.points - a.points)
   return {ranks: ranks}
