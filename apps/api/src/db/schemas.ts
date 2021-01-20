@@ -4,7 +4,7 @@ import {
   CompetitionResults,
   CompetitionStatus,
   Player,
-  PlayerClassification
+  PlayerClassification, Ranking, RankingJob
 } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';
@@ -66,8 +66,10 @@ const competitionSchema = new mongoose.Schema({
   zone: {type: String, required: true, lowercase: true, enum: ['national', 'regional - east', 'regional - west', 'cff']}
 });
 
-
-
+const rankingJobSchema = new mongoose.Schema({
+  user:  {type: String, required: true},
+  dateGenerated:  {type: Date, required: true, default: Date.now}
+});
 
 const playerClassificationSchema = new mongoose.Schema({
   weapon:  {type: String, required: true},
@@ -78,6 +80,19 @@ const playerClassificationSchema = new mongoose.Schema({
   club:  {type: String, required: true},
   province:  {type: String, required: true}
 });
+
+const rank = new mongoose.Schema({
+  points: {type: Number, required: true},
+  player: {type: playerClassificationSchema}
+})
+
+const ranking = new mongoose.Schema({
+  ageCategory: {type: mongoose.Types.ObjectId, required: true, ref: 'AgeCategory'},
+  weapon: {type: String, required: true, lowercase: true, enum: ['fleuret', 'epee', 'sabre']},
+  ranks: {type: [rank]},
+  rankingJob: {type: mongoose.Types.ObjectId, required: true, ref: 'RankingJob'}
+})
+
 
 type CompetitionResultsType = CompetitionResults & mongoose.Document;
 const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
@@ -94,4 +109,10 @@ const PlayerClassificationModel = mongoose.model<PlayerClassificationType>('Play
 type AgeCategoryType = AgeCategory & mongoose.Document;
 const AgeCategoryModel = mongoose.model<AgeCategoryType>('AgeCategory', ageCategorySchema);
 
-export { PlayerModel, CompetitionResultsModel, CompetitionModel, PlayerClassificationModel, AgeCategoryModel }
+type RankingJobType = RankingJob & mongoose.Document;
+const RankingJobModel = mongoose.model<RankingJobType>('RankingJob', rankingJobSchema);
+
+type RankingType = Ranking & mongoose.Document;
+const RankingModel = mongoose.model<RankingType>('Ranking', ranking);
+
+export { PlayerModel, CompetitionResultsModel, CompetitionModel, PlayerClassificationModel, AgeCategoryModel, RankingJobModel, RankingModel }

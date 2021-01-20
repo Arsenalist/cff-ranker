@@ -102,6 +102,12 @@ interface PlayerClassification {
   province?: string
 }
 
+export enum Weapon {
+  Epee = "epee",
+  Fleuret = "fleuret",
+  Sabre = "sabre"
+}
+
 export interface PlayerAndCompetition {
   player: PlayerClassification,
   competition: Competition
@@ -112,6 +118,15 @@ export interface Rank {
   points: number
 }
 export interface Ranking {
+  _id?: string
   ranks: Rank[]
+  weapon?: Weapon
+  ageCategory?: AgeCategory
+}
+
+export interface RankingJob {
+  _id?: string
+  user: string
+  dateGenerated: Date
 }
 export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }
