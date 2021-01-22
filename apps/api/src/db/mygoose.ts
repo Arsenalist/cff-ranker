@@ -18,7 +18,7 @@ export async function findCompetitionResult(id): Promise<CompetitionResults> {
   return CompetitionResultsModel.findOne({ _id: objectId }).populate('ageCategory competition');
 }
 
-export async function findPlayerByCffNumber(cffNumber: string, name: string, surname: string, yearOfBirth: number, gender: string): Promise<Player> {
+export async function validateParticipant(cffNumber: string, name: string, surname: string, yearOfBirth: number, gender: string): Promise<Player> {
   return PlayerModel.findOne({
     cffNumber: cffNumber,
     name: name,

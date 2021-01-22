@@ -1,6 +1,5 @@
 import { mockOnce } from '../../mockgoose';
 import {
-  createAgeCategory,
   createCompetition,
   deleteCompetition,
   getCompetitions,
@@ -21,6 +20,7 @@ import {
   PlayerClassification
 } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
+import { createAgeCategory } from './age-category';
 
 const mongoose = require('mongoose');
 
@@ -116,7 +116,7 @@ describe('dao.ts', () => {
           fields.ageCategory = null;
           fields.tournamentName = null;
           fields.competitionShortName = null;
-          jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+          jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
           jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
           jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
 
@@ -129,7 +129,7 @@ describe('dao.ts', () => {
         }
       });
       it('age category is invalid', async () => {
-        jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+        jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
         jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({})
         jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(null);
         try {
@@ -140,7 +140,7 @@ describe('dao.ts', () => {
         }
       });
       it('competition code does not exist', async () => {
-        jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({})
+        jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({})
         jest.spyOn(mygoose, 'getCompetition').mockResolvedValue(null)
         jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
         try {
@@ -152,7 +152,7 @@ describe('dao.ts', () => {
       })
       it('results are valid', async () => {
         mockOnce('insertOne');
-        jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
+        jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
         jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
         jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
         const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementation(jest.fn())
@@ -168,7 +168,7 @@ describe('dao.ts', () => {
           fields.results[0].yearOfBirth = 2000
           fields.results[0].gender = "INVALID_GENDER"
           jest.resetAllMocks()
-          jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue(null);
+          jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue(null);
           try {
             await saveCompetitionResults(fields)
             fail("should not get here")
@@ -176,14 +176,6 @@ describe('dao.ts', () => {
             expect(err).toBeInstanceOf(MultiMessageError);
             expect(err.errorMessages[0]).toBe(`Could not validate: ${fields.results[0].cffNumber}, ${fields.results[0].name}, ${fields.results[0].surname}, ${fields.results[0].yearOfBirth}, ${fields.results[0].gender}.`)
           }
-        });
-        it('blank CFF# is not rejected', async () => {
-          fields.results[0].cffNumber = '';
-          PlayerModel.findOne = jest.fn((params) => null);
-          jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
-          jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-          mockOnce('insertOne');
-          await saveCompetitionResults(fields);
         });
       });
       describe('competition results approval/rejection', () => {
@@ -274,14 +266,3 @@ describe('dao.ts', () => {
   });
 });
 
-describe('age categories', () => {
-  it('code already exists', async () => {
-    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory)
-    try {
-      await createAgeCategory(ageCategory)
-      fail("should not get here")
-    } catch(e) {
-      expect(e.errorMessages[0]).toBe(`Code already exists: ${ageCategory.code}`)
-    }
-  });
-})

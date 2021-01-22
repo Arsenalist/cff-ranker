@@ -78,7 +78,7 @@ enum PlayerClass {
 }
 
 interface AgeCategory {
-  _id?: string
+  _id?: any
   name: string
   code: string
   yearOfBirth: number

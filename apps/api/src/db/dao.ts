@@ -1,6 +1,5 @@
 import { decorateResultsWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import {
-  AgeCategory,
   Competition,
   CompetitionParticipant,
   CompetitionResults,
@@ -24,7 +23,7 @@ async function getCompetitionByCode(code: string): Promise<Competition> {
 }
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
-  await validateCffNumber(competitionResults)
+  await validateParticipants(competitionResults)
   const ageCategory = await mygoose.getAgeCategoryByCode(competitionResults.ageCategory as string);
   if (!ageCategory) {
     throw new MultiMessageError([`Age Category is invalid: ${competitionResults.ageCategory}`])
@@ -43,9 +42,9 @@ async function saveCompetitionResults(competitionResults: CompetitionResults) {
   return decoratedResults
 }
 
-async function validateCffNumber(competitionResults: CompetitionResults) {
+async function validateParticipants(competitionResults: CompetitionResults) {
   for (const r of competitionResults.results) {
-    if (r.cffNumber && !await mygoose.findPlayerByCffNumber(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
+    if (!await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
     }
   }
@@ -105,25 +104,5 @@ async function saveClassifications(classifications: PlayerClassification[]) {
   return await mygoose.saveClassifications(classifications)
 }
 
-export async function updateAgeCategory(ageCategory: AgeCategory) {
-  await mygoose.updateAgeCategory(ageCategory)
-}
 
-export async function deleteAgeCategory(code: string) {
-  await mygoose.deleteAgeCategory(code)
-}
-
-export async function createAgeCategory(ageCategory: AgeCategory) {
-  const existing = await mygoose.getAgeCategoryByCode(ageCategory.code)
-  if (existing) {
-    throw new MultiMessageError([`Code already exists: ${ageCategory.code}`])
-  }
-  await mygoose.createAgeCategory(ageCategory)
-}
-
-async function getAgeCategories(): Promise<AgeCategory[]> {
-  return mygoose.getAgeCategories()
-}
-
-
-export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition, saveClassifications, getAgeCategories }
+export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition, saveClassifications}
