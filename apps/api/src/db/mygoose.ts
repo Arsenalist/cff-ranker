@@ -18,8 +18,14 @@ export async function findCompetitionResult(id): Promise<CompetitionResults> {
   return CompetitionResultsModel.findOne({ _id: objectId }).populate('ageCategory competition');
 }
 
-export async function findPlayerByCffNumber(cffNumber: string): Promise<Player> {
-  return PlayerModel.findOne({ cffNumber: cffNumber });
+export async function findPlayerByCffNumber(cffNumber: string, name: string, surname: string, yearOfBirth: number, gender: string): Promise<Player> {
+  return PlayerModel.findOne({
+    cffNumber: cffNumber,
+    name: name,
+    surname: surname,
+    yearOfBirth: yearOfBirth,
+    gender: gender
+  });
 }
 
 export async function saveCompetitionResults(competitionResults: CompetitionResults) {

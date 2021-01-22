@@ -45,7 +45,7 @@ async function saveCompetitionResults(competitionResults: CompetitionResults) {
 
 async function validateCffNumber(competitionResults: CompetitionResults) {
   for (const r of competitionResults.results) {
-    if (r.cffNumber && !await mygoose.findPlayerByCffNumber(r.cffNumber)) {
+    if (r.cffNumber && !await mygoose.findPlayerByCffNumber(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`The CFF# ${r.cffNumber} was not found.`])
     }
   }

@@ -48,7 +48,7 @@ interface Player {
   _id?: string
   surname?: string
   name?: string
-  yearOfBirth?: string
+  yearOfBirth?: number
   gender?: string
   club?: string
   branch?: string
