@@ -162,7 +162,11 @@ describe('dao.ts', () => {
       describe('CFF# validation from validation file', () => {
         it('participant with invalid CFF# is rejected', async () => {
           PlayerModel.findOne = jest.fn((params) => null);
-          fields.results[0].cffNumber = "INVALID"
+          fields.results[0].cffNumber = "INVALID_CFFNUMBER"
+          fields.results[0].name = "INVALID_NAME"
+          fields.results[0].surname = "INVALID_SURNAME"
+          fields.results[0].yearOfBirth = 2000
+          fields.results[0].gender = "INVALID_GENDER"
           jest.resetAllMocks()
           jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue(null);
           try {
@@ -170,7 +174,7 @@ describe('dao.ts', () => {
             fail("should not get here")
           } catch (err) {
             expect(err).toBeInstanceOf(MultiMessageError);
-            expect(err.errorMessages[0]).toBe("The CFF# INVALID was not found.")
+            expect(err.errorMessages[0]).toBe(`Could not validate: ${fields.results[0].cffNumber}, ${fields.results[0].name}, ${fields.results[0].surname}, ${fields.results[0].yearOfBirth}, ${fields.results[0].gender}.`)
           }
         });
         it('blank CFF# is not rejected', async () => {
