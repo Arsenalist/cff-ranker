@@ -132,7 +132,7 @@ app.delete('/api/competition', checkJwt,  asyncHandler(async (req, res) => {
 }));
 
 app.get('/api/rankings/jobs', asyncHandler(async (req, res) => {
-  res.send(await RankingJobModel.find({}))
+  res.send(await RankingJobModel.find({}).sort('-dateGenerated'))
 }));
 
 app.get('/api/rankings/jobs/:id', asyncHandler(async (req, res) => {
