@@ -11,10 +11,12 @@ describe('<CompetitionList/>', () => {
   it('list is shown', async () => {
     mock.onGet('/api/competition-results').reply(200, [
       {
+        _id: "id",
         tournamentName: 'tourney name',
         competitionDate: '12/12/2030',
         ageCategory: {name: 'Senior'},
-        weapon: 'sword'
+        weapon: 'sword',
+        status: 'approved'
       }
     ]);
     await act(async () => {
@@ -23,5 +25,6 @@ describe('<CompetitionList/>', () => {
     expect(screen.getByText(/tourney name/i)).toBeInTheDocument();
     expect(screen.getByText(/12\/12\/2030/i)).toBeInTheDocument();
     expect(screen.getByText(/sword/i)).toBeInTheDocument();
+    expect(screen.getByText(/Approved/)).toBeInTheDocument();
   });
 });

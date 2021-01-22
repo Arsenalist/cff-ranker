@@ -53,7 +53,7 @@ const competitionFileRecordSchema = new mongoose.Schema({
   competitionDate: {type: String, required: true},
   weapon: {type: String, required: true, lowercase: true, enum: ['fleuret', 'epee', 'sabre']},
   gender: {type: String, enum: ['M', 'F', '']},
-  ageCategory: {type: ageCategorySchema, required: true},
+  ageCategory: {type: mongoose.Types.ObjectId, required: true, ref: 'AgeCategory'},
   tournamentName: {type: String, required: true},
   competitionShortName: {type: String, required: true},
   status: {type: String, default: CompetitionStatus.pending, required: true, lowercase: true, enum: [CompetitionStatus.approved, CompetitionStatus.rejected, CompetitionStatus.pending]},

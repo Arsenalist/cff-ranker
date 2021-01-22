@@ -1,17 +1,22 @@
 import {
+  createAgeCategory,
   createCompetition,
+  deleteAgeCategory,
   deleteCompetition,
   findCompetitionResult,
   findCompetitionResults,
-  findParticipant, getCompetitions,
+  findParticipant,
+  getAgeCategories,
+  getCompetitions,
+  saveClassifications,
   saveCompetitionResults,
   saveParticipantInCompetition,
   savePlayers,
-  updateCompetitionStatus,
-  saveClassifications, getAgeCategories, updateAgeCategory, deleteAgeCategory, createAgeCategory
+  updateAgeCategory,
+  updateCompetitionStatus
 } from './db/dao';
 import { handleUpload } from './file-upload';
-import { decorateResultsWithWarnings, parseCompetitionFileContents, parseValidationFileContents, parseClassificationFileContents } from '@cff/csv';
+import { parseClassificationFileContents, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
 import { handleErrors } from './middleware/errors';
 import { openMongo } from './db/mongo-connection';
 import { readFile } from './file-io';
@@ -21,7 +26,8 @@ import {
   CompetitionResults,
   CompetitionStatus,
   Player,
-  PlayerClassification, Weapon
+  PlayerClassification,
+  Weapon
 } from '@cff/api-interfaces';
 import { getCompetitionResultsInLast12Months, getPlayerClassifications } from './db/mygoose';
 import { rank } from '@cff/ranking-algo';
@@ -65,15 +71,13 @@ app.post('/api/upload-competition-file', checkJwt, asyncHandler(async (req, res)
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results: CompetitionResults = await parseCompetitionFileContents(contents);
-  const decoratedResults: CompetitionResults = decorateResultsWithWarnings(results);
   if (req.body && !req.body.code) {
     throw new Error("Competition code is required.")
   }
   results.competitionShortName = req.body.code
-  await saveCompetitionResults(decoratedResults);
   res.send({
     rowCount: results.results.length,
-    competition: results
+    competition: await saveCompetitionResults(results)
   })
 }));
 

@@ -10,12 +10,12 @@ import { mongoose } from '@typegoose/typegoose';
 import { Competition } from '@cff/api-interfaces';
 
 export async function findCompetitionResults(): Promise<CompetitionResults[]> {
-  return CompetitionResultsModel.find({});
+  return CompetitionResultsModel.find({}).populate('ageCategory competition');
 }
 
 export async function findCompetitionResult(id): Promise<CompetitionResults> {
   const objectId = mongoose.Types.ObjectId(id)
-  return CompetitionResultsModel.findOne({ _id: objectId });
+  return CompetitionResultsModel.findOne({ _id: objectId }).populate('ageCategory competition');
 }
 
 export async function findPlayerByCffNumber(cffNumber: string): Promise<Player> {

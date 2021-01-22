@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { CompetitionResults } from '@cff/api-interfaces';
+import { CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
 
 export function CompetitionResultsList() {
   const [competitions, setCompetitions] = useState<CompetitionResults[]>([])
@@ -19,11 +19,22 @@ export function CompetitionResultsList() {
     });
   }, []);
 
+  const statusChip = (status) => {
+    switch(status) {
+      case CompetitionStatus.approved:
+        return <Chip label="Approved" color="primary" variant="default" />
+      case CompetitionStatus.pending:
+        return <Chip label="Pending" color="secondary" variant="default" />
+      case CompetitionStatus.rejected:
+        return <Chip label="Approved" color="default" variant="default" />
+    }
+  };
+
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
-          <TableRow>
+          <TableRow key="header">
             <TableCell>Name</TableCell>
             <TableCell>Date</TableCell>
             <TableCell>Type</TableCell>
@@ -33,37 +44,35 @@ export function CompetitionResultsList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {competitions.map((row) => (
-            <TableRow key={row._id}>
-              <TableCell scope="row">
-                <Link to={{pathname: `/competition/${row._id}`}} >
-                  {row.tournamentName}
-                </Link>
-              </TableCell>
-              <TableCell scope="row">
-                {row.competitionDate}
-              </TableCell>
-              <TableCell scope="row">
-                {row.competitionType}
-              </TableCell>
-              <TableCell scope="row">
-                {row.weapon}
-              </TableCell>
-              <TableCell scope="row">
-                {row.gender}
-              </TableCell>
-              <TableCell scope="row">
-                {row.ageCategory.name}
-              </TableCell>
-              <TableCell scope="row">
-                <Chip
-                  label="Pending"
-                  color="secondary"
-                  variant="outlined"
-                />
-              </TableCell>
-            </TableRow>
-          ))}
+          {competitions.map((row) => {
+            return (
+              <TableRow key={row._id}>
+                <TableCell scope="row">
+                  <Link to={{ pathname: `/competition/${row._id}` }}>
+                    {row.tournamentName}
+                  </Link>
+                </TableCell>
+                <TableCell scope="row">
+                  {row.competitionDate}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.competitionType}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.weapon}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.gender}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.ageCategory.name}
+                </TableCell>
+                <TableCell scope="row">
+                  {statusChip(row.status)}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>

@@ -32,7 +32,15 @@ async function saveCompetitionResults(competitionResults: CompetitionResults) {
   const competition = await getCompetitionByCode(competitionResults.competitionShortName)
   competitionResults.ageCategory = ageCategory
   competitionResults.competition = competition._id
-  await mygoose.saveCompetitionResults(competitionResults)
+  const decoratedResults = decorateResultsWithWarnings(competitionResults)
+  const hasWarnings = decoratedResults.results.filter(p => p.warnings.length !== 0).length !== 0
+  if (hasWarnings) {
+    decoratedResults.status = CompetitionStatus.pending
+  } else {
+    decoratedResults.status = CompetitionStatus.approved
+  }
+  await mygoose.saveCompetitionResults(decoratedResults)
+  return decoratedResults
 }
 
 async function validateCffNumber(competitionResults: CompetitionResults) {

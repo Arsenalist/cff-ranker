@@ -1,5 +1,4 @@
 import { decorateResultsWithWarnings, parseCompetitionFileContents } from '@cff/csv';
-import { AgeCategory } from '@cff/api-interfaces';
 
 const validCsvContents = "FFF;WIN;competition;sylvie clement;individuel\n" +
   "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +

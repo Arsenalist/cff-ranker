@@ -25,6 +25,7 @@ import * as mygoose from './mygoose';
 const mongoose = require('mongoose');
 
 const ageCategory: AgeCategory = {
+  _id: new mongoose.Types.ObjectId("600ae95ca9a08111903e5066"),
   code: 'senior',
   name: 'Senior',
   minimumForce: 40,
@@ -118,22 +119,13 @@ describe('dao.ts', () => {
           jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
           jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
           jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
+
           await saveCompetitionResults(fields);
           fail('should not reach here');
         } catch (err) {
+          console.log(err)
           expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
           expect(Object.keys(err.errors).length).toBe(7); // age category is handled separately
-        }
-      });
-      it('at least one result must be provided', async () => {
-        fields['results'] = [];
-        jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
-        try {
-          await saveCompetitionResults(fields);
-          fail('should not reach here');
-        } catch (err) {
-          expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-          expect(Object.keys(err.errors).length).toBe(1);
         }
       });
       it('age category is invalid', async () => {
@@ -163,7 +155,9 @@ describe('dao.ts', () => {
         jest.spyOn(mygoose, 'findPlayerByCffNumber').mockResolvedValue({});
         jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
         jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
+        const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementation(jest.fn())
         await saveCompetitionResults(fields);
+        expect(saveCompetitionResultsSpy.mock.calls[0][0].status).toBe(CompetitionStatus.approved)
       });
       describe('CFF# validation from validation file', () => {
         it('participant with invalid CFF# is rejected', async () => {
