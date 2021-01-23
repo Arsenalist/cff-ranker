@@ -9,7 +9,7 @@ import {
 import { handleUpload } from './file-upload';
 import { parseClassificationFileContents, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
 import { handleErrors } from './middleware/errors';
-import { openMongo } from './db/mongo-connection';
+import { openMongo } from './db/mongodb/mongo-connection';
 import { readFile } from './file-io';
 import {
   Competition,
