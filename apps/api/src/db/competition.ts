@@ -10,7 +10,7 @@ export async function getCompetitionByCode(code: string): Promise<Competition> {
   return competition;
 }
 
-async function createCompetition(competition: Competition) {
+export async function createCompetition(competition: Competition) {
   try {
     await mygoose.createCompetition(competition);
   } catch (e) {
@@ -22,14 +22,12 @@ async function createCompetition(competition: Competition) {
   }
 }
 
-export { createCompetition };
-
 export async function deleteCompetition(code: string) {
   await mygoose.deleteCompetition(code)
 }
 
-async function getCompetitions(): Promise<Competition[]> {
+export async function getCompetitions(): Promise<Competition[]> {
   return await mygoose.getCompetitions();
 }
 
-export { getCompetitions };
+

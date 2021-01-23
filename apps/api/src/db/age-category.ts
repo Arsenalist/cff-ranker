@@ -18,8 +18,6 @@ export async function createAgeCategory(ageCategory: AgeCategory) {
   await mygoose.createAgeCategory(ageCategory);
 }
 
-async function getAgeCategories(): Promise<AgeCategory[]> {
+export async function getAgeCategories(): Promise<AgeCategory[]> {
   return mygoose.getAgeCategories();
 }
-
-export { getAgeCategories };
