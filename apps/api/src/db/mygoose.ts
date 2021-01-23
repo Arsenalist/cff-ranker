@@ -38,7 +38,7 @@ export async function saveCompetitionResults(competitionResults: CompetitionResu
   await new CompetitionResultsModel(competitionResults).save()
 }
 
-export async function updateCompetitionResults(competitionResults: CompetitionResult) {
+export async function updateCompetitionResult(competitionResults: CompetitionResult) {
   await save(competitionResults)
 }
 

@@ -10,7 +10,7 @@ import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 
 async function saveCompetitionResults(competitionResult: CompetitionResult) {
-  await validateCompetitionResultParticipants(competitionResult.results)
+  await validateParticipantsInCompetitionResult(competitionResult.results)
   const ageCategory = await mygoose.getAgeCategoryByCode(competitionResult.ageCategory as string);
   if (!ageCategory) {
     throw new MultiMessageError([`Age Category is invalid: ${competitionResult.ageCategory}`])
@@ -29,7 +29,7 @@ async function saveCompetitionResults(competitionResult: CompetitionResult) {
   return decoratedResults
 }
 
-async function validateCompetitionResultParticipants(competitionParticipants: CompetitionParticipant[]) {
+async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]) {
   for (const r of competitionParticipants) {
     if (!await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
@@ -62,9 +62,9 @@ async function saveParticipantInCompetitionResult(competitionResultId: string, p
 }
 
 export async function updateCompetitionResultStatus(competitionId: string, status: CompetitionStatus) {
-  const competitionResults = await findCompetitionResult(competitionId)
-  competitionResults.status = status
-  await mygoose.updateCompetitionResults(competitionResults)
+  const competitionResult = await findCompetitionResult(competitionId)
+  competitionResult.status = status
+  await mygoose.updateCompetitionResult(competitionResult)
 }
 
 async function saveClassifications(classifications: PlayerClassification[]) {

@@ -131,14 +131,14 @@ describe('dao.ts', () => {
         it('competition is approved', async () => {
           jest.resetAllMocks()
           jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
-          const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
+          const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResult').mockImplementationOnce(jest.fn())
           await updateCompetitionResultStatus(fields._id, CompetitionStatus.approved )
           expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.approved}))
         });
         it('competition is rejected', async () => {
           jest.resetAllMocks()
           jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
-          const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
+          const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResult').mockImplementationOnce(jest.fn())
           await updateCompetitionResultStatus(fields._id, CompetitionStatus.rejected )
           expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.rejected}))
         });
