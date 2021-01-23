@@ -5,7 +5,7 @@ import {
   saveCompetitionResults,
   saveParticipantInCompetitionResult,
   updateCompetitionResultStatus
-} from './db/dao';
+} from './db/competition-result';
 import { handleUpload } from './file-upload';
 import { parseClassificationFileContents, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
 import { handleErrors } from './middleware/errors';

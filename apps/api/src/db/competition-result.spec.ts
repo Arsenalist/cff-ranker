@@ -2,7 +2,7 @@ import { mockOnce } from '../../mockgoose';
 import {
   saveCompetitionResults, saveParticipantInCompetitionResult,
   updateCompetitionResultStatus
-} from './dao';
+} from './competition-result';
 import { MultiMessageError } from '@cff/common';
 import { PlayerModel } from './schemas';
 import {
@@ -26,7 +26,7 @@ const ageCategory: AgeCategory = {
   yearOfBirth: 1980
 }
 
-describe('dao.ts', () => {
+describe('competition-result.ts', () => {
   let fields: CompetitionResult;
     beforeEach(() => {
       fields = {
