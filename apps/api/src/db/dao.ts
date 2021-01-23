@@ -50,18 +50,18 @@ async function findParticipant(competitionId: string, participantId: string): Pr
   return await mygoose.queryListById(competition.results, participantId)
 }
 
-async function saveParticipantInCompetition(competitionId: string, participantId: string, data: Partial<CompetitionParticipant>) {
+async function saveParticipantInCompetitionResults(competitionResultId: string, participantId: string, data: Partial<CompetitionParticipant>) {
   if (!isCffNumberFormatValid(data.cffNumber)) {
     throw new MultiMessageError([`Invalid CFF# format: ${data.cffNumber}`])
   }
-  let competition: CompetitionResults = await mygoose.findCompetitionResult(competitionId)
+  let competition: CompetitionResults = await mygoose.findCompetitionResult(competitionResultId)
   const participant =  await mygoose.queryListById(competition.results, participantId)
   participant.cffNumber = data.cffNumber
   competition = decorateResultsWithWarnings(competition)
   await mygoose.save(competition)
 }
 
-export async function updateCompetitionStatus(competitionId: string, status: CompetitionStatus) {
+export async function updateCompetitionResultsStatus(competitionId: string, status: CompetitionStatus) {
   const competitionResults = await findCompetitionResult(competitionId)
   competitionResults.status = status
   await mygoose.updateCompetitionResults(competitionResults)
@@ -72,4 +72,4 @@ async function saveClassifications(classifications: PlayerClassification[]) {
 }
 
 
-export { saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, saveClassifications}
+export { saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetitionResults, saveClassifications}

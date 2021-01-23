@@ -1,8 +1,8 @@
 import { mockOnce } from '../../mockgoose';
 import {
   saveClassifications,
-  saveCompetitionResults, saveParticipantInCompetition,
-  updateCompetitionStatus
+  saveCompetitionResults, saveParticipantInCompetitionResults,
+  updateCompetitionResultsStatus
 } from './dao';
 import { MultiMessageError } from '@cff/common';
 import { PlayerModel } from './schemas';
@@ -132,14 +132,14 @@ describe('dao.ts', () => {
           jest.resetAllMocks()
           jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
           const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
-          await updateCompetitionStatus(fields._id, CompetitionStatus.approved )
+          await updateCompetitionResultsStatus(fields._id, CompetitionStatus.approved )
           expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.approved}))
         });
         it('competition is rejected', async () => {
           jest.resetAllMocks()
           jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
           const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResults').mockImplementationOnce(jest.fn())
-          await updateCompetitionStatus(fields._id, CompetitionStatus.rejected )
+          await updateCompetitionResultsStatus(fields._id, CompetitionStatus.rejected )
           expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.rejected}))
         });
       });
@@ -147,7 +147,7 @@ describe('dao.ts', () => {
         it('save a participant is rejected', async () => {
           const invalidCffNumber = "ABC"
           try {
-            await saveParticipantInCompetition("competitionId", "participantId", {cffNumber: invalidCffNumber} )
+            await saveParticipantInCompetitionResults("competitionId", "participantId", {cffNumber: invalidCffNumber} )
             fail("should not get here")
           } catch (e) {
             expect(e.errorMessages[0]).toBe(`Invalid CFF# format: ${invalidCffNumber}`)
@@ -157,7 +157,7 @@ describe('dao.ts', () => {
           jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
           jest.spyOn(mygoose, 'queryListById').mockResolvedValue({ } )
           jest.spyOn(mygoose, 'save').mockResolvedValue(null)
-          await saveParticipantInCompetition("competitionId", "participantId", {cffNumber: "C06-0516"} )
+          await saveParticipantInCompetitionResults("competitionId", "participantId", {cffNumber: "C06-0516"} )
         });
       });
     });

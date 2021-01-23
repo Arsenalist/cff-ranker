@@ -4,8 +4,8 @@ import {
   findParticipant,
   saveClassifications,
   saveCompetitionResults,
-  saveParticipantInCompetition,
-  updateCompetitionStatus
+  saveParticipantInCompetitionResults,
+  updateCompetitionResultsStatus
 } from './db/dao';
 import { handleUpload } from './file-upload';
 import { parseClassificationFileContents, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
@@ -97,7 +97,7 @@ app.get('/api/competition/:id', checkJwt, asyncHandler(async (req, res) => {
 }));
 
 app.post('/api/competition/status', checkJwt, asyncHandler(async (req, res) => {
-  await updateCompetitionStatus(req.body.competitionId, CompetitionStatus[req.body.status]);
+  await updateCompetitionResultsStatus(req.body.competitionId, CompetitionStatus[req.body.status]);
   res.send()
 }));
 
@@ -107,7 +107,7 @@ app.get('/api/participant/:competitionId/:participantId', checkJwt, asyncHandler
 }));
 
 app.post('/api/participant/:competitionId/:participantId', checkJwt, asyncHandler(async (req, res) => {
-  const contents = await saveParticipantInCompetition(req.params.competitionId, req.params.participantId, req.body);
+  const contents = await saveParticipantInCompetitionResults(req.params.competitionId, req.params.participantId, req.body);
   res.send(contents)
 }));
 
