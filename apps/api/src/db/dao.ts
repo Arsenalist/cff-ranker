@@ -10,7 +10,7 @@ import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
-  await validateParticipants(competitionResults)
+  await validateCompetitionParticipants(competitionResults.results)
   const ageCategory = await mygoose.getAgeCategoryByCode(competitionResults.ageCategory as string);
   if (!ageCategory) {
     throw new MultiMessageError([`Age Category is invalid: ${competitionResults.ageCategory}`])
@@ -29,8 +29,8 @@ async function saveCompetitionResults(competitionResults: CompetitionResults) {
   return decoratedResults
 }
 
-async function validateParticipants(competitionResults: CompetitionResults) {
-  for (const r of competitionResults.results) {
+async function validateCompetitionParticipants(competitionParticipants: CompetitionParticipant[]) {
+  for (const r of competitionParticipants) {
     if (!await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
     }
