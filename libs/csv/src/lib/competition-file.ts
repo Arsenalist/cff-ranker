@@ -31,7 +31,7 @@ async function parseCompetitionFileContents(fileContents: string): Promise<Compe
   }
 }
 
-function decorateResultsWithWarnings(competition: CompetitionResult): CompetitionResult {
+function decorateCompetitionResultWithWarnings(competition: CompetitionResult): CompetitionResult {
   for (const r of competition.results) {
     const warnings = []
     if (!r.cffNumber) {
@@ -116,4 +116,4 @@ async function parseResults(fileContents: string): Promise<CompetitionParticipan
   });
 }
 
-export { parseCompetitionFileContents, decorateResultsWithWarnings };
+export { parseCompetitionFileContents, decorateCompetitionResultWithWarnings };

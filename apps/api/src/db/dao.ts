@@ -1,4 +1,4 @@
-import { decorateResultsWithWarnings, isCffNumberFormatValid } from '@cff/csv';
+import { decorateCompetitionResultWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import {
   CompetitionParticipant,
   CompetitionResult,
@@ -9,16 +9,16 @@ import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 
-async function saveCompetitionResults(competitionResults: CompetitionResult) {
-  await validateCompetitionParticipants(competitionResults.results)
-  const ageCategory = await mygoose.getAgeCategoryByCode(competitionResults.ageCategory as string);
+async function saveCompetitionResults(competitionResult: CompetitionResult) {
+  await validateCompetitionResultParticipants(competitionResult.results)
+  const ageCategory = await mygoose.getAgeCategoryByCode(competitionResult.ageCategory as string);
   if (!ageCategory) {
-    throw new MultiMessageError([`Age Category is invalid: ${competitionResults.ageCategory}`])
+    throw new MultiMessageError([`Age Category is invalid: ${competitionResult.ageCategory}`])
   }
-  const competition = await getCompetitionByCode(competitionResults.competitionShortName)
-  competitionResults.ageCategory = ageCategory
-  competitionResults.competition = competition._id
-  const decoratedResults = decorateResultsWithWarnings(competitionResults)
+  const competition = await getCompetitionByCode(competitionResult.competitionShortName)
+  competitionResult.ageCategory = ageCategory
+  competitionResult.competition = competition._id
+  const decoratedResults = decorateCompetitionResultWithWarnings(competitionResult)
   const hasWarnings = decoratedResults.results.filter(p => p.warnings.length !== 0).length !== 0
   if (hasWarnings) {
     decoratedResults.status = CompetitionStatus.pending
@@ -29,7 +29,7 @@ async function saveCompetitionResults(competitionResults: CompetitionResult) {
   return decoratedResults
 }
 
-async function validateCompetitionParticipants(competitionParticipants: CompetitionParticipant[]) {
+async function validateCompetitionResultParticipants(competitionParticipants: CompetitionParticipant[]) {
   for (const r of competitionParticipants) {
     if (!await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
@@ -50,18 +50,18 @@ async function findParticipant(competitionId: string, participantId: string): Pr
   return await mygoose.queryListById(competition.results, participantId)
 }
 
-async function saveParticipantInCompetitionResults(competitionResultId: string, participantId: string, data: Partial<CompetitionParticipant>) {
+async function saveParticipantInCompetitionResult(competitionResultId: string, participantId: string, data: Partial<CompetitionParticipant>) {
   if (!isCffNumberFormatValid(data.cffNumber)) {
     throw new MultiMessageError([`Invalid CFF# format: ${data.cffNumber}`])
   }
   let competition: CompetitionResult = await mygoose.findCompetitionResult(competitionResultId)
   const participant =  await mygoose.queryListById(competition.results, participantId)
   participant.cffNumber = data.cffNumber
-  competition = decorateResultsWithWarnings(competition)
+  competition = decorateCompetitionResultWithWarnings(competition)
   await mygoose.save(competition)
 }
 
-export async function updateCompetitionResultsStatus(competitionId: string, status: CompetitionStatus) {
+export async function updateCompetitionResultStatus(competitionId: string, status: CompetitionStatus) {
   const competitionResults = await findCompetitionResult(competitionId)
   competitionResults.status = status
   await mygoose.updateCompetitionResults(competitionResults)
@@ -72,4 +72,4 @@ async function saveClassifications(classifications: PlayerClassification[]) {
 }
 
 
-export { saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetitionResults, saveClassifications}
+export { saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetitionResult, saveClassifications}

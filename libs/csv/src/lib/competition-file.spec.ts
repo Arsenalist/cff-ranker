@@ -1,4 +1,4 @@
-import { decorateResultsWithWarnings, parseCompetitionFileContents } from '@cff/csv';
+import { decorateCompetitionResultWithWarnings, parseCompetitionFileContents } from '@cff/csv';
 
 const validCsvContents = "FFF;WIN;competition;sylvie clement;individuel\n" +
   "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
@@ -223,7 +223,7 @@ describe('decorate competition results with warnings', () => {
         warnings: []
       }]
     }
-    const decorated = decorateResultsWithWarnings(competiton)
+    const decorated = decorateCompetitionResultWithWarnings(competiton)
     expect(decorated.results[0].warnings.length).toBe(1)
     expect(decorated.results[0].warnings[0].type).toBe('MISSING_CFF_NUMBER')
   });
