@@ -1,7 +1,7 @@
 import { decorateResultsWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import {
   CompetitionParticipant,
-  CompetitionResults,
+  CompetitionResult,
   CompetitionStatus,
   PlayerClassification
 } from '@cff/api-interfaces';
@@ -9,7 +9,7 @@ import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 
-async function saveCompetitionResults(competitionResults: CompetitionResults) {
+async function saveCompetitionResults(competitionResults: CompetitionResult) {
   await validateCompetitionParticipants(competitionResults.results)
   const ageCategory = await mygoose.getAgeCategoryByCode(competitionResults.ageCategory as string);
   if (!ageCategory) {
@@ -37,16 +37,16 @@ async function validateCompetitionParticipants(competitionParticipants: Competit
   }
 }
 
-async function findCompetitionResults(): Promise<CompetitionResults[]> {
+async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return mygoose.findCompetitionResults()
 }
 
-async function findCompetitionResult(id): Promise<CompetitionResults> {
+async function findCompetitionResult(id): Promise<CompetitionResult> {
   return mygoose.findCompetitionResult(id)
 }
 
 async function findParticipant(competitionId: string, participantId: string): Promise<CompetitionParticipant> {
-  const competition: CompetitionResults = await mygoose.findCompetitionResult(competitionId)
+  const competition: CompetitionResult = await mygoose.findCompetitionResult(competitionId)
   return await mygoose.queryListById(competition.results, participantId)
 }
 
@@ -54,7 +54,7 @@ async function saveParticipantInCompetitionResults(competitionResultId: string, 
   if (!isCffNumberFormatValid(data.cffNumber)) {
     throw new MultiMessageError([`Invalid CFF# format: ${data.cffNumber}`])
   }
-  let competition: CompetitionResults = await mygoose.findCompetitionResult(competitionResultId)
+  let competition: CompetitionResult = await mygoose.findCompetitionResult(competitionResultId)
   const participant =  await mygoose.queryListById(competition.results, participantId)
   participant.cffNumber = data.cffNumber
   competition = decorateResultsWithWarnings(competition)

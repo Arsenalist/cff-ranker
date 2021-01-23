@@ -1,5 +1,5 @@
 import { MultiMessageError } from '@cff/common';
-import { AgeCategory, CompetitionParticipant, CompetitionResults } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionParticipant, CompetitionResult } from '@cff/api-interfaces';
 import { isCffNumberFormatValid } from '@cff/common';
 
 const csv = require('async-csv');
@@ -9,10 +9,10 @@ function getEnumKeyByEnumValue(myEnum, enumValue:string): any {
   return keys.length > 0 ? myEnum[keys[0]] : null;
 }
 
-async function parseCompetitionFileContents(fileContents: string): Promise<CompetitionResults> {
+async function parseCompetitionFileContents(fileContents: string): Promise<CompetitionResult> {
   const { line1Values, line2Values } = parseHeaderRows(fileContents);
   const records: CompetitionParticipant[] = await parseResults(fileContents);
-  const competition: CompetitionResults = {
+  const competition: CompetitionResult = {
     creator: line1Values[3],
     competitionType: line1Values[4],
     competitionDate: line2Values[0],
@@ -31,7 +31,7 @@ async function parseCompetitionFileContents(fileContents: string): Promise<Compe
   }
 }
 
-function decorateResultsWithWarnings(competition: CompetitionResults): CompetitionResults {
+function decorateResultsWithWarnings(competition: CompetitionResult): CompetitionResult {
   for (const r of competition.results) {
     const warnings = []
     if (!r.cffNumber) {
@@ -51,7 +51,7 @@ function parseHeaderRows(fileContents: string) {
   return { line1Values, line2Values };
 }
 
-function validateCompetition(competition: CompetitionResults) {
+function validateCompetition(competition: CompetitionResult) {
   const errors: string[] = []
   addMessageToErrorsListIfTestFails(errors, () => !!competition.competitionDate, "The competition date is not specified.")
   addMessageToErrorsListIfTestFails(errors, () => !!competition.weapon, "The weapon is not specified.")

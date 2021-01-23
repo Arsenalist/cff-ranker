@@ -1,7 +1,7 @@
 import {
   AgeCategory,
   Competition,
-  CompetitionResults,
+  CompetitionResult,
   Player,
   PlayerClassification,
   Weapon
@@ -15,11 +15,11 @@ import {
 } from './schemas';
 import { mongoose } from '@typegoose/typegoose';
 
-export async function findCompetitionResults(): Promise<CompetitionResults[]> {
+export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');
 }
 
-export async function findCompetitionResult(id): Promise<CompetitionResults> {
+export async function findCompetitionResult(id): Promise<CompetitionResult> {
   const objectId = mongoose.Types.ObjectId(id)
   return CompetitionResultsModel.findOne({ _id: objectId }).populate('ageCategory competition');
 }
@@ -34,11 +34,11 @@ export async function validateParticipant(cffNumber: string, name: string, surna
   });
 }
 
-export async function saveCompetitionResults(competitionResults: CompetitionResults) {
+export async function saveCompetitionResults(competitionResults: CompetitionResult) {
   await new CompetitionResultsModel(competitionResults).save()
 }
 
-export async function updateCompetitionResults(competitionResults: CompetitionResults) {
+export async function updateCompetitionResults(competitionResults: CompetitionResult) {
   await save(competitionResults)
 }
 
@@ -93,7 +93,7 @@ export async function saveClassifications(classifications: PlayerClassification[
   await PlayerClassificationModel.insertMany(classifications);
 }
 
-export async function getCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResults[]> {
+export async function getCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({weapon: weapon}).populate('competition');
 }
 

@@ -13,9 +13,9 @@ import Button from '@material-ui/core/Button';
 import EditParticipant from '../edit-participant/edit-participant'
 import CompetitionHeader from '../competition-header/competition-header';
 import Dialog from '@material-ui/core/Dialog';
-import { CompetitionResults, CompetitionStatus } from '@cff/api-interfaces';
+import { CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
 
-function checkHasWarnings(competition: CompetitionResults) {
+function checkHasWarnings(competition: CompetitionResult) {
   return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
 }
 
@@ -25,7 +25,7 @@ export function ViewCompetition() {
   const [hasWarnings, setHasWarnings] = useState(false);
   const [introMessage, setIntroMessage] = useState(null);
   const [participantId, setParticipantId] = useState(null);
-  const [competition, setCompetition] = useState<CompetitionResults>(null)
+  const [competition, setCompetition] = useState<CompetitionResult>(null)
   const [reload, setReload] = useState(0)
 
   const handleClose = () => {

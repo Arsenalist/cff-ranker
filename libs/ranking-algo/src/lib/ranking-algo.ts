@@ -1,7 +1,7 @@
 import {
   AgeCategory,
   CompetitionParticipant,
-  CompetitionResults,
+  CompetitionResult,
   CompetitionZone,
   PlayerClass,
   PlayerClassification, Rank, Ranking
@@ -23,12 +23,12 @@ export function calculatePointsForParticipant(place: number, force: number, numb
   return roundToOneDecimal(actual)
 }
 
-export function filterCompetitionResults(competitionResults: CompetitionResults[], player: PlayerClassification, zone: CompetitionZone): CompetitionResults[] {
+export function filterCompetitionResults(competitionResults: CompetitionResult[], player: PlayerClassification, zone: CompetitionZone): CompetitionResult[] {
   return competitionResults.filter(v => v.competition.zone === zone &&
     v.results.filter(p => p.cffNumber === player.cffNumber).length !== 0)
 }
 
-export function rank(competitionResults: CompetitionResults[], players: PlayerClassification[]): Ranking {
+export function rank(competitionResults: CompetitionResult[], players: PlayerClassification[]): Ranking {
   const forceMap = createForceMap(competitionResults, players)
   let allPlayersPointsMap = new Map<string, number>()
   const ranks: Rank[] = []
@@ -47,7 +47,7 @@ export function rank(competitionResults: CompetitionResults[], players: PlayerCl
 }
 
 function collectPoints(player: PlayerClassification,
-                       results: CompetitionResults[],
+                       results: CompetitionResult[],
                        playerPointsMap: Map<string, number>): number {
   return results.reduce( (acc, value) => {
      const points = playerPointsMap.get(player.cffNumber + value.competition.code);
@@ -56,7 +56,7 @@ function collectPoints(player: PlayerClassification,
   }, 0)
 }
 
-function createForceMap(competitionResults: CompetitionResults[], players: PlayerClassification[]): Map<string, number> {
+function createForceMap(competitionResults: CompetitionResult[], players: PlayerClassification[]): Map<string, number> {
   const forceMap = new Map<string, number>()
   for (const c of competitionResults) {
     forceMap[c.competition.code] = calculateForce(c.results, players, c.ageCategory as AgeCategory)
@@ -76,7 +76,7 @@ function takeTopCompetitions(cffCompetitionPoints: { code: string; points: numbe
   return cffCompetitionPoints;
 }
 
-function createPlayerPointsMap(competitionResults: CompetitionResults[], player: PlayerClassification, forceMap): Map<string, number> {
+function createPlayerPointsMap(competitionResults: CompetitionResult[], player: PlayerClassification, forceMap): Map<string, number> {
   const map = new Map<string, number>()
   let cffCompetitionPoints: {code: string, points: number}[] = []
   for(const c of competitionResults) {

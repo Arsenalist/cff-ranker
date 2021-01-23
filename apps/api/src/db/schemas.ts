@@ -1,7 +1,7 @@
 import {
   AgeCategory,
   Competition,
-  CompetitionResults,
+  CompetitionResult,
   CompetitionStatus,
   Player,
   PlayerClassification, Ranking, RankingJob
@@ -94,7 +94,7 @@ const ranking = new mongoose.Schema({
 })
 
 
-type CompetitionResultsType = CompetitionResults & mongoose.Document;
+type CompetitionResultsType = CompetitionResult & mongoose.Document;
 const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
 
 type PlayerType = Player & mongoose.Document;

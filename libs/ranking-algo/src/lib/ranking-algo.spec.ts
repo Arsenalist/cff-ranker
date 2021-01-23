@@ -2,7 +2,7 @@ import { calculateForce, calculatePointsForParticipant, filterCompetitionResults
 import {
   AgeCategory,
   CompetitionParticipant,
-  CompetitionResults,
+  CompetitionResult,
   CompetitionZone,
   PlayerClass,
   PlayerClassification,
@@ -166,7 +166,7 @@ describe('calculate points earned by a participant in a competition', () => {
 })
 
 describe('get competitions by zone for a player', () => {
-  const competitionResults: CompetitionResults[] = [
+  const competitionResults: CompetitionResult[] = [
     {
       competitionShortName: 'CFF1',
       competition: {zone: CompetitionZone.cff},
@@ -206,7 +206,7 @@ describe('calculate points for players in many tournaments', () => {
     {cffNumber: '009', 'class': PlayerClass.D},
     {cffNumber: '010', 'class': PlayerClass.D}
   ]
-  const competitionResults: CompetitionResults[] = [
+  const competitionResults: CompetitionResult[] = [
     {
       ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: 'CFF1'},
@@ -287,8 +287,8 @@ describe('only top five cff competitions are considered', () => {
     {cffNumber: '005', 'class': PlayerClass.C},
     {cffNumber: '006', 'class': PlayerClass.C}
   ]
-  function createCompetitionResults(code: string, placeFor001: number): CompetitionResults {
-    const competitionResult: CompetitionResults = {
+  function createCompetitionResults(code: string, placeFor001: number): CompetitionResult {
+    const competitionResult: CompetitionResult = {
       ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: code},
       results: [

@@ -17,7 +17,7 @@ interface Warning {
   type: string
 }
 
-interface CompetitionResults {
+interface CompetitionResult {
 
   _id?: string
 
@@ -130,4 +130,4 @@ export interface RankingJob {
   user: string
   dateGenerated: Date
 }
-export { CompetitionParticipant, Warning, CompetitionResults, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }
+export { CompetitionParticipant, Warning, CompetitionResult, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }

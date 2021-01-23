@@ -15,7 +15,7 @@ import { readFile } from './file-io';
 import {
   Competition,
   CompetitionParticipant,
-  CompetitionResults,
+  CompetitionResult,
   CompetitionStatus,
   Player,
   PlayerClassification,
@@ -65,7 +65,7 @@ app.post('/api/upload-validation-file', checkJwt, asyncHandler(async (req, res) 
 app.post('/api/upload-competition-file', checkJwt, asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
-  const results: CompetitionResults = await parseCompetitionFileContents(contents);
+  const results: CompetitionResult = await parseCompetitionFileContents(contents);
   if (req.body && !req.body.code) {
     throw new Error("Competition code is required.")
   }
@@ -87,12 +87,12 @@ app.post('/api/upload-classification-file', checkJwt, asyncHandler(async (req, r
 }));
 
 app.get('/api/competition-results', checkJwt, asyncHandler(async (req, res) => {
-  const contents: CompetitionResults[] = await findCompetitionResults();
+  const contents: CompetitionResult[] = await findCompetitionResults();
   res.send(contents)
 }));
 
 app.get('/api/competition/:id', checkJwt, asyncHandler(async (req, res) => {
-  const contents: CompetitionResults = await findCompetitionResult(req.params.id);
+  const contents: CompetitionResult = await findCompetitionResult(req.params.id);
   res.send(contents)
 }));
 

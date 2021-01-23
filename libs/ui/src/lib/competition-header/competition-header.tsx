@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import { AgeCategory, CompetitionResults } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionResult } from '@cff/api-interfaces';
 
 interface CompetitionHeaderProps {
-  competition: CompetitionResults
+  competition: CompetitionResult
 }
 
 const StyledCompetitionHeader = styled.div`
@@ -15,7 +15,7 @@ const StyledCompetitionHeader = styled.div`
 `;
 
 export function CompetitionHeader(props: CompetitionHeaderProps) {
-  const [competition, setCompetition] = useState<CompetitionResults>(null)
+  const [competition, setCompetition] = useState<CompetitionResult>(null)
   useEffect(() => setCompetition(props.competition), [])
   return (
     <StyledCompetitionHeader>

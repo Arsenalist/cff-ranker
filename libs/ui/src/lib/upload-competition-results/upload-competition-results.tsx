@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { Competition, CompetitionResults } from '@cff/api-interfaces';
+import { Competition, CompetitionResult } from '@cff/api-interfaces';
 import TableContainer from '@material-ui/core/TableContainer';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -17,7 +17,7 @@ import CompetitionHeader from '../competition-header/competition-header';
 
 
 export function UploadCompetitionResults() {
-  const [competitionResults, setCompetitionResults] = useState<CompetitionResults>(null);
+  const [competitionResults, setCompetitionResults] = useState<CompetitionResult>(null);
   const [competition, setCompetition] = useState<Competition>(null);
   const [competitions, setCompetitions] = useState<Competition[]>([]);
   const { addErrors } = useContext(MessagesContext);

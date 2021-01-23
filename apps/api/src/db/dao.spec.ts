@@ -8,7 +8,7 @@ import { MultiMessageError } from '@cff/common';
 import { PlayerModel } from './schemas';
 import {
   AgeCategory,
-  CompetitionResults,
+  CompetitionResult,
   CompetitionStatus,
   CompetitionZone,
   PlayerClass,
@@ -28,7 +28,7 @@ const ageCategory: AgeCategory = {
 }
 
 describe('dao.ts', () => {
-  let fields: CompetitionResults;
+  let fields: CompetitionResult;
     beforeEach(() => {
       fields = {
         creator: 'Bill Smith',
