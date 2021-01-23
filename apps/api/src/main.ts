@@ -22,7 +22,7 @@ import {
 } from '@cff/api-interfaces';
 import { getCompetitionResultsInLast12Months, getPlayerClassifications } from './db/mygoose';
 import { rank } from '@cff/ranking-algo';
-import { AgeCategoryModel, RankingJobModel, RankingModel } from './db/schemas';
+import { AgeCategoryModel, RankingJobModel, RankingModel } from './db/schemas/schemas';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
 import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
 import { savePlayers } from './db/player';

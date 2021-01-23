@@ -5,7 +5,7 @@ import {
   updateCompetitionResultStatus
 } from './competition-result';
 import { MultiMessageError } from '@cff/common';
-import { PlayerModel } from './schemas';
+import { PlayerModel } from './schemas/schemas';
 import { AgeCategory, CompetitionResult, CompetitionStatus, CompetitionZone } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
 

@@ -5,7 +5,7 @@ import {
   CompetitionResultsModel,
   PlayerClassificationModel,
   PlayerModel
-} from './schemas';
+} from './schemas/schemas';
 import { mongoose } from '@typegoose/typegoose';
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {
