@@ -11,5 +11,4 @@ export const playerClassificationSchema = new mongoose.Schema({
   province: { type: String, required: true }
 });
 type PlayerClassificationType = PlayerClassification & mongoose.Document;
-const PlayerClassificationModel = mongoose.model<PlayerClassificationType>('PlayerClassification', playerClassificationSchema);
-export { PlayerClassificationModel };
+export const PlayerClassificationModel = mongoose.model<PlayerClassificationType>('PlayerClassification', playerClassificationSchema);

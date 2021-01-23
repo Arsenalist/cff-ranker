@@ -2,7 +2,7 @@ import * as mongoose from 'mongoose';
 import { CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
 import { competitionParticipant } from './competition-participant';
 
-export const competitionFileRecordSchema = new mongoose.Schema({
+const competitionFileRecordSchema = new mongoose.Schema({
   competition: { type: mongoose.Schema.Types.ObjectId, ref: 'Competition' },
   creator: { type: String, required: true },
   competitionType: { type: String, required: true },
@@ -22,5 +22,4 @@ export const competitionFileRecordSchema = new mongoose.Schema({
   results: { type: [competitionParticipant], validate: v => Array.isArray(v) && v.length > 0 }
 });
 type CompetitionResultsType = CompetitionResult & mongoose.Document;
-const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
-export { CompetitionResultsModel };
+export const CompetitionResultsModel = mongoose.model<CompetitionResultsType>('CompetitionResults', competitionFileRecordSchema);
