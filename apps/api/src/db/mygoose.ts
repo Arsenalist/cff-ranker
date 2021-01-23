@@ -1,12 +1,10 @@
 import { AgeCategory, Competition, CompetitionResult, Player, PlayerClassification, Weapon } from '@cff/api-interfaces';
-import {
-  AgeCategoryModel,
-  CompetitionModel,
-  CompetitionResultsModel,
-  PlayerClassificationModel,
-  PlayerModel
-} from './schemas/schemas';
 import { mongoose } from '@typegoose/typegoose';
+import { CompetitionResultsModel } from './schemas/competition-results';
+import { PlayerModel } from './schemas/player';
+import { CompetitionModel } from './schemas/competition';
+import { PlayerClassificationModel } from './schemas/player-classification';
+import { AgeCategoryModel } from './schemas/age-category';
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');

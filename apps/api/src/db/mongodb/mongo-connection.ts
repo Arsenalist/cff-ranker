@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 
 function openMongo() {
   mongoose.connect('mongodb+srv://web:vxhxbwn3i3bXAk5@cluster0.lylny.mongodb.net/ranker?retryWrites=true&w=majority', { useNewUrlParser: true });

@@ -5,11 +5,11 @@ import {
   updateCompetitionResultStatus
 } from './competition-result';
 import { MultiMessageError } from '@cff/common';
-import { PlayerModel } from './schemas/schemas';
 import { AgeCategory, CompetitionResult, CompetitionStatus, CompetitionZone } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
+import { PlayerModel } from './schemas/player';
 
-const mongoose = require('mongoose');
+import * as mongoose from 'mongoose';
 
 const ageCategory: AgeCategory = {
   _id: new mongoose.Types.ObjectId("600ae95ca9a08111903e5066"),
