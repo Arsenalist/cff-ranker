@@ -26,7 +26,7 @@ import { AgeCategoryModel, RankingJobModel, RankingModel } from './db/schemas';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
 import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
 import { savePlayers } from './db/player';
-import { saveClassifications } from './db/player-classification';
+import { savePlayerClassifications } from './db/player-classification';
 
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
@@ -80,7 +80,7 @@ app.post('/api/upload-classification-file', checkJwt, asyncHandler(async (req, r
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results: PlayerClassification[] = await parseClassificationFileContents(contents);
-  await saveClassifications(results);
+  await savePlayerClassifications(results);
   res.send({
     rowCount: results.length
   })
