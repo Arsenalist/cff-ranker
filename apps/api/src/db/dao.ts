@@ -1,15 +1,10 @@
 import { decorateCompetitionResultWithWarnings, isCffNumberFormatValid } from '@cff/csv';
-import {
-  CompetitionParticipant,
-  CompetitionResult,
-  CompetitionStatus,
-  PlayerClassification
-} from '@cff/api-interfaces';
+import { CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
 import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 
-async function saveCompetitionResults(competitionResult: CompetitionResult) {
+export async function saveCompetitionResults(competitionResult: CompetitionResult) {
   await validateParticipantsInCompetitionResult(competitionResult.results)
   const ageCategory = await mygoose.getAgeCategoryByCode(competitionResult.ageCategory as string);
   if (!ageCategory) {
@@ -29,7 +24,7 @@ async function saveCompetitionResults(competitionResult: CompetitionResult) {
   return decoratedResults
 }
 
-async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]) {
+export async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]) {
   for (const r of competitionParticipants) {
     if (!await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
@@ -37,20 +32,20 @@ async function validateParticipantsInCompetitionResult(competitionParticipants: 
   }
 }
 
-async function findCompetitionResults(): Promise<CompetitionResult[]> {
+export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return mygoose.findCompetitionResults()
 }
 
-async function findCompetitionResult(id): Promise<CompetitionResult> {
+export async function findCompetitionResult(id): Promise<CompetitionResult> {
   return mygoose.findCompetitionResult(id)
 }
 
-async function findParticipant(competitionId: string, participantId: string): Promise<CompetitionParticipant> {
+export async function findParticipant(competitionId: string, participantId: string): Promise<CompetitionParticipant> {
   const competition: CompetitionResult = await mygoose.findCompetitionResult(competitionId)
   return await mygoose.queryListById(competition.results, participantId)
 }
 
-async function saveParticipantInCompetitionResult(competitionResultId: string, participantId: string, data: Partial<CompetitionParticipant>) {
+export async function saveParticipantInCompetitionResult(competitionResultId: string, participantId: string, data: Partial<CompetitionParticipant>) {
   if (!isCffNumberFormatValid(data.cffNumber)) {
     throw new MultiMessageError([`Invalid CFF# format: ${data.cffNumber}`])
   }
@@ -66,10 +61,3 @@ export async function updateCompetitionResultStatus(competitionId: string, statu
   competitionResult.status = status
   await mygoose.updateCompetitionResult(competitionResult)
 }
-
-async function saveClassifications(classifications: PlayerClassification[]) {
-  return await mygoose.saveClassifications(classifications)
-}
-
-
-export { saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetitionResult, saveClassifications}

@@ -2,7 +2,6 @@ import {
   findCompetitionResult,
   findCompetitionResults,
   findParticipant,
-  saveClassifications,
   saveCompetitionResults,
   saveParticipantInCompetitionResult,
   updateCompetitionResultStatus
@@ -27,6 +26,7 @@ import { AgeCategoryModel, RankingJobModel, RankingModel } from './db/schemas';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
 import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
 import { savePlayers } from './db/player';
+import { saveClassifications } from './db/player-classification';
 
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
