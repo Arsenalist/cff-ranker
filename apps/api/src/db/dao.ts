@@ -1,26 +1,13 @@
 import { decorateResultsWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import {
-  Competition,
   CompetitionParticipant,
   CompetitionResults,
   CompetitionStatus,
-  Player,
   PlayerClassification
 } from '@cff/api-interfaces';
 import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
-
-async function savePlayers(results: Player[]) {
-    await mygoose.savePlayers(results)
-}
-
-async function getCompetitionByCode(code: string): Promise<Competition> {
-  const competition: Competition = await mygoose.getCompetition(code)
-  if (!competition) {
-    throw new MultiMessageError([`The competition code "${code}" does not exist.`])
-  }
-  return competition
-}
+import { getCompetitionByCode } from './competition';
 
 async function saveCompetitionResults(competitionResults: CompetitionResults) {
   await validateParticipants(competitionResults)
@@ -80,29 +67,9 @@ export async function updateCompetitionStatus(competitionId: string, status: Com
   await mygoose.updateCompetitionResults(competitionResults)
 }
 
-async function createCompetition(competition: Competition) {
-  try {
-    await mygoose.createCompetition(competition)
-  } catch (e) {
-    if (e.code && e.code === 11000) {
-      throw new MultiMessageError([`Competition with code "${competition.code}" already exists.`])
-    } else {
-      throw e
-    }
-}
-}
-
-async function deleteCompetition(code: string) {
-  await mygoose.deleteCompetition(code)
-}
-
-async function getCompetitions(): Promise<Competition[]> {
-  return await mygoose.getCompetitions()
-}
-
 async function saveClassifications(classifications: PlayerClassification[]) {
   return await mygoose.saveClassifications(classifications)
 }
 
 
-export { savePlayers, saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, createCompetition, getCompetitions, deleteCompetition, saveClassifications}
+export { saveCompetitionResults, findCompetitionResults, findCompetitionResult, findParticipant, saveParticipantInCompetition, saveClassifications}

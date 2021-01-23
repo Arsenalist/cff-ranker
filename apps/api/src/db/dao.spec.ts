@@ -1,18 +1,13 @@
 import { mockOnce } from '../../mockgoose';
 import {
-  createCompetition,
-  deleteCompetition,
-  getCompetitions,
   saveClassifications,
   saveCompetitionResults, saveParticipantInCompetition,
-  savePlayers,
   updateCompetitionStatus
 } from './dao';
 import { MultiMessageError } from '@cff/common';
 import { PlayerModel } from './schemas';
 import {
   AgeCategory,
-  Competition,
   CompetitionResults,
   CompetitionStatus,
   CompetitionZone,
@@ -20,7 +15,7 @@ import {
   PlayerClassification
 } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
-import { createAgeCategory } from './age-category';
+import { savePlayers } from './player';
 
 const mongoose = require('mongoose');
 
@@ -58,52 +53,6 @@ describe('dao.ts', () => {
           warnings: []
         }]
       };
-    });
-    describe('validation file fields are validated', () => {
-      let fields;
-      beforeEach(() => {
-        fields = [{
-          surname: 'Smith',
-          name: 'Bill',
-          yearOfBirth: 1980,
-          club: 'ABC',
-          branch: 'ON',
-          country: 'CAN',
-          cffNumber: 'ABC124',
-          validated: 'y'
-        }];
-      });
-      it('seven out of eight fields are not provided', async () => {
-        try {
-          await savePlayers([{ 'name': 'Bill' }]);
-        } catch (err) {
-          expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-          expect(Object.keys(err.errors).length).toBe(7);
-        }
-      });
-      it('invalid province', async () => {
-        fields[0]['branch'] = 'XY';
-        try {
-          await savePlayers(fields);
-          fail('should not reach here');
-        } catch (err) {
-          expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-          expect(Object.keys(err.errors).length).toBe(1);
-        }
-      });
-      it('invalid validated indicator', async () => {
-        fields[0]['validated'] = 'm';
-        try {
-          await savePlayers(fields);
-        } catch (err) {
-          expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-          expect(Object.keys(err.errors).length).toBe(1);
-        }
-      });
-      it('all eight fields are provided', async () => {
-        mockOnce('insertMany');
-        await savePlayers(fields);
-      });
     });
     describe('competition fields are validated', () => {
       it('check for required fields at top level', async () => {
@@ -212,49 +161,6 @@ describe('dao.ts', () => {
         });
       });
     });
-    describe ('manage competitions', () => {
-      const competition: Competition = {
-        name: 'competition name',
-        code: 'COMP_CODE',
-        zone: CompetitionZone.cff
-      }
-      it('adds a competition successfully', async() => {
-        mockOnce('insertOne');
-        const createCompetitionMock = jest.spyOn(mygoose, 'createCompetition')
-        await createCompetition(competition)
-        expect(createCompetitionMock).toHaveBeenCalledWith(competition)
-      })
-      it('fails to add a competition as code already exists', async() => {
-        jest.spyOn(mygoose, 'createCompetition').mockImplementation(() => {throw {code: 11000}})
-        try {
-          await createCompetition(competition)
-          fail("should not get here")
-        } catch(e) {
-          expect(e.errorMessages[0]).toBe(`Competition with code "${competition.code}" already exists.`)
-        }
-      })
-      it('fails to add for a reason other than competition code existing', async() => {
-        jest.spyOn(mygoose, 'createCompetition').mockImplementation(() => {throw new Error("hi")} )
-        try {
-          await createCompetition(competition)
-          fail("should not get here")
-        } catch(e) {
-          expect(e.message).toBe("hi")
-        }
-      })
-      it('deletes competition successfully', async() => {
-        mockOnce('deleteOne');
-        const code = "myCompetitionCode"
-        const deleteCompetitionMock = jest.spyOn(mygoose, 'deleteCompetition')
-        await deleteCompetition(code)
-        expect(deleteCompetitionMock).toHaveBeenCalledWith(code)
-      })
-      it('lists all competitions', async() => {
-        const getCompetitionsMock = jest.spyOn(mygoose, 'getCompetitions').mockImplementation()
-        await getCompetitions()
-        expect(getCompetitionsMock).toHaveBeenCalledWith()
-      })
-    })
     describe('save classification file', () => {
     it('classification record saving is successful', async () => {
       mockOnce('insertMany');

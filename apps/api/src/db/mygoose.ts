@@ -1,4 +1,11 @@
-import { AgeCategory, CompetitionResults, Player, PlayerClassification, Weapon } from '@cff/api-interfaces';
+import {
+  AgeCategory,
+  Competition,
+  CompetitionResults,
+  Player,
+  PlayerClassification,
+  Weapon
+} from '@cff/api-interfaces';
 import {
   AgeCategoryModel,
   CompetitionModel,
@@ -7,7 +14,6 @@ import {
   PlayerModel
 } from './schemas';
 import { mongoose } from '@typegoose/typegoose';
-import { Competition } from '@cff/api-interfaces';
 
 export async function findCompetitionResults(): Promise<CompetitionResults[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');
@@ -46,6 +52,10 @@ export async function queryListById<T>(list: T[], id): Promise<T> {
   return await list.id(id)
 }
 
+export async function deleteCompetition(code: string) {
+  await CompetitionModel.deleteOne({ code: code });
+}
+
 export async function createCompetition(competition: Competition) {
   await new CompetitionModel(competition).save()
 }
@@ -56,10 +66,6 @@ export async function getCompetitions(): Promise<Competition[]> {
 
 export async function getCompetition(code: string): Promise<Competition> {
   return CompetitionModel.findOne({code: code})
-}
-
-export async function deleteCompetition(code: string) {
-  await CompetitionModel.deleteOne({code: code})
 }
 
 export async function deleteAgeCategory(id: string) {

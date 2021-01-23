@@ -1,14 +1,10 @@
 import {
-  createCompetition,
-  deleteCompetition,
   findCompetitionResult,
   findCompetitionResults,
   findParticipant,
-  getCompetitions,
   saveClassifications,
   saveCompetitionResults,
   saveParticipantInCompetition,
-  savePlayers,
   updateCompetitionStatus
 } from './db/dao';
 import { handleUpload } from './file-upload';
@@ -29,6 +25,8 @@ import { getCompetitionResultsInLast12Months, getPlayerClassifications } from '.
 import { rank } from '@cff/ranking-algo';
 import { AgeCategoryModel, RankingJobModel, RankingModel } from './db/schemas';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
+import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
+import { savePlayers } from './db/player';
 
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
