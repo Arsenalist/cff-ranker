@@ -1,20 +1,13 @@
 import { mockOnce } from '../../mockgoose';
 import {
-  saveCompetitionResults, saveParticipantInCompetitionResult,
+  saveCompetitionResults,
+  saveParticipantInCompetitionResult,
   updateCompetitionResultStatus
 } from './competition-result';
 import { MultiMessageError } from '@cff/common';
 import { PlayerModel } from './schemas';
-import {
-  AgeCategory,
-  CompetitionResult,
-  CompetitionStatus,
-  CompetitionZone,
-  PlayerClass,
-  PlayerClassification
-} from '@cff/api-interfaces';
+import { AgeCategory, CompetitionResult, CompetitionStatus, CompetitionZone } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
-import { saveClassifications } from './player-classification';
 
 const mongoose = require('mongoose');
 

@@ -1,7 +1,6 @@
 import { Competition } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
 import { MultiMessageError } from '@cff/common';
-import { CompetitionModel } from './schemas';
 
 export async function getCompetitionByCode(code: string): Promise<Competition> {
   const competition: Competition = await mygoose.getCompetition(code);

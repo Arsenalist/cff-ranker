@@ -4,7 +4,9 @@ import {
   CompetitionResult,
   CompetitionStatus,
   Player,
-  PlayerClassification, Ranking, RankingJob
+  PlayerClassification,
+  Ranking,
+  RankingJob
 } from '@cff/api-interfaces';
 
 import * as mongoose from 'mongoose';

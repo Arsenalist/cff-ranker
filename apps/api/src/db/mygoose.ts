@@ -1,11 +1,4 @@
-import {
-  AgeCategory,
-  Competition,
-  CompetitionResult,
-  Player,
-  PlayerClassification,
-  Weapon
-} from '@cff/api-interfaces';
+import { AgeCategory, Competition, CompetitionResult, Player, PlayerClassification, Weapon } from '@cff/api-interfaces';
 import {
   AgeCategoryModel,
   CompetitionModel,
