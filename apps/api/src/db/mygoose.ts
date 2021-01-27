@@ -15,17 +15,21 @@ export async function findCompetitionResult(id): Promise<CompetitionResult> {
   return CompetitionResultsModel.findOne({ _id: objectId }).populate('ageCategory competition');
 }
 
+async function latestValidationFileId() {
+  const latestValidationFileId = await ValidationFileModel.findOne().sort('-dateGenerated').select('_id');
+  return latestValidationFileId._id;
+}
+
 export async function validateParticipant(cffNumber: string, name: string, surname: string, yearOfBirth: number, gender: string): Promise<Player> {
-  const latestValidationFileId =  await ValidationFileModel.findOne().sort('-dateGenerated').select('_id')
-  const filteredPlayers = await ValidationFileModel.findOne({
-      "_id": latestValidationFileId._id,
+  const matchedPlayersInLatestValidationFile = await ValidationFileModel.findOne({
+      "_id": await latestValidationFileId(),
       "players.cffNumber": cffNumber,
       "players.name": name.toLowerCase(),
       "players.surname": surname.toLowerCase(),
       "players.yearOfBirth": yearOfBirth,
       "players.gender": gender
     }, {'players.$': 1})
-    return filteredPlayers == null ? null : filteredPlayers.players[0]
+    return matchedPlayersInLatestValidationFile == null ? null : matchedPlayersInLatestValidationFile.players[0]
 }
 
 export async function saveCompetitionResults(competitionResults: CompetitionResult) {
