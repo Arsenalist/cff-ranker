@@ -7,9 +7,9 @@ import {
 import { MultiMessageError } from '@cff/common';
 import { AgeCategory, CompetitionResult, CompetitionStatus, CompetitionZone } from '@cff/api-interfaces';
 import * as mygoose from './mygoose';
-import { PlayerModel } from './schemas/player';
 
 import * as mongoose from 'mongoose';
+import { ValidationFileModel } from './schemas/player';
 
 const ageCategory: AgeCategory = {
   _id: new mongoose.Types.ObjectId("600ae95ca9a08111903e5066"),
@@ -48,7 +48,7 @@ function aCompetitionResult(): CompetitionResult {
 describe('CFF# validation from validation file', () => {
   it('participant with invalid CFF# is rejected', async () => {
     const fields = aCompetitionResult()
-    PlayerModel.findOne = jest.fn((params) => null);
+    ValidationFileModel.findOne = jest.fn((params) => null);
     fields.results[0].cffNumber = "INVALID_CFFNUMBER"
     fields.results[0].name = "INVALID_NAME"
     fields.results[0].surname = "INVALID_SURNAME"

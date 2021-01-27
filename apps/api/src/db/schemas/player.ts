@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { Player } from '@cff/api-interfaces';
+import { ValidationFile } from '@cff/api-interfaces';
 
 const playerSchema = new mongoose.Schema({
   surname: { type: String, required: true },
@@ -16,5 +16,11 @@ const playerSchema = new mongoose.Schema({
   cffNumber: { type: String, required: true },
   validated: { type: String, required: true, enum: ['y', 'n'] }
 });
-type PlayerType = Player & mongoose.Document;
-export const PlayerModel = mongoose.model<PlayerType>('Player', playerSchema);
+
+const validationFile = new mongoose.Schema({
+  players: { type: [playerSchema] },
+  dateGenerated: { type: Date, required: true, default: Date.now }
+});
+
+type ValidationFileType = ValidationFile & mongoose.Document;
+export const ValidationFileModel = mongoose.model<ValidationFileType>('ValidationFile', validationFile);

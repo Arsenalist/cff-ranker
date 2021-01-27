@@ -1,10 +1,10 @@
 import { AgeCategory, Competition, CompetitionResult, Player, PlayerClassification, Weapon } from '@cff/api-interfaces';
 import { mongoose } from '@typegoose/typegoose';
 import { CompetitionResultsModel } from './schemas/competition-results';
-import { PlayerModel } from './schemas/player';
 import { CompetitionModel } from './schemas/competition';
 import { PlayerClassificationModel } from './schemas/player-classification';
 import { AgeCategoryModel } from './schemas/age-category';
+import { ValidationFileModel } from './schemas/player';
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');
@@ -16,13 +16,16 @@ export async function findCompetitionResult(id): Promise<CompetitionResult> {
 }
 
 export async function validateParticipant(cffNumber: string, name: string, surname: string, yearOfBirth: number, gender: string): Promise<Player> {
-  return PlayerModel.findOne({
-    cffNumber: cffNumber,
-    name: name,
-    surname: surname,
-    yearOfBirth: yearOfBirth,
-    gender: gender
-  });
+  const latestValidationFileId =  await ValidationFileModel.findOne().sort('-dateGenerated').select('_id')
+  const filteredPlayers = await ValidationFileModel.findOne({
+      "_id": latestValidationFileId._id,
+      "players.cffNumber": cffNumber,
+      "players.name": name.toLowerCase(),
+      "players.surname": surname.toLowerCase(),
+      "players.yearOfBirth": yearOfBirth,
+      "players.gender": gender
+    }, {'players.$': 1})
+    return filteredPlayers == null ? null : filteredPlayers.players[0]
 }
 
 export async function saveCompetitionResults(competitionResults: CompetitionResult) {
@@ -34,7 +37,12 @@ export async function updateCompetitionResult(competitionResults: CompetitionRes
 }
 
 export async function savePlayers(results: Player[]) {
-  await PlayerModel.insertMany(results);
+  const lowercase = results.map(p => { return {
+    ...p,
+    name: p.name.toLowerCase(),
+    surname: p.surname.toLowerCase()
+  }})
+  await new ValidationFileModel({players: lowercase}).save()
 }
 
 export async function queryListById<T>(list: T[], id): Promise<T> {

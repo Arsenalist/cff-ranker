@@ -130,4 +130,9 @@ export interface RankingJob {
   user: string
   dateGenerated: Date
 }
+
+export interface ValidationFile {
+  players: Player[]
+  dateGenerated: Date
+}
 export { CompetitionParticipant, Warning, CompetitionResult, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }
