@@ -4,7 +4,7 @@ import { savePlayerClassifications } from './player-classification';
 
 describe('save classification file', () => {
   it('classification record saving is successful', async () => {
-    mockOnce('insertMany');
+    mockOnce('insertOne');
     const classifications: PlayerClassification[] = [
       {weapon: 'ME', class: PlayerClass.A, lastName: 'Jones', firstName: 'Jim', cffNumber: 'C06-1234', club: 'ABC', province: 'ON'}
     ]

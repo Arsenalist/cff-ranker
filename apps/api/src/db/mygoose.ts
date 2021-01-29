@@ -2,7 +2,7 @@ import { AgeCategory, Competition, CompetitionResult, Player, PlayerClassificati
 import { mongoose } from '@typegoose/typegoose';
 import { CompetitionResultsModel } from './schemas/competition-results';
 import { CompetitionModel } from './schemas/competition';
-import { PlayerClassificationModel } from './schemas/player-classification';
+import { ClassificationFileModel } from './schemas/player-classification';
 import { AgeCategoryModel } from './schemas/age-category';
 import { ValidationFileModel } from './schemas/player';
 
@@ -93,7 +93,7 @@ export async function getAgeCategoryByCode(code: string): Promise<AgeCategory> {
 
 
 export async function saveClassifications(classifications: PlayerClassification[]) {
-  await PlayerClassificationModel.insertMany(classifications);
+  await new ClassificationFileModel({classifications: classifications}).save()
 }
 
 export async function getCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResult[]> {
@@ -101,7 +101,8 @@ export async function getCompetitionResultsInLast12Months(weapon: Weapon): Promi
 }
 
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {
-  return PlayerClassificationModel.find({});
+  const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1)
+  return latestClassificationFile.classifications
 }
 
 export async function save(entity) {

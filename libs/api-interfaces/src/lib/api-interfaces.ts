@@ -135,4 +135,10 @@ export interface ValidationFile {
   players: Player[]
   dateGenerated: Date
 }
+
+export interface ClassificationFile {
+  classifications: PlayerClassification[]
+  dateGenerated: Date
+}
+
 export { CompetitionParticipant, Warning, CompetitionResult, Player, CompetitionStatus, Competition, PlayerClassification, CompetitionZone, AgeCategory, PlayerClass }

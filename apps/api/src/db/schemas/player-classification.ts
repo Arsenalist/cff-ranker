@@ -1,5 +1,5 @@
 import * as mongoose from 'mongoose';
-import { PlayerClassification } from '@cff/api-interfaces';
+import { ClassificationFile, PlayerClassification } from '@cff/api-interfaces';
 
 export const playerClassificationSchema = new mongoose.Schema({
   weapon: { type: String, required: true },
@@ -10,5 +10,11 @@ export const playerClassificationSchema = new mongoose.Schema({
   club: { type: String, required: true },
   province: { type: String, required: true }
 });
-type PlayerClassificationType = PlayerClassification & mongoose.Document;
-export const PlayerClassificationModel = mongoose.model<PlayerClassificationType>('PlayerClassification', playerClassificationSchema);
+
+const validationFile = new mongoose.Schema({
+  classifications: { type: [playerClassificationSchema] },
+  dateGenerated: { type: Date, required: true, default: Date.now }
+});
+
+type ClassificationFileType = ClassificationFile & mongoose.Document;
+export const ClassificationFileModel = mongoose.model<ClassificationFileType>('ValidationFile', validationFile);
