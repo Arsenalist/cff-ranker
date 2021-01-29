@@ -17,4 +17,4 @@ const validationFile = new mongoose.Schema({
 });
 
 type ClassificationFileType = ClassificationFile & mongoose.Document;
-export const ClassificationFileModel = mongoose.model<ClassificationFileType>('ValidationFile', validationFile);
+export const ClassificationFileModel = mongoose.model<ClassificationFileType>('ClassificationFile', validationFile);
