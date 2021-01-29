@@ -1,6 +1,6 @@
 import Grid from '@material-ui/core/Grid';
 import MuiAlert from '@material-ui/lab/Alert';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import { MessagesContext } from './messages-context';
@@ -21,31 +21,33 @@ export function Messages() {
   const { errors, messages, addErrors, clear } = useContext(MessagesContext);
   const { getAccessTokenSilently } = useAuth0()
 
-  axios.interceptors.response.use(function(response) {
-    return response;
-  }, function(error) {
-    if (error.response) {
-      addErrors(error.response.data.messages);
-    }
-    return Promise.reject(error);
-  });
+  useEffect(() => {
+    axios.interceptors.response.use(function(response) {
+      return response;
+    }, function(error) {
+      if (error.response) {
+        addErrors(error.response.data.messages);
+      }
+      return Promise.reject(error);
+    });
 
-  axios.interceptors.request.use(function (config) {
-    // Do something before request is sent
-    //clear()
-    return config;
-  }, function (error) {
-    // Do something with request error
-    return Promise.reject(error);
-  });
+    axios.interceptors.request.use(function (config) {
+      // Do something before request is sent
+      clear()
+      return config;
+    }, function (error) {
+      // Do something with request error
+      return Promise.reject(error);
+    });
 
-  axios.interceptors.request.use(function (config) {
-    (async () => {
-      const token = await getAccessTokenSilently();
-      config.headers.Authorization = `Bearer ${token}`;
-    })()
-    return config;
-  });
+    axios.interceptors.request.use(function (config) {
+      (async () => {
+        const token = await getAccessTokenSilently();
+        config.headers.Authorization = `Bearer ${token}`;
+      })()
+      return config;
+    });
+  }, [])
 
   return (
     <div>

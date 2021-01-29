@@ -25,11 +25,11 @@ export function MessagesProvider({ children }) {
     addErrors: useCallback((errs) => {
         setErrors(errs);
       }
-      , [errors]),
+      , []),
     addMessages: useCallback((msgs) => {
         setMessages(msgs);
       }
-      , [messages]),
+      , []),
   };
 
   return (
