@@ -1,131 +1,139 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
-import { createMuiTheme, makeStyles, MuiThemeProvider } from '@material-ui/core/styles';
-import MenuIcon from '@material-ui/icons/Menu';
+import { createMuiTheme, createStyles, makeStyles, MuiThemeProvider, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import {
-  ClassificationUploadPage, Home,
-  ValidateFileUploadPage,
-} from './pages';
+import { ClassificationUploadPage, Home, ValidateFileUploadPage } from './pages';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
-import { Ranking, Rankings, RankingJobs, AgeCategoryList, Profile, LoginButton, LogoutButton, UploadCompetitionResults, CompetitionList, CompetitionResultsList } from '@cff/ui';
-import { ViewCompetition } from '@cff/ui';
-import { Messages } from '@cff/ui';
-import { MessagesProvider } from '@cff/ui';
+import {
+  AgeCategoryList,
+  CompetitionList,
+  CompetitionResultsList,
+  LoginButton,
+  LogoutButton,
+  Messages,
+  MessagesProvider,
+  Profile,
+  Ranking,
+  RankingJobs,
+  Rankings,
+  UploadCompetitionResults,
+  ViewCompetition
+} from '@cff/ui';
 
 import { Auth0Provider } from '@auth0/auth0-react';
+import { Drawer, List, ListItem, ListItemText } from '@material-ui/core';
 
 const theme = createMuiTheme({
   typography: {
-    fontFamily: "Roboto, sans-serif",
+    fontFamily: 'Roboto, sans-serif'
   }
 });
+const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
-
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+    },
+    appBar: {
+      zIndex: theme.zIndex.drawer + 1,
+    },
+    drawer: {
+      width: drawerWidth,
+      flexShrink: 0,
+    },
+    drawerPaper: {
+      width: drawerWidth,
+    },
+    drawerContainer: {
+      overflow: 'auto',
+    },
+    content: {
+      flexGrow: 1,
+      padding: theme.spacing(3),
+    },
+    title: {
+      flex: 1
+    }
+  }),
+);
 export const App = () => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const menuItems = [
+    { path: '/rankings/jobs', text: 'View Rankings' },
+    { path: '/competition-file-upload', text: 'Upload Competition Results' },
+    { path: '/classification-file-upload', text: 'Upload Classification File' },
+    { path: '/validation-file-upload', text: 'Upload Validation File' },
+    { path: '/manage-results', text: 'Manage Competition Results' },
+    { path: '/manage-competitions', text: 'Manage Competitions' },
+    { path: '/manage-age-categories', text: 'Manage Age Categories' }
+  ];
 
-  const handleMenu = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   return (
     <Router>
       <Auth0Provider
+        className={classes.root} theme={theme}
         domain="cff.us.auth0.com"
         audience="https://localhost:3000/api"
         scope="openid email profile"
         clientId="UlTsuEYfjGc2sqBo8dHxLEDpdOIUBJ32"
         redirectUri={window.location.origin}
       >
-      <MuiThemeProvider theme={theme}>
-        <MessagesProvider>
-        <CssBaseline/>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <AppBar position="static">
+        <MuiThemeProvider theme={theme}>
+          <MessagesProvider>
+            <div className={classes.root}>
+            <CssBaseline/>
+            <AppBar position="fixed" className={classes.appBar}>
               <Toolbar>
-                <IconButton edge="start" onClick={handleMenu} color="inherit" aria-label="menu">
-                  <MenuIcon />
-                </IconButton>
                 <Typography variant="h6" className={classes.title}>
                   CFF
                 </Typography>
                 <LoginButton/>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={open}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleClose} component={Link} to="/validation-file-upload">Upload Players</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/competition-file-upload">Upload Competition Results</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/classification-file-upload">Upload Classification File</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/manage-competitions">Manage Competitions</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/manage-results">Competitions Results</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/rankings/jobs">Rankings</MenuItem>
-                  <MenuItem onClick={handleClose} component={Link} to="/manage-age-categories">Age Categories</MenuItem>
-                </Menu>
-                <Profile />
-                <LogoutButton />
+                <Profile/>
+                <LogoutButton/>
               </Toolbar>
             </AppBar>
-          </Grid>
-          <Grid item xs={2}/>
-          <Grid item xs={8}>
-            <Messages />
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/validation-file-upload" component={ValidateFileUploadPage} />
-              <Route path="/competition-file-upload" component={UploadCompetitionResults} />
-              <Route path="/classification-file-upload" component={ClassificationUploadPage} />
-              <Route path="/manage-results" component={CompetitionResultsList} />
-              <Route path="/manage-competitions" component={CompetitionList} />
-              <Route path="/competition/:id" component={ViewCompetition} />
-              <Route path="/manage-age-categories" component={AgeCategoryList} />
-              <Route path="/rankings/jobs" exact component={RankingJobs} />
-              <Route path="/rankings/jobs/:id" exact component={Rankings} />
-              <Route path="/rankings/ranking/:id" component={Ranking} />
-            </Switch>
-          </Grid>
-          <Grid item xs={2}/>
-        </Grid>
-        </MessagesProvider>
-      </MuiThemeProvider>
+              <Drawer
+                className={classes.drawer}
+                variant="permanent"
+                classes={{
+                  paper: classes.drawerPaper,
+                }}
+              >
+                <Toolbar />
+                <div className={classes.drawerContainer}>
+              {menuItems.map(m => (
+                <List>
+                  <ListItem button component={Link} to={m.path}><ListItemText primary={m.text}/></ListItem>
+                </List>
+              ))}
+                </div>
+            </Drawer>
+              <main className={classes.content}>
+                <Toolbar />
+              <Messages/>
+              <Switch>
+                <Route path="/" exact component={Home}/>
+                <Route path="/validation-file-upload" component={ValidateFileUploadPage}/>
+                <Route path="/competition-file-upload" component={UploadCompetitionResults}/>
+                <Route path="/classification-file-upload" component={ClassificationUploadPage}/>
+                <Route path="/manage-results" component={CompetitionResultsList}/>
+                <Route path="/manage-competitions" component={CompetitionList}/>
+                <Route path="/competition/:id" component={ViewCompetition}/>
+                <Route path="/manage-age-categories" component={AgeCategoryList}/>
+                <Route path="/rankings/jobs" exact component={RankingJobs}/>
+                <Route path="/rankings/jobs/:id" exact component={Rankings}/>
+                <Route path="/rankings/ranking/:id" component={Ranking}/>
+              </Switch>
+              </main>
+            </div>
+          </MessagesProvider>
+        </MuiThemeProvider>
       </Auth0Provider>
-    </Router>
-  );
+</Router>
+);
 };
 
 export default App;
