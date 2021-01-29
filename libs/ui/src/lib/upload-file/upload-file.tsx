@@ -40,7 +40,7 @@ export function UploadFile(props) {
     if (props.validate && !props.validate()) {
         return
     }
-    axios.post(props.endpoint, formData).then(response => {
+    axios.post(props.endpoint, formData, {params: {useLoader: true}}).then(response => {
       addMessages([`${response.data.rowCount} rows uploaded.`])
       props.postUploadHandler(response.data.competition)
     }, function(err) {});

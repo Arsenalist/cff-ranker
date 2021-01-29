@@ -34,13 +34,13 @@ export function Messages() {
     });
 
     axios.interceptors.request.use(function (config) {
-      // Do something before request is sent
       clear()
-      setLoading(true)
+      if (config.params.useLoader) {
+        setLoading(true)
+      }
       return config;
     }, function (error) {
       setLoading(false)
-      // Do something with request error
       return Promise.reject(error);
     });
 
