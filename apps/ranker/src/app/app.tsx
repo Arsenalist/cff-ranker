@@ -8,6 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
 import {
   AgeCategoryList,
+  BackdropLoader,
   CompetitionList,
   CompetitionResultsList,
   LoginButton,
@@ -83,6 +84,7 @@ export const App = () => {
       >
         <MuiThemeProvider theme={theme}>
           <MessagesProvider>
+            <BackdropLoader />
             <div className={classes.root}>
             <CssBaseline/>
             <AppBar position="fixed" className={classes.appBar}>

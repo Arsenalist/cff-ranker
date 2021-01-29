@@ -18,14 +18,16 @@ const useStyles = makeStyles((theme) => ({
 
 export function Messages() {
   const classes = useStyles();
-  const { errors, messages, addErrors, clear } = useContext(MessagesContext);
+  const { errors, messages, addErrors, clear, setLoading } = useContext(MessagesContext);
   const { getAccessTokenSilently } = useAuth0()
 
   useEffect(() => {
     axios.interceptors.response.use(function(response) {
+      setLoading(false)
       return response;
     }, function(error) {
       if (error.response) {
+        setLoading(false)
         addErrors(error.response.data.messages);
       }
       return Promise.reject(error);
@@ -34,8 +36,10 @@ export function Messages() {
     axios.interceptors.request.use(function (config) {
       // Do something before request is sent
       clear()
+      setLoading(true)
       return config;
     }, function (error) {
+      setLoading(false)
       // Do something with request error
       return Promise.reject(error);
     });

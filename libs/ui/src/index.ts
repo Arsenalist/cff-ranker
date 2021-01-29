@@ -1,3 +1,4 @@
+export * from './lib/backdrop/backdrop-loader';
 export * from './lib/ranking/ranking';
 export * from './lib/rankings/rankings';
 export * from './lib/ranking-jobs/ranking-jobs';

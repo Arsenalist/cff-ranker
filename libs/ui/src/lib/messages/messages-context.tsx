@@ -7,13 +7,17 @@ export const MessagesContext = React.createContext(
     messages: [],
     clear: () => {},
     addErrors: (errs) => {},
-    addMessages: (messages) => {}
+    addMessages: (messages) => {},
+    isLoading: false,
+    setLoading: (loading) => {}
+
   }
 );
 
 export function MessagesProvider({ children }) {
   const [errors, setErrors] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [isLoading, setLoading] = useState(false);
 
   const contextValue = {
     errors,
@@ -30,6 +34,12 @@ export function MessagesProvider({ children }) {
         setMessages(msgs);
       }
       , []),
+    isLoading,
+    setLoading: useCallback((loading) => {
+        setLoading(loading)
+      }
+      , []),
+
   };
 
   return (
