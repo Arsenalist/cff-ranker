@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Backdrop, createStyles, makeStyles, Theme } from '@material-ui/core';
 import { MessagesContext } from '../..';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -15,7 +16,27 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export function BackdropLoader() {
   const classes = useStyles();
-  const { isLoading } = useContext(MessagesContext);
+  const { isLoading, setLoading } = useContext(MessagesContext);
+
+  axios.interceptors.response.use(function(response) {
+    setLoading(false)
+    return response;
+  }, function(error) {
+    if (error.response) {
+      setLoading(false)
+    }
+    return Promise.reject(error);
+  });
+
+  axios.interceptors.request.use(function (config) {
+    if (config.params?.useLoader) {
+      setLoading(true)
+    }
+    return config;
+  }, function (error) {
+    setLoading(false)
+    return Promise.reject(error);
+  });
 
 
   return (

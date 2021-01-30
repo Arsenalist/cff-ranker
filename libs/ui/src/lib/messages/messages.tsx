@@ -18,34 +18,25 @@ const useStyles = makeStyles((theme) => ({
 
 export function Messages() {
   const classes = useStyles();
-  const { errors, messages, addErrors, clear, setLoading } = useContext(MessagesContext);
-  const { getAccessTokenSilently } = useAuth0()
+  const { errors, messages, addErrors, clear } = useContext(MessagesContext);
+  useEffect(() => {
+    axios.interceptors.response.use(function(response) {
+      return response;
+    }, function(error) {
+      if (error.response) {
+        addErrors(error.response.data.messages);
+      }
+      return Promise.reject(error);
+    });
 
-  axios.interceptors.response.use(function(response) {
-    setLoading(false)
-    return response;
-  }, function(error) {
-    if (error.response) {
-      setLoading(false)
-      addErrors(error.response.data.messages);
-    }
-    return Promise.reject(error);
-  });
+    axios.interceptors.request.use(function (config) {
+      clear()
+      return config;
+    }, function (error) {
+      return Promise.reject(error);
+    });
+  }, [])
 
-  axios.interceptors.request.use(function (config) {
-    clear()
-    if (config.params?.useLoader) {
-      setLoading(true)
-    }
-    (async () => {
-      const token = await getAccessTokenSilently();
-      config.headers.Authorization = `Bearer ${token}`;
-    })()
-    return config;
-  }, function (error) {
-    setLoading(false)
-    return Promise.reject(error);
-  });
   return (
     <div>
       {errors ?

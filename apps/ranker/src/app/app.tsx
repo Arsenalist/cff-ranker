@@ -25,6 +25,7 @@ import {
 
 import { Auth0Provider } from '@auth0/auth0-react';
 import { Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Auth } from './auth';
 
 const theme = createMuiTheme({
   typography: {
@@ -62,6 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 export const App = () => {
   const classes = useStyles();
+
   const menuItems = [
     { path: '/rankings/jobs', text: 'View Rankings' },
     { path: '/competition-file-upload', text: 'Upload Competition Results' },
@@ -84,6 +86,7 @@ export const App = () => {
       >
         <MuiThemeProvider theme={theme}>
           <MessagesProvider>
+            <Auth />
             <BackdropLoader />
             <div className={classes.root}>
             <CssBaseline/>
