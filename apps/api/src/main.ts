@@ -123,25 +123,25 @@ app.get('/api/competition', checkJwt, asyncHandler(async (req, res) => {
   res.send(contents)
 }));
 
-app.delete('/api/competition', checkJwt,  asyncHandler(async (req, res) => {
+app.delete('/api/competition',  asyncHandler(async (req, res) => {
   await deleteCompetition(req.body.code);
   res.send()
 }));
 
-app.get('/api/rankings/jobs', asyncHandler(async (req, res) => {
+app.get('/api/rankings/jobs', checkJwt, asyncHandler(async (req, res) => {
   res.send(await RankingJobModel.find({}).sort('-dateGenerated'))
 }));
 
-app.get('/api/rankings/jobs/:id', asyncHandler(async (req, res) => {
+app.get('/api/rankings/jobs/:id', checkJwt, asyncHandler(async (req, res) => {
   res.send(await RankingModel.find({rankingJob: req.params.id}).populate("ageCategory").select("weapon ageCategory"))
 }));
 
-app.get('/api/rankings/ranking/:id', asyncHandler(async (req, res) => {
+app.get('/api/rankings/ranking/:id', checkJwt, asyncHandler(async (req, res) => {
   res.send(await RankingModel.findById(req.params.id))
 }));
 
 
-app.get('/api/rank', asyncHandler(async (req, res) => {
+app.get('/api/rank', checkJwt, asyncHandler(async (req, res) => {
   const playerClassifications = await getPlayerClassifications()
   const rankingJobModel = await new RankingJobModel({
     user: "zarar",
