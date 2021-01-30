@@ -113,7 +113,7 @@ app.post('/api/participant/:competitionId/:participantId', checkJwt, asyncHandle
   res.send(contents)
 }));
 
-app.put('/api/competition', checkJwt, asyncHandler(async (req, res) => {
+app.put('/api/competition', asyncHandler(async (req, res) => {
   await createCompetition(req.body)
   res.send()
 }));
@@ -164,7 +164,7 @@ app.get('/api/rank', checkJwt, asyncHandler(async (req, res) => {
   })
 }));
 
-app.get('/api/age-category',  asyncHandler(async (req, res) => {
+app.get('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
   res.send(await getAgeCategories())
 }));
 

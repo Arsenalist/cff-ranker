@@ -21,38 +21,31 @@ export function Messages() {
   const { errors, messages, addErrors, clear, setLoading } = useContext(MessagesContext);
   const { getAccessTokenSilently } = useAuth0()
 
-  useEffect(() => {
-    axios.interceptors.response.use(function(response) {
+  axios.interceptors.response.use(function(response) {
+    setLoading(false)
+    return response;
+  }, function(error) {
+    if (error.response) {
       setLoading(false)
-      return response;
-    }, function(error) {
-      if (error.response) {
-        setLoading(false)
-        addErrors(error.response.data.messages);
-      }
-      return Promise.reject(error);
-    });
+      addErrors(error.response.data.messages);
+    }
+    return Promise.reject(error);
+  });
 
-    axios.interceptors.request.use(function (config) {
-      clear()
-      if (config.params?.useLoader) {
-        setLoading(true)
-      }
-      return config;
-    }, function (error) {
-      setLoading(false)
-      return Promise.reject(error);
-    });
-
-    axios.interceptors.request.use(function (config) {
-      (async () => {
-        const token = await getAccessTokenSilently();
-        config.headers.Authorization = `Bearer ${token}`;
-      })()
-      return config;
-    });
-  }, [])
-
+  axios.interceptors.request.use(function (config) {
+    clear()
+    if (config.params?.useLoader) {
+      setLoading(true)
+    }
+    (async () => {
+      const token = await getAccessTokenSilently();
+      config.headers.Authorization = `Bearer ${token}`;
+    })()
+    return config;
+  }, function (error) {
+    setLoading(false)
+    return Promise.reject(error);
+  });
   return (
     <div>
       {errors ?
