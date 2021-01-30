@@ -40,7 +40,7 @@ app.use(require('express-fileupload')());
 app.use(express.json());
 app.use(express.urlencoded());
 
-const checkJwt = jwt({
+app.use(jwt({
   secret: jwksRsa.expressJwtSecret({
     cache: true,
     rateLimit: true,
@@ -50,11 +50,11 @@ const checkJwt = jwt({
   audience: 'https://localhost:3000/api',
   issuer: 'https://cff.us.auth0.com/',
   algorithms: ['RS256']
-});
+}));
 
 openMongo();
 
-app.post('/api/upload-validation-file', checkJwt, asyncHandler(async (req, res) => {
+app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
     const filePathOnDisk = await handleUpload(req, 'uploadedFile');
     const contents = await readFile(filePathOnDisk);
     const results: Player[] = await parseValidationFileContents(contents);
@@ -64,7 +64,7 @@ app.post('/api/upload-validation-file', checkJwt, asyncHandler(async (req, res) 
     })
 }));
 
-app.post('/api/upload-competition-file', checkJwt, asyncHandler(async (req, res) => {
+app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results: CompetitionResult = await parseCompetitionFileContents(contents);
@@ -78,7 +78,7 @@ app.post('/api/upload-competition-file', checkJwt, asyncHandler(async (req, res)
   })
 }));
 
-app.post('/api/upload-classification-file', checkJwt, asyncHandler(async (req, res) => {
+app.post('/api/upload-classification-file', asyncHandler(async (req, res) => {
   const filePathOnDisk = await handleUpload(req, 'uploadedFile');
   const contents = await readFile(filePathOnDisk);
   const results: PlayerClassification[] = await parseClassificationFileContents(contents);
@@ -88,27 +88,27 @@ app.post('/api/upload-classification-file', checkJwt, asyncHandler(async (req, r
   })
 }));
 
-app.get('/api/competition-results', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/competition-results', asyncHandler(async (req, res) => {
   const contents: CompetitionResult[] = await findCompetitionResults();
   res.send(contents)
 }));
 
-app.get('/api/competition/:id', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/competition/:id', asyncHandler(async (req, res) => {
   const contents: CompetitionResult = await findCompetitionResult(req.params.id);
   res.send(contents)
 }));
 
-app.post('/api/competition/status', checkJwt, asyncHandler(async (req, res) => {
+app.post('/api/competition/status', asyncHandler(async (req, res) => {
   await updateCompetitionResultStatus(req.body.competitionId, CompetitionStatus[req.body.status]);
   res.send()
 }));
 
-app.get('/api/participant/:competitionId/:participantId', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
   const contents: CompetitionParticipant = await findParticipant(req.params.competitionId, req.params.participantId);
   res.send(contents)
 }));
 
-app.post('/api/participant/:competitionId/:participantId', checkJwt, asyncHandler(async (req, res) => {
+app.post('/api/participant/:competitionId/:participantId', asyncHandler(async (req, res) => {
   const contents = await saveParticipantInCompetitionResult(req.params.competitionId, req.params.participantId, req.body);
   res.send(contents)
 }));
@@ -118,7 +118,7 @@ app.put('/api/competition', asyncHandler(async (req, res) => {
   res.send()
 }));
 
-app.get('/api/competition', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/competition', asyncHandler(async (req, res) => {
   const contents: Competition[] = await getCompetitions();
   res.send(contents)
 }));
@@ -128,20 +128,20 @@ app.delete('/api/competition',  asyncHandler(async (req, res) => {
   res.send()
 }));
 
-app.get('/api/rankings/jobs', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/rankings/jobs', asyncHandler(async (req, res) => {
   res.send(await RankingJobModel.find({}).sort('-dateGenerated'))
 }));
 
-app.get('/api/rankings/jobs/:id', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/rankings/jobs/:id', asyncHandler(async (req, res) => {
   res.send(await RankingModel.find({rankingJob: req.params.id}).populate("ageCategory").select("weapon ageCategory"))
 }));
 
-app.get('/api/rankings/ranking/:id', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/rankings/ranking/:id', asyncHandler(async (req, res) => {
   res.send(await RankingModel.findById(req.params.id))
 }));
 
 
-app.get('/api/rank', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/rank', asyncHandler(async (req, res) => {
   const playerClassifications = await getPlayerClassifications()
   const rankingJobModel = await new RankingJobModel({
     user: "zarar",
@@ -164,21 +164,21 @@ app.get('/api/rank', checkJwt, asyncHandler(async (req, res) => {
   })
 }));
 
-app.get('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+app.get('/api/age-category', asyncHandler(async (req, res) => {
   res.send(await getAgeCategories())
 }));
 
-app.put('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+app.put('/api/age-category', asyncHandler(async (req, res) => {
   await createAgeCategory(req.body)
   res.send()
 }));
 
-app.post('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+app.post('/api/age-category', asyncHandler(async (req, res) => {
   await updateAgeCategory(req.body)
   res.send()
 }));
 
-app.delete('/api/age-category', checkJwt, asyncHandler(async (req, res) => {
+app.delete('/api/age-category', asyncHandler(async (req, res) => {
   await deleteAgeCategory(req.body._id)
   res.send()
 }));
