@@ -93,7 +93,7 @@ export const App = () => {
             <AppBar position="fixed" className={classes.appBar}>
               <Toolbar>
                 <Typography variant="h6" className={classes.title}>
-                  CFF
+                  <Link href="#"  style={{ textDecoration: 'none', color: 'white' }} to="/">CFF</Link>
                 </Typography>
                 <LoginButton/>
                 <Profile/>
