@@ -35,7 +35,7 @@ export function Messages() {
 
     axios.interceptors.request.use(function (config) {
       clear()
-      if (config.params.useLoader) {
+      if (config.params?.useLoader) {
         setLoading(true)
       }
       return config;
