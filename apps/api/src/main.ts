@@ -151,11 +151,14 @@ app.get('/api/rank', asyncHandler(async (req, res) => {
   const ageCategories = await AgeCategoryModel.find({})
   for (const key of Object.keys(Weapon)) {
     for(const ageCategory of ageCategories) {
-      const allCompetitionResults = await getApprovedCompetitionResultsInLast12Months(Weapon[key])
-      const ranking = rank(allCompetitionResults, playerClassifications);
-      ranking.weapon = Weapon[key];
-      ranking.ageCategory = ageCategory
-      await new RankingModel({...ranking, rankingJob: rankingJobModel}).save()
+      for (const gender of ["M", "F"]) {
+        const allCompetitionResults = await getApprovedCompetitionResultsInLast12Months(Weapon[key], ageCategory, gender)
+        const ranking = rank(allCompetitionResults, playerClassifications);
+        ranking.weapon = Weapon[key];
+        ranking.ageCategory = ageCategory
+        ranking.gender = gender
+        await new RankingModel({...ranking, rankingJob: rankingJobModel}).save()
+      }
     }
   }
 

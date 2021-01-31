@@ -135,6 +135,7 @@ export interface Ranking {
   ranks: Rank[]
   weapon?: Weapon
   ageCategory?: AgeCategory
+  gender?: string
 }
 
 export interface RankingJob {

@@ -6,7 +6,7 @@ import {
   CompetitionZone,
   PlayerClass,
   PlayerClassification,
-  Ranking
+  Ranking, Weapon
 } from '@cff/api-interfaces';
 
 const openAgeCategory: AgeCategory = {
@@ -65,72 +65,72 @@ describe('calculate force', () => {
 
   it('2xA, 2xB, 1xC, 1xD = 58', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.A},
-      {cffNumber: "#2", 'class': PlayerClass.A},
-      {cffNumber: "#3", 'class': PlayerClass.B},
-      {cffNumber: "#4", 'class': PlayerClass.B},
-      {cffNumber: "#5", 'class': PlayerClass.C},
-      {cffNumber: "#6", 'class': PlayerClass.D}
+      {cffNumber: "#1", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#2", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#3", 'class': PlayerClass.B, weapon: "MF"},
+      {cffNumber: "#4", 'class': PlayerClass.B, weapon: "MF"},
+      {cffNumber: "#5", 'class': PlayerClass.C, weapon: "MF"},
+      {cffNumber: "#6", 'class': PlayerClass.D, weapon: "MF"}
     ]
     expect(calculateForce(results, classification, openAgeCategory)).toEqual(58);
   });
 
   it('6xA = 90', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.A},
-      {cffNumber: "#2", 'class': PlayerClass.A},
-      {cffNumber: "#3", 'class': PlayerClass.A},
-      {cffNumber: "#4", 'class': PlayerClass.A},
-      {cffNumber: "#5", 'class': PlayerClass.A},
-      {cffNumber: "#6", 'class': PlayerClass.A}
+      {cffNumber: "#1", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#2", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#3", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#4", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#5", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#6", 'class': PlayerClass.A, weapon: "MF"}
     ]
     expect(calculateForce(results, classification, openAgeCategory)).toEqual(90);
   });
 
   it('3xA, 3XB = 75', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.A},
-      {cffNumber: "#2", 'class': PlayerClass.A},
-      {cffNumber: "#3", 'class': PlayerClass.A},
-      {cffNumber: "#4", 'class': PlayerClass.B},
-      {cffNumber: "#5", 'class': PlayerClass.B},
-      {cffNumber: "#6", 'class': PlayerClass.B}
+      {cffNumber: "#1", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#2", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#3", 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: "#4", 'class': PlayerClass.B, weapon: "MF"},
+      {cffNumber: "#5", 'class': PlayerClass.B, weapon: "MF"},
+      {cffNumber: "#6", 'class': PlayerClass.B, weapon: "MF"}
     ]
     expect(calculateForce(results, classification, openAgeCategory)).toEqual(75);
   });
 
   it('minimum invoked for open as 6XD < 30', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.D},
-      {cffNumber: "#2", 'class': PlayerClass.D},
-      {cffNumber: "#3", 'class': PlayerClass.D},
-      {cffNumber: "#4", 'class': PlayerClass.D},
-      {cffNumber: "#5", 'class': PlayerClass.D},
-      {cffNumber: "#6", 'class': PlayerClass.D}
+      {cffNumber: "#1", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#2", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#3", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#4", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#5", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#6", 'class': PlayerClass.D, weapon: "MF"}
     ]
     expect(calculateForce(results, classification, openAgeCategory)).toEqual(30);
   });
 
   it('minimum invoked for masters as 6XD = 18 which is < 20', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.D},
-      {cffNumber: "#2", 'class': PlayerClass.D},
-      {cffNumber: "#3", 'class': PlayerClass.D},
-      {cffNumber: "#4", 'class': PlayerClass.D},
-      {cffNumber: "#5", 'class': PlayerClass.D},
-      {cffNumber: "#6", 'class': PlayerClass.D}
+      {cffNumber: "#1", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#2", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#3", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#4", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#5", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#6", 'class': PlayerClass.D, weapon: "MF"}
     ]
     expect(calculateForce(results, classification, mastersAgeCategory)).toEqual(20);
   });
 
   it('minimum invoked for junior as 6XD = 18 which is < 20', () => {
     const classification: PlayerClassification[] = [
-      {cffNumber: "#1", 'class': PlayerClass.D},
-      {cffNumber: "#2", 'class': PlayerClass.D},
-      {cffNumber: "#3", 'class': PlayerClass.D},
-      {cffNumber: "#4", 'class': PlayerClass.D},
-      {cffNumber: "#5", 'class': PlayerClass.D},
-      {cffNumber: "#6", 'class': PlayerClass.D}
+      {cffNumber: "#1", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#2", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#3", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#4", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#5", 'class': PlayerClass.D, weapon: "MF"},
+      {cffNumber: "#6", 'class': PlayerClass.D, weapon: "MF"}
     ]
     expect(calculateForce(results, classification, juniorAgeCategory)).toEqual(20);
   });
@@ -169,6 +169,8 @@ describe('get competitions by zone for a player', () => {
   const competitionResults: CompetitionResult[] = [
     {
       competitionShortName: 'CFF1',
+      weapon: Weapon.Fleuret,
+      gender: "M",
       competition: {zone: CompetitionZone.cff},
       results: [
         {cffNumber: '123'},
@@ -195,20 +197,22 @@ describe('get competitions by zone for a player', () => {
 
 describe('calculate points for players in many tournaments', () => {
   const players: PlayerClassification[] = [
-    {cffNumber: '001', 'class': PlayerClass.A},
-    {cffNumber: '002', 'class': PlayerClass.B},
-    {cffNumber: '003', 'class': PlayerClass.B},
-    {cffNumber: '004', 'class': PlayerClass.C},
-    {cffNumber: '005', 'class': PlayerClass.C},
-    {cffNumber: '006', 'class': PlayerClass.C},
-    {cffNumber: '007', 'class': PlayerClass.D},
-    {cffNumber: '008', 'class': PlayerClass.D},
-    {cffNumber: '009', 'class': PlayerClass.D},
-    {cffNumber: '010', 'class': PlayerClass.D}
+    {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF"},
+    {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF"},
+    {cffNumber: '003', 'class': PlayerClass.B, weapon: "MF"},
+    {cffNumber: '004', 'class': PlayerClass.C, weapon: "MF"},
+    {cffNumber: '005', 'class': PlayerClass.C, weapon: "MF"},
+    {cffNumber: '006', 'class': PlayerClass.C, weapon: "MF"},
+    {cffNumber: '007', 'class': PlayerClass.D, weapon: "MF"},
+    {cffNumber: '008', 'class': PlayerClass.D, weapon: "MF"},
+    {cffNumber: '009', 'class': PlayerClass.D, weapon: "MF"},
+    {cffNumber: '010', 'class': PlayerClass.D, weapon: "MF"}
   ]
   const competitionResults: CompetitionResult[] = [
     {
       ageCategory: seniorAgeCategory,
+      weapon: Weapon.Fleuret,
+      gender: "M",
       competition: {zone: CompetitionZone.cff, code: 'CFF1'},
       results: [
         {cffNumber: '001', rank: 1, completed: "t"},
@@ -221,6 +225,8 @@ describe('calculate points for players in many tournaments', () => {
     },
     {
       ageCategory: cadetAgeCategory,
+      weapon: Weapon.Fleuret,
+      gender: "M",
       competition: {zone: CompetitionZone.regionalEast, code: 'REG1'},
       results: [
         {cffNumber: '007', rank: 1, completed: "t"},
@@ -233,6 +239,8 @@ describe('calculate points for players in many tournaments', () => {
     },
     {
       ageCategory: juniorAgeCategory,
+      weapon: Weapon.Fleuret,
+      gender: "M",
       competition: {zone: CompetitionZone.national, code: 'NAT1'},
       results: [
         {cffNumber: '001', rank: 1, completed: "t"},
@@ -280,17 +288,19 @@ describe('calculate points for players in many tournaments', () => {
 
 describe('only top five cff competitions are considered', () => {
   const players: PlayerClassification[] = [
-    {cffNumber: '001', 'class': PlayerClass.A},
-    {cffNumber: '002', 'class': PlayerClass.B},
-    {cffNumber: '003', 'class': PlayerClass.B},
-    {cffNumber: '004', 'class': PlayerClass.C},
-    {cffNumber: '005', 'class': PlayerClass.C},
-    {cffNumber: '006', 'class': PlayerClass.C}
+    {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF"},
+    {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF"},
+    {cffNumber: '003', 'class': PlayerClass.B, weapon: "MF"},
+    {cffNumber: '004', 'class': PlayerClass.C, weapon: "MF"},
+    {cffNumber: '005', 'class': PlayerClass.C, weapon: "MF"},
+    {cffNumber: '006', 'class': PlayerClass.C, weapon: "MF"}
   ]
   function createCompetitionResults(code: string, placeFor001: number): CompetitionResult {
     const competitionResult: CompetitionResult = {
       ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: code},
+      weapon: Weapon.Fleuret,
+      gender: "M",
       results: [
         {cffNumber: '001', rank: placeFor001, completed: "t"},
         {cffNumber: '002', rank: 2, completed: "t"},
@@ -321,6 +331,8 @@ describe('top five cff competitions, regional and national are grouped', () => {
   function createCompetitionResults(code: string, places: number[], zone: CompetitionZone): CompetitionResult {
     return {
       ageCategory: seniorAgeCategory,
+      weapon: Weapon.Fleuret,
+      gender: "M",
       competition: {zone: zone, code: code},
       results: [
         {cffNumber: '001', rank: places[0], completed: "t"},
@@ -342,12 +354,12 @@ describe('top five cff competitions, regional and national are grouped', () => {
   }
   it('calculate points for multiple players in three tournaments', () => {
     const players: PlayerClassification[] = [
-      {cffNumber: '001', 'class': PlayerClass.A},
-      {cffNumber: '002', 'class': PlayerClass.B},
-      {cffNumber: '003', 'class': PlayerClass.B},
-      {cffNumber: '004', 'class': PlayerClass.C},
-      {cffNumber: '005', 'class': PlayerClass.C},
-      {cffNumber: '006', 'class': PlayerClass.C}
+      {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF"},
+      {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF"},
+      {cffNumber: '003', 'class': PlayerClass.B, weapon: "MF"},
+      {cffNumber: '004', 'class': PlayerClass.C, weapon: "MF"},
+      {cffNumber: '005', 'class': PlayerClass.C, weapon: "MF"},
+      {cffNumber: '006', 'class': PlayerClass.C, weapon: "MF"}
     ]
 
 

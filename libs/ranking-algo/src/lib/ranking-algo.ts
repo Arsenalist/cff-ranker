@@ -6,7 +6,7 @@ import {
   PlayerClass,
   PlayerClassification,
   Rank,
-  Ranking, ZoneDistribution
+  Ranking, Weapon, ZoneDistribution
 } from '@cff/api-interfaces';
 
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
@@ -71,7 +71,7 @@ function createRankForPlayer(competitionResults: CompetitionResult[], player: Pl
   const regionalPoints: {code: string, points: number}[] = []
   const nationalPoints: {code: string, points: number}[] = []
   for(const c of competitionResults) {
-    const placeForPlayer = getPlaceForPlayer(player, c.results);
+    const placeForPlayer = getPlaceForPlayer(player, c);
     // not every player participates in every competition
     if (placeForPlayer) {
       const points = calculatePointsForParticipant(placeForPlayer, forceMap[c.competition.code], c.results.length);
@@ -103,9 +103,18 @@ function zoneDistribution(competitions: { code: string; points: number }[]) : Zo
   return {points: roundToOneDecimal(total), competitions: competitions}
 }
 
-function getPlaceForPlayer(player: PlayerClassification, results: CompetitionParticipant[]): number {
-  const p = results.filter(r => r.cffNumber === player.cffNumber && r.completed === "t")
-  return p.length > 0 ? p[0].rank : null
+function getPlaceForPlayer(player: PlayerClassification, result: CompetitionResult): number {
+  if (isPlayerEligibleForCompetition(player, result)) {
+    const p = result.results.filter(r => r.cffNumber === player.cffNumber && r.completed === "t")
+    return p.length > 0 ? p[0].rank : null
+  } else {
+    return null
+  }
+}
+
+function isPlayerEligibleForCompetition(player: PlayerClassification, result: CompetitionResult) {
+  const competitionInfo = (result.gender === "M" ? "M" : "W") + result.weapon.substring(0, 1).toUpperCase()
+  return player.weapon === competitionInfo
 }
 
 function emptyPlayerClassCountMap() {
