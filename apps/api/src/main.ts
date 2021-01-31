@@ -133,7 +133,7 @@ app.get('/api/rankings/jobs', asyncHandler(async (req, res) => {
 }));
 
 app.get('/api/rankings/jobs/:id', asyncHandler(async (req, res) => {
-  res.send(await RankingModel.find({rankingJob: req.params.id}).populate("ageCategory").select("weapon ageCategory"))
+  res.send(await RankingModel.find({rankingJob: req.params.id}).populate("ageCategory").select("weapon ageCategory gender"))
 }));
 
 app.get('/api/rankings/ranking/:id', asyncHandler(async (req, res) => {

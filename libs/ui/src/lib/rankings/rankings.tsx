@@ -29,6 +29,7 @@ export function Rankings() {
             <TableRow key="header">
               <TableCell>Age Category</TableCell>
               <TableCell>Weapon</TableCell>
+              <TableCell>Gender</TableCell>
               <TableCell> </TableCell>
             </TableRow>
           </TableHead>
@@ -38,6 +39,7 @@ export function Rankings() {
                 <TableRow key={row._id}>
                   <TableCell>{row.ageCategory.name}</TableCell>
                   <TableCell>{row.weapon}</TableCell>
+                  <TableCell>{row.gender}</TableCell>
                   <TableCell>
                     <Button variant="outlined" color="primary" data-testid="rank" onClick={() => showRanking(row._id)}>View</Button>
                   </TableCell>

@@ -28,6 +28,10 @@ export function Ranking() {
           variant="outlined"
           label={ranking.weapon}
         />
+        <Chip
+          variant="outlined"
+          label={ranking.gender}
+        />
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
