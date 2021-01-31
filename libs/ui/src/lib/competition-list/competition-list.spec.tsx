@@ -49,7 +49,8 @@ describe('CompetitionList', () => {
       await fireEvent.click(screen.getByLabelText("national"));
       await userEvent.click(screen.getByTestId("add-button-confirm"));
     });
-    expect(screen.getByText(/national\/my new competition/i)).toBeInTheDocument();
+    expect(screen.queryAllByText(/national/i)[0]).toBeInTheDocument();
+    expect(screen.queryAllByText(/my new competition/)[0]).toBeInTheDocument();
   });
   it('deletes a competition', async() => {
     jest.resetAllMocks()

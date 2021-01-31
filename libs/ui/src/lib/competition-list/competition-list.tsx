@@ -5,12 +5,9 @@ import axios from 'axios';
 import {
   FormControlLabel,
   FormLabel,
-  List,
-  ListItem,
   Radio,
-  RadioGroup
+  RadioGroup, TableBody
 } from '@material-ui/core';
-import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -18,9 +15,14 @@ import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import { useForm } from 'react-hook-form';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import Table from '@material-ui/core/Table';
+import TableContainer from '@material-ui/core/TableContainer';
+import Paper from '@material-ui/core/Paper';
 
 export function CompetitionList() {
   const [competitions, setCompetitions] = useState<Competition[]>([])
@@ -50,18 +52,32 @@ export function CompetitionList() {
   return (
     <div>
       <Button variant="contained" color="primary" data-testid="add-button" onClick={() => setAddDialogOpen(true)}>Add Competition</Button>
-      <List>
+      <TableContainer component={Paper}>
+        <Table>
+      <TableHead>
+        <TableRow key="header">
+          <TableCell>Name</TableCell>
+          <TableCell>Code</TableCell>
+          <TableCell>Zone</TableCell>
+          <TableCell>Delete</TableCell>
+        </TableRow>
+      </TableHead>
+          <TableBody>
       {competitions && competitions.map((row: Competition) =>
-      <ListItem>
-        <ListItemText primary={row.zone + "/" + row.name} secondary={row.code} />
-        <ListItemSecondaryAction>
+      <TableRow key={row.code}>
+        <TableCell scope="row">{row.name}</TableCell>
+        <TableCell scope="row">{row.code}</TableCell>
+        <TableCell scope="row">{row.zone}</TableCell>
+        <TableCell scope="row">
           <IconButton edge="end" aria-label="delete" data-testid="delete-button" onClick={() => onDelete(row.code)}>
             <DeleteIcon />
           </IconButton>
-        </ListItemSecondaryAction>
-      </ListItem>
+        </TableCell>
+      </TableRow>
       )}
-    </List>
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Dialog open={openAddDialog}  onClose={() => setAddDialogOpen(false)} aria-labelledby="form-dialog-title">
         <form onSubmit={handleSubmit(onSubmit)}>
         <DialogTitle >Add a Competition</DialogTitle>
