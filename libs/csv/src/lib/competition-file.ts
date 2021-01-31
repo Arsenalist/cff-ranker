@@ -75,7 +75,7 @@ function validateCompetition(competition: CompetitionResult) {
     addMessageToErrorsListIfTestFails(errors, () => !!p.branch, `Line ${row}: Missing Branch.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.club, `Line ${row}: Missing Club.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.rank, `Line ${row}: Missing Rank.`)
-    addMessageToErrorsListIfTestFails(errors, () => !!p.validated, `Line ${row}: Missing Validated.`)
+    addMessageToErrorsListIfTestFails(errors, () => !!p.completed, `Line ${row}: Missing Completed.`)
     addMessageToErrorsListIfTestFails(errors, () => {
       if (p.cffNumber && isCffNumberFormatValid(p.cffNumber)) {
         return true
@@ -117,7 +117,7 @@ async function parseResults(fileContents: string): Promise<CompetitionParticipan
         branch: block3[1],
         club: block3[2],
         rank: block4[0],
-        validated: block4[1]
+        completed: block4[1]
       }
     }
   });

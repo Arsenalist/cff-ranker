@@ -76,7 +76,7 @@ export function UploadCompetitionResults() {
                 <TableCell>Branch</TableCell>
                 <TableCell>Club</TableCell>
                 <TableCell>Rank</TableCell>
-                <TableCell>Validated</TableCell>
+                <TableCell>Completed</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -92,7 +92,7 @@ export function UploadCompetitionResults() {
                   <TableCell>{row.branch}</TableCell>
                   <TableCell>{row.club}</TableCell>
                   <TableCell>{row.rank}</TableCell>
-                  <TableCell>{row.validated}</TableCell>
+                  <TableCell>{row.completed}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -104,7 +104,7 @@ function zoneDistribution(competitions: { code: string; points: number }[]) : Zo
 }
 
 function getPlaceForPlayer(player: PlayerClassification, results: CompetitionParticipant[]): number {
-  const p = results.filter(r => r.cffNumber === player.cffNumber)
+  const p = results.filter(r => r.cffNumber === player.cffNumber && r.completed === "t")
   return p.length > 0 ? p[0].rank : null
 }
 

@@ -55,12 +55,12 @@ const veteransAgeCategory: AgeCategory = {
 
 describe('calculate force', () => {
   const results: CompetitionParticipant[] = [
-    {cffNumber: "#1" },
-    {cffNumber: "#2" },
-    {cffNumber: "#3" },
-    {cffNumber: "#4" },
-    {cffNumber: "#5" },
-    {cffNumber: "#6" }
+    {cffNumber: "#1", completed: "t" },
+    {cffNumber: "#2", completed: "t" },
+    {cffNumber: "#3", completed: "t" },
+    {cffNumber: "#4", completed: "t" },
+    {cffNumber: "#5", completed: "t" },
+    {cffNumber: "#6", completed: "t" }
   ]
 
   it('2xA, 2xB, 1xC, 1xD = 58', () => {
@@ -137,9 +137,9 @@ describe('calculate force', () => {
 
   it('minimum invoked for cadet as 3XD = 9 which is < 10', () => {
     const results: CompetitionParticipant[] = [
-      {cffNumber: "#1" },
-      {cffNumber: "#2" },
-      {cffNumber: "#3" }
+      {cffNumber: "#1", completed: "t" },
+      {cffNumber: "#2", completed: "t" },
+      {cffNumber: "#3", completed: "t" }
     ]
     const classification: PlayerClassification[] = [
       {cffNumber: "#1", 'class': PlayerClass.D},
@@ -211,36 +211,36 @@ describe('calculate points for players in many tournaments', () => {
       ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: 'CFF1'},
       results: [
-        {cffNumber: '001', rank: 1},
-        {cffNumber: '002', rank: 2},
-        {cffNumber: '003', rank: 3},
-        {cffNumber: '004', rank: 4},
-        {cffNumber: '005', rank: 5},
-        {cffNumber: '006', rank: 6}
+        {cffNumber: '001', rank: 1, completed: "t"},
+        {cffNumber: '002', rank: 2, completed: "t"},
+        {cffNumber: '003', rank: 3, completed: "t"},
+        {cffNumber: '004', rank: 4, completed: "t"},
+        {cffNumber: '005', rank: 5, completed: "t"},
+        {cffNumber: '006', rank: 6, completed: "t"}
       ]
     },
     {
       ageCategory: cadetAgeCategory,
       competition: {zone: CompetitionZone.regionalEast, code: 'REG1'},
       results: [
-        {cffNumber: '007', rank: 1},
-        {cffNumber: '008', rank: 2},
-        {cffNumber: '009', rank: 3},
-        {cffNumber: '001', rank: 4},
-        {cffNumber: '002', rank: 5},
-        {cffNumber: '003', rank: 6}
+        {cffNumber: '007', rank: 1, completed: "t"},
+        {cffNumber: '008', rank: 2, completed: "t"},
+        {cffNumber: '009', rank: 3, completed: "t"},
+        {cffNumber: '001', rank: 4, completed: "t"},
+        {cffNumber: '002', rank: 5, completed: "t"},
+        {cffNumber: '003', rank: 6, completed: "t"}
       ]
     },
     {
       ageCategory: juniorAgeCategory,
       competition: {zone: CompetitionZone.national, code: 'NAT1'},
       results: [
-        {cffNumber: '001', rank: 1},
-        {cffNumber: '002', rank: 2},
-        {cffNumber: '004', rank: 3},
-        {cffNumber: '008', rank: 4},
-        {cffNumber: '009', rank: 5},
-        {cffNumber: '010', rank: 6}
+        {cffNumber: '001', rank: 1, completed: "t"},
+        {cffNumber: '002', rank: 2, completed: "t"},
+        {cffNumber: '004', rank: 3, completed: "t"},
+        {cffNumber: '008', rank: 4, completed: "t"},
+        {cffNumber: '009', rank: 5, completed: "t"},
+        {cffNumber: '010', rank: 6, completed: "t"}
       ]
     }
   ]
@@ -292,12 +292,12 @@ describe('only top five cff competitions are considered', () => {
       ageCategory: seniorAgeCategory,
       competition: {zone: CompetitionZone.cff, code: code},
       results: [
-        {cffNumber: '001', rank: placeFor001},
-        {cffNumber: '002', rank: 2},
-        {cffNumber: '003', rank: 3},
-        {cffNumber: '004', rank: 4},
-        {cffNumber: '005', rank: 5},
-        {cffNumber: '006', rank: 6}
+        {cffNumber: '001', rank: placeFor001, completed: "t"},
+        {cffNumber: '002', rank: 2, completed: "t"},
+        {cffNumber: '003', rank: 3, completed: "t"},
+        {cffNumber: '004', rank: 4, completed: "t"},
+        {cffNumber: '005', rank: 5, completed: "t"},
+        {cffNumber: '006', rank: 6, completed: "t"}
       ]
     }
     return competitionResult
@@ -323,12 +323,12 @@ describe('top five cff competitions, regional and national are grouped', () => {
       ageCategory: seniorAgeCategory,
       competition: {zone: zone, code: code},
       results: [
-        {cffNumber: '001', rank: places[0]},
-        {cffNumber: '002', rank: places[1]},
-        {cffNumber: '003', rank: places[2]},
-        {cffNumber: '004', rank: places[3]},
-        {cffNumber: '005', rank: places[4]},
-        {cffNumber: '006', rank: places[5]}
+        {cffNumber: '001', rank: places[0], completed: "t"},
+        {cffNumber: '002', rank: places[1], completed: "t"},
+        {cffNumber: '003', rank: places[2], completed: "t"},
+        {cffNumber: '004', rank: places[3], completed: "t"},
+        {cffNumber: '005', rank: places[4], completed: "t"},
+        {cffNumber: '006', rank: places[5], completed: "t"}
       ]
     }
   }

@@ -39,7 +39,7 @@ function aCompetitionResult(): CompetitionResult {
       branch: 'QC',
       club: 'OM',
       rank: 1,
-      validated: 't',
+      completed: 't',
       warnings: []
     }]
   };

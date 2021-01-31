@@ -117,7 +117,7 @@ export function ViewCompetition() {
             <TableCell>CFF#</TableCell>
             <TableCell>Gender</TableCell>
             <TableCell>YOB</TableCell>
-            <TableCell>Validated</TableCell>
+            <TableCell>Completed</TableCell>
             <TableCell>Club</TableCell>
             <TableCell>Country</TableCell>
           </TableRow>
@@ -141,7 +141,7 @@ export function ViewCompetition() {
                 {row.yearOfBirth}
               </TableCell>
               <TableCell scope="row">
-                {row.validated}
+                {row.completed}
               </TableCell>
               <TableCell scope="row">
                 {row.club}

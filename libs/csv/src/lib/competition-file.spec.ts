@@ -87,7 +87,7 @@ describe('competition file csv parsing', () => {
     expect(result.results[0].branch).toBe("QC")
     expect(result.results[0].club).toBe("OM")
     expect(result.results[0].rank).toBe("1")
-    expect(result.results[0].validated).toBe("t")
+    expect(result.results[0].completed).toBe("t")
   });
 });
 
@@ -130,7 +130,7 @@ describe('competition file errors', () => {
       expect(e.errorMessages[5]).toBe("Line 1: Missing Branch.")
       expect(e.errorMessages[6]).toBe("Line 1: Missing Club.")
       expect(e.errorMessages[7]).toBe("Line 1: Missing Rank.")
-      expect(e.errorMessages[8]).toBe("Line 1: Missing Validated.")
+      expect(e.errorMessages[8]).toBe("Line 1: Missing Completed.")
     }
   });
   it('all fields missing in one line, some in the other', async () => {
@@ -150,7 +150,7 @@ describe('competition file errors', () => {
       expect(e.errorMessages[5]).toBe("Line 1: Missing Branch.")
       expect(e.errorMessages[6]).toBe("Line 1: Missing Club.")
       expect(e.errorMessages[7]).toBe("Line 1: Missing Rank.")
-      expect(e.errorMessages[8]).toBe("Line 1: Missing Validated.")
+      expect(e.errorMessages[8]).toBe("Line 1: Missing Completed.")
       expect(e.errorMessages[9]).toBe("Line 2: Missing Name.")
     }
   });

@@ -9,7 +9,7 @@ interface CompetitionParticipant  {
   branch?: string
   club?: string
   rank?: number
-  validated?: string
+  completed?: string
   warnings?: Warning[]
 }
 
