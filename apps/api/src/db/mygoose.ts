@@ -1,4 +1,12 @@
-import { AgeCategory, Competition, CompetitionResult, Player, PlayerClassification, Weapon } from '@cff/api-interfaces';
+import {
+  AgeCategory,
+  Competition,
+  CompetitionResult,
+  CompetitionStatus,
+  Player,
+  PlayerClassification,
+  Weapon
+} from '@cff/api-interfaces';
 import { mongoose } from '@typegoose/typegoose';
 import { CompetitionResultsModel } from './schemas/competition-results';
 import { CompetitionModel } from './schemas/competition';
