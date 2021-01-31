@@ -1,13 +1,8 @@
 import { MultiMessageError } from '@cff/common';
-import { AgeCategory, CompetitionParticipant, CompetitionResult } from '@cff/api-interfaces';
+import { CompetitionParticipant, CompetitionResult } from '@cff/api-interfaces';
 import { isCffNumberFormatValid } from '@cff/common';
 
 const csv = require('async-csv');
-
-function getEnumKeyByEnumValue(myEnum, enumValue:string): any {
-  let keys = Object.keys(myEnum).filter(x => myEnum[x] == enumValue);
-  return keys.length > 0 ? myEnum[keys[0]] : null;
-}
 
 async function parseCompetitionFileContents(fileContents: string): Promise<CompetitionResult> {
   const { line1Values, line2Values } = parseHeaderRows(fileContents);
@@ -15,7 +10,7 @@ async function parseCompetitionFileContents(fileContents: string): Promise<Compe
   const competition: CompetitionResult = {
     creator: line1Values[3],
     competitionType: line1Values[4],
-    competitionDate: line2Values[0],
+    competitionDate: competitionStringDateToDate(line2Values[0]),
     weapon: line2Values[1],
     gender: line2Values[2],
     ageCategory: line2Values[3],
@@ -30,6 +25,17 @@ async function parseCompetitionFileContents(fileContents: string): Promise<Compe
     throw new MultiMessageError(errors);
   }
 }
+
+function competitionStringDateToDate(date: string): Date {
+  const parts = date.split("/")
+  const d = new Date(parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]))
+  return isValidDate(d) ? d : null
+}
+
+function isValidDate(d) {
+  return d instanceof Date && !isNaN(d.getTime());
+}
+
 
 function decorateCompetitionResultWithWarnings(competition: CompetitionResult): CompetitionResult {
   for (const r of competition.results) {
@@ -96,6 +102,7 @@ async function parseResults(fileContents: string): Promise<CompetitionParticipan
   return await csv.parse(fileContents, {
     from_line: 3,
     delimiter: ';',
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     on_record: (record, { lines }) => {
       const block1 = record[0].split(/,/);
       const block3 = record[2].split(/,/);

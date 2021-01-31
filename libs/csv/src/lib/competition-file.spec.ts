@@ -15,7 +15,9 @@ describe('competition file csv parsing', () => {
     const result = await parseCompetitionFileContents(validCsvContents);
     expect(result.creator).toBe("sylvie clement")
     expect(result.competitionType).toBe("individuel")
-    expect(result.competitionDate).toBe("10/12/2011")
+    expect(result.competitionDate.getDate()).toBe(10)
+    expect(result.competitionDate.getMonth()).toBe(11)
+    expect(result.competitionDate.getFullYear()).toBe(2011)
     expect(result.weapon).toBe("fleuret")
     expect(result.gender).toBe("M")
     expect(result.ageCategory).toBe("senior")

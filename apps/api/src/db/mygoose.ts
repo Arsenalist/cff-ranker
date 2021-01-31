@@ -105,7 +105,17 @@ export async function saveClassifications(classifications: PlayerClassification[
 }
 
 export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResult[]> {
-  return CompetitionResultsModel.find({weapon: weapon, status: CompetitionStatus.approved}).populate('competition');
+  const aYearAgo = new Date();
+  aYearAgo.setDate(aYearAgo.getDate()-365)
+  const today = new Date();
+  return CompetitionResultsModel.find({
+    weapon: weapon,
+    status: CompetitionStatus.approved,
+    competitionDate: {
+      $gte: aYearAgo,
+      $lt: today
+    }
+  }).populate('competition');
 }
 
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {

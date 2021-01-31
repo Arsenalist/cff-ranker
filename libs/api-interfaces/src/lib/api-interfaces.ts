@@ -21,13 +21,13 @@ interface CompetitionResult {
 
   _id?: string
 
-  competition?: any
+  competition?: Competition
 
   creator?: string;
 
   competitionType?: string;
 
-  competitionDate?: string;
+  competitionDate?: Date;
 
   weapon?:string
 
