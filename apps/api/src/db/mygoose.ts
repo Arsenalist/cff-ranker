@@ -96,8 +96,8 @@ export async function saveClassifications(classifications: PlayerClassification[
   await new ClassificationFileModel({classifications: classifications}).save()
 }
 
-export async function getCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResult[]> {
-  return CompetitionResultsModel.find({weapon: weapon}).populate('competition');
+export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon): Promise<CompetitionResult[]> {
+  return CompetitionResultsModel.find({weapon: weapon, status: CompetitionStatus.approved}).populate('competition');
 }
 
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {

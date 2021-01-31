@@ -20,7 +20,7 @@ import {
   PlayerClassification,
   Weapon
 } from '@cff/api-interfaces';
-import { getCompetitionResultsInLast12Months, getPlayerClassifications } from './db/mygoose';
+import { getApprovedCompetitionResultsInLast12Months, getPlayerClassifications } from './db/mygoose';
 import { rank } from '@cff/ranking-algo';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
 import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
@@ -151,7 +151,7 @@ app.get('/api/rank', asyncHandler(async (req, res) => {
   const ageCategories = await AgeCategoryModel.find({})
   for (const key of Object.keys(Weapon)) {
     for(const ageCategory of ageCategories) {
-      const allCompetitionResults = await getCompetitionResultsInLast12Months(Weapon[key])
+      const allCompetitionResults = await getApprovedCompetitionResultsInLast12Months(Weapon[key])
       const ranking = rank(allCompetitionResults, playerClassifications);
       ranking.weapon = Weapon[key];
       ranking.ageCategory = ageCategory
