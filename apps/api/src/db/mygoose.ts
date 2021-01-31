@@ -31,6 +31,7 @@ async function latestValidationFileId() {
 export async function validateParticipant(cffNumber: string, name: string, surname: string, yearOfBirth: number, gender: string): Promise<Player> {
   const matchedPlayersInLatestValidationFile = await ValidationFileModel.findOne({
       "_id": await latestValidationFileId(),
+      "players.validated": "y",
       "players.cffNumber": cffNumber,
       "players.name": name.toLowerCase(),
       "players.surname": surname.toLowerCase(),
