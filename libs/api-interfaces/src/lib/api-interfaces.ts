@@ -114,10 +114,22 @@ export interface PlayerAndCompetition {
   competition: Competition
 }
 
+export type ZoneDistribution = {
+  points?: number,
+  competitions?: {
+    code?: string,
+    points?: number
+  }[]
+};
+
 export interface Rank {
-  player: PlayerClassification
-  points: number
+  player?: PlayerClassification
+  points?: number
+  cffDistribution?: ZoneDistribution
+  regionalDistribution?: ZoneDistribution
+  nationalDistribution?: ZoneDistribution
 }
+
 export interface Ranking {
   _id?: string
   ranks: Rank[]

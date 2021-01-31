@@ -4,9 +4,10 @@ import {
   CompetitionResult,
   CompetitionZone,
   PlayerClass,
-  PlayerClassification, Rank, Ranking
+  PlayerClassification,
+  Rank,
+  Ranking, ZoneDistribution
 } from '@cff/api-interfaces';
-var hash = require('object-hash');
 
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
   const classMap = emptyPlayerClassCountMap();
@@ -30,31 +31,19 @@ export function filterCompetitionResults(competitionResults: CompetitionResult[]
 
 export function rank(competitionResults: CompetitionResult[], players: PlayerClassification[]): Ranking {
   const forceMap = createForceMap(competitionResults, players)
-  let allPlayersPointsMap = new Map<string, number>()
   const ranks: Rank[] = []
   for (const p of players) {
-    allPlayersPointsMap = new Map([...allPlayersPointsMap, ...createPlayerPointsMap(competitionResults, p, forceMap)])
-    const points = roundToOneDecimal(collectPoints(p, competitionResults, allPlayersPointsMap));
+    const rank: Rank = createRankForPlayer(competitionResults, p, forceMap)
+    const points = roundToOneDecimal(rank.cffDistribution.points + rank.regionalDistribution.points + rank.nationalDistribution.points);
     if (points != 0) {
-      ranks.push({
-        points: points,
-        player: p
-      })
+      rank.points = points
+      ranks.push(rank)
     }
   }
   ranks.sort((a, b) => b.points - a.points)
   return {ranks: ranks}
 }
 
-function collectPoints(player: PlayerClassification,
-                       results: CompetitionResult[],
-                       playerPointsMap: Map<string, number>): number {
-  return results.reduce( (acc, value) => {
-     const points = playerPointsMap.get(player.cffNumber + value.competition.code);
-    // not every player participates in every competition
-    return points ? acc + points : acc
-  }, 0)
-}
 
 function createForceMap(competitionResults: CompetitionResult[], players: PlayerClassification[]): Map<string, number> {
   const forceMap = new Map<string, number>()
@@ -76,27 +65,42 @@ function takeTopCompetitions(cffCompetitionPoints: { code: string; points: numbe
   return cffCompetitionPoints;
 }
 
-function createPlayerPointsMap(competitionResults: CompetitionResult[], player: PlayerClassification, forceMap): Map<string, number> {
-  const map = new Map<string, number>()
+function createRankForPlayer(competitionResults: CompetitionResult[], player: PlayerClassification, forceMap): Rank {
+  const rank: Rank = { player: player, points: 0 }
   let cffCompetitionPoints: {code: string, points: number}[] = []
+  const regionalPoints: {code: string, points: number}[] = []
+  const nationalPoints: {code: string, points: number}[] = []
   for(const c of competitionResults) {
     const placeForPlayer = getPlaceForPlayer(player, c.results);
     // not every player participates in every competition
     if (placeForPlayer) {
       const points = calculatePointsForParticipant(placeForPlayer, forceMap[c.competition.code], c.results.length);
       if (c.competition.zone == CompetitionZone.cff) {
-        cffCompetitionPoints.push({code: c.competition.code, points: points})
+        cffCompetitionPoints.push({ code: c.competition.code, points: points })
+      } else if (c.competition.zone == CompetitionZone.national) {
+        nationalPoints.push({ code: c.competition.code, points: points })
       } else {
-        map.set(player.cffNumber + c.competition.code, points)
+        regionalPoints.push({ code: c.competition.code, points: points })
       }
     }
   }
   sortCompetitionsByPointsInDescendingOrder(cffCompetitionPoints);
+  sortCompetitionsByPointsInDescendingOrder(regionalPoints);
+  sortCompetitionsByPointsInDescendingOrder(nationalPoints);
   cffCompetitionPoints = takeTopCompetitions(cffCompetitionPoints);
-  for (const c of cffCompetitionPoints) {
-    map.set(player.cffNumber + c.code, c.points)
+  rank.cffDistribution = zoneDistribution(cffCompetitionPoints)
+  rank.regionalDistribution = zoneDistribution(regionalPoints)
+  rank.nationalDistribution = zoneDistribution(nationalPoints)
+  return rank
+
+}
+
+function zoneDistribution(competitions: { code: string; points: number }[]) : ZoneDistribution {
+  let total = 0
+  for (const p of competitions) {
+    total += p.points
   }
-  return map
+  return {points: roundToOneDecimal(total), competitions: competitions}
 }
 
 function getPlaceForPlayer(player: PlayerClassification, results: CompetitionParticipant[]): number {
