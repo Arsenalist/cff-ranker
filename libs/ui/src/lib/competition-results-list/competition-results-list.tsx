@@ -40,6 +40,7 @@ export function CompetitionResultsList() {
             <TableCell>Type</TableCell>
             <TableCell>Weapon</TableCell>
             <TableCell>Gender</TableCell>
+            <TableCell>Age Category</TableCell>
             <TableCell>Status</TableCell>
           </TableRow>
         </TableHead>
