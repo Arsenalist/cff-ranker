@@ -144,7 +144,7 @@ app.get('/api/rankings/ranking/:id', asyncHandler(async (req, res) => {
 app.get('/api/rank', asyncHandler(async (req, res) => {
   const playerClassifications = await getPlayerClassifications()
   const rankingJobModel = await new RankingJobModel({
-    user: "zarar",
+    user: req.user["https://fencing.ca/name"],
     dateGenerated: Date.now()
   }).save()
 
