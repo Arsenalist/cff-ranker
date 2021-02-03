@@ -6,7 +6,8 @@ import {
   PlayerClass,
   PlayerClassification,
   Rank,
-  Ranking, Weapon, ZoneDistribution
+  Ranking,
+  ZoneDistribution
 } from '@cff/api-interfaces';
 
 export function calculateForce(participants: CompetitionParticipant[], classification: PlayerClassification[], ageCategory: AgeCategory): number {
@@ -65,6 +66,18 @@ function takeTopCompetitions(cffCompetitionPoints: { code: string; points: numbe
   return cffCompetitionPoints;
 }
 
+function isProvinceInCompetitionZone(zone: CompetitionZone.regionalEast | CompetitionZone.regionalWest, province: string) {
+  if (zone == CompetitionZone.regionalWest) {
+    return province === "BC" || province ===  "AB" || province === "SK" || province === "MB"
+  } else if (zone == CompetitionZone.regionalEast) {
+    return province === "ON" || province ===  "QC" || province ===  "NS" || province ===  "NB" || province ===  "PE" || province ===  "NL"
+  }
+}
+
+function isRegional(zone: CompetitionZone) {
+  return zone == CompetitionZone.regionalEast || zone == CompetitionZone.regionalWest
+}
+
 function createRankForPlayer(competitionResults: CompetitionResult[], player: PlayerClassification, forceMap): Rank {
   const rank: Rank = { player: player, points: 0 }
   let cffCompetitionPoints: {code: string, points: number}[] = []
@@ -79,8 +92,10 @@ function createRankForPlayer(competitionResults: CompetitionResult[], player: Pl
         cffCompetitionPoints.push({ code: c.competition.code, points: points })
       } else if (c.competition.zone == CompetitionZone.national) {
         nationalPoints.push({ code: c.competition.code, points: points })
-      } else {
+      } else if (isRegional(c.competition.zone) && isProvinceInCompetitionZone(c.competition.zone, player.province)) {
         regionalPoints.push({ code: c.competition.code, points: points })
+      } else {
+        cffCompetitionPoints.push({ code: c.competition.code, points: points })
       }
     }
   }

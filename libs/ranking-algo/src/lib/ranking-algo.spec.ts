@@ -354,12 +354,12 @@ describe('top five cff competitions, regional and national are grouped', () => {
   }
   it('calculate points for multiple players in three tournaments', () => {
     const players: PlayerClassification[] = [
-      {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF"},
-      {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF"},
-      {cffNumber: '003', 'class': PlayerClass.B, weapon: "MF"},
-      {cffNumber: '004', 'class': PlayerClass.C, weapon: "MF"},
-      {cffNumber: '005', 'class': PlayerClass.C, weapon: "MF"},
-      {cffNumber: '006', 'class': PlayerClass.C, weapon: "MF"}
+      {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF", province: "MB"},
+      {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF", province: "MB"},
+      {cffNumber: '003', 'class': PlayerClass.B, weapon: "MF", province: "MB"},
+      {cffNumber: '004', 'class': PlayerClass.C, weapon: "MF", province: "MB"},
+      {cffNumber: '005', 'class': PlayerClass.C, weapon: "MF", province: "MB"},
+      {cffNumber: '006', 'class': PlayerClass.C, weapon: "MF", province: "MB"}
     ]
 
 
@@ -370,7 +370,7 @@ describe('top five cff competitions, regional and national are grouped', () => {
       createCompetitionResults('CFF4', [4, 2, 3, 1, 5, 6], CompetitionZone.cff),
       createCompetitionResults('CFF5', [5, 2, 3, 4, 1, 6], CompetitionZone.cff),
       createCompetitionResults('CFF6', [6, 2, 3, 4, 5, 1], CompetitionZone.cff),
-      createCompetitionResults('REG1', [1, 3, 2, 5, 4, 6], CompetitionZone.regionalEast),
+      createCompetitionResults('REG1', [1, 3, 2, 5, 4, 6], CompetitionZone.regionalWest),
       createCompetitionResults('REG2', [6, 2, 4, 3, 5, 1], CompetitionZone.regionalWest),
       createCompetitionResults('REG3', [1, 5, 3, 4, 2, 6], CompetitionZone.regionalWest),
       createCompetitionResults('NAT1', [1, 2, 6, 4, 5, 3], CompetitionZone.national),
