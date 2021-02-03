@@ -13,6 +13,7 @@ import { CompetitionModel } from './schemas/competition';
 import { ClassificationFileModel } from './schemas/player-classification';
 import { AgeCategoryModel } from './schemas/age-category';
 import { ValidationFileModel } from './schemas/player';
+import { MultiMessageError } from '@cff/common';
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');
@@ -129,7 +130,11 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
   }
   const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1)
   return latestClassificationFile.classifications.map(c => {
-    return {...c, province: cffMap[c.cffNumber].province}
+      const cffMapElement = cffMap[c.cffNumber];
+      if (!cffMapElement) {
+        throw new MultiMessageError([`${c.cffNumber} was not found in the validation file but exists in the classification file.`])
+      }
+      return {...c, province: cffMapElement.province}
   })
 }
 
