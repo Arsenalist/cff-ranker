@@ -122,8 +122,15 @@ export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon
 }
 
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {
+  const validationFile = await ValidationFileModel.findOne().sort('-dateGenerated').limit(1)
+  const cffMap = {}
+  for (const p of validationFile.players) {
+    cffMap[p.cffNumber] = p
+  }
   const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1)
-  return latestClassificationFile.classifications
+  return latestClassificationFile.classifications.map(c => {
+    return {...c, province: cffMap[c.cffNumber].province}
+  })
 }
 
 export async function save(entity) {
