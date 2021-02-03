@@ -352,7 +352,7 @@ describe('top five cff competitions, regional and national are grouped', () => {
     expect(rankings.ranks[position-1].nationalDistribution.points).toBe(nationalTotal)
     expect(rankings.ranks[position-1].cffDistribution.competitions).toStrictEqual(cffCompetitions)
   }
-  it('calculate points for multiple players in three tournaments', () => {
+  it('calculate points for multiple players in tournaments which are in three different zones', () => {
     const players: PlayerClassification[] = [
       {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF", province: "MB"},
       {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF", province: "MB"},
@@ -421,5 +421,77 @@ describe('top five cff competitions, regional and national are grouped', () => {
         {code: "CFF3", points: 5.4},
         {code: "CFF4", points: 5.4},
         {code: "CFF6", points: 5.4}], 48, 36.4)
+  })
+
+  it('players whose province does not match the region are classified as CFF tournaments', () => {
+    const players: PlayerClassification[] = [
+      {cffNumber: '001', 'class': PlayerClass.A, weapon: "MF", province: "ON"},
+      {cffNumber: '002', 'class': PlayerClass.B, weapon: "MF", province: "ON"},
+      {cffNumber: '003', 'class': PlayerClass.B, weapon: "MF", province: "ON"},
+      {cffNumber: '004', 'class': PlayerClass.C, weapon: "MF", province: "MB"},
+      {cffNumber: '005', 'class': PlayerClass.C, weapon: "MF", province: "MB"},
+      {cffNumber: '006', 'class': PlayerClass.C, weapon: "MF", province: "MB"}
+    ]
+
+
+    const competitionResults = [
+      createCompetitionResults('CFF1', [1, 2, 3, 4, 5, 6], CompetitionZone.cff),
+      createCompetitionResults('CFF2', [2, 2, 3, 4, 5, 6], CompetitionZone.cff),
+      createCompetitionResults('CFF3', [3, 2, 3, 4, 5, 6], CompetitionZone.cff),
+      createCompetitionResults('CFF4', [4, 2, 3, 4, 5, 6], CompetitionZone.cff),
+      createCompetitionResults('CFF5', [5, 2, 3, 4, 5, 6], CompetitionZone.cff),
+      createCompetitionResults('CFF6', [6, 2, 3, 4, 5, 6], CompetitionZone.cff),
+      createCompetitionResults('REG1', [1, 3, 2, 5, 4, 6], CompetitionZone.regionalWest),
+      createCompetitionResults('REG2', [6, 2, 4, 3, 5, 1], CompetitionZone.regionalEast),
+      createCompetitionResults('REG3', [1, 5, 3, 4, 2, 6], CompetitionZone.regionalWest),
+      createCompetitionResults('NAT1', [1, 2, 6, 4, 5, 3], CompetitionZone.national),
+      createCompetitionResults('NAT2', [6, 5, 4, 3, 2, 1], CompetitionZone.national)
+    ]
+    const rankings: Ranking = rank(competitionResults, players)
+    validateRank(rankings, "001", 1, 252.4, 201.5,
+      [
+        {code: "CFF1", points: 50.3},
+        {code: "REG1", points: 50.3},
+        {code: "REG3", points: 50.3},
+        {code: "CFF2", points: 31},
+        {code: "CFF3", points: 19.6}
+        ], 0.3, 50.6)
+    validateRank(rankings, "002", 2, 222.4, 155,
+      [
+        {code: "CFF1", points: 31},
+        {code: "CFF2", points: 31},
+        {code: "CFF3", points: 31},
+        {code: "CFF4", points: 31},
+        {code: "CFF5", points: 31}], 31, 36.4)
+    validateRank(rankings, "003", 3, 132.9, 109.4,
+          [
+            {code: "REG1", points: 31},
+            {code: "CFF1", points: 19.6},
+            {code: "CFF2", points: 19.6},
+            {code: "CFF3", points: 19.6},
+            {code: "CFF4", points: 19.6}], 11.6, 11.9)
+    validateRank(rankings, "006", 4, 122, 51.5,
+      [
+        {code: "REG2", points: 50.3},
+        {code: "CFF1", points: 0.3},
+        {code: "CFF2", points: 0.3},
+        {code: "CFF3", points: 0.3},
+        {code: "CFF4", points: 0.3}], 0.6, 69.9)
+
+    validateRank(rankings, "004", 5, 114.2, 66,
+      [
+        {code: "REG2", points: 19.6},
+        {code: "CFF1", points: 11.6},
+        {code: "CFF2", points: 11.6},
+        {code: "CFF3", points: 11.6},
+        {code: "CFF4", points: 11.6}], 17, 31.2)
+
+    validateRank(rankings, "005", 6, 106, 27,
+      [
+        {code: "CFF1", points: 5.4},
+        {code: "CFF2", points: 5.4},
+        {code: "CFF3", points: 5.4},
+        {code: "CFF4", points: 5.4},
+        {code: "CFF5", points: 5.4}], 42.6, 36.4)
   })
 })
