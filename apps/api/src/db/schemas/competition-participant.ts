@@ -11,6 +11,6 @@ export const competitionParticipant = new mongoose.Schema({
   branch: { type: String, required: true },
   club: { type: String, required: true },
   rank: { type: Number },
-  validated: { type: String, required: true },
+  completed: { type: String, required: true },
   warnings: { type: [participantWarning] }
 });
