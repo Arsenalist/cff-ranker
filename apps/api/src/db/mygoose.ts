@@ -128,7 +128,7 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
   for (const p of validationFile.players) {
     cffMap[p.cffNumber] = p
   }
-  const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1)
+  const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1).lean()
   return latestClassificationFile.classifications.map(c => {
       const cffMapElement = cffMap[c.cffNumber];
       if (!cffMapElement) {
