@@ -119,7 +119,7 @@ export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon
       $gte: aYearAgo,
       $lt: today
     }
-  }).populate('competition');
+  }).populate('competition ageCategory');
 }
 
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {
