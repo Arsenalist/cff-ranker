@@ -134,7 +134,7 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
       if (!cffMapElement) {
         throw new MultiMessageError([`${c.cffNumber} was not found in the validation file but exists in the classification file.`])
       }
-      return {...c, province: cffMapElement.province}
+      return {...c, province: cffMapElement.branch}
   })
 }
 
