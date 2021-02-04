@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {useParams} from 'react-router'
-import styled from 'styled-components';
-import {Ranking as RankingObject } from '@cff/api-interfaces'
+import { Ranking as RankingObject, ZoneDistribution } from '@cff/api-interfaces';
 import axios from 'axios';
 import { Chip, TableBody, TableContainer, Paper, Table, TableHead, TableRow, TableCell } from '@material-ui/core';
 
@@ -15,7 +14,13 @@ export function Ranking() {
     });
   }, [])
 
-
+  const showDistribution = (distribution: ZoneDistribution) => {
+    return <div>
+      {distribution.points} {distribution.competitions.map(c => (
+      `(${c.code} = ${c.points}) `
+    ))}
+    </div>
+  }
   return (
     <>
       {ranking &&
@@ -39,6 +44,9 @@ export function Ranking() {
               <TableCell>Name</TableCell>
               <TableCell>CFF Number</TableCell>
               <TableCell>Points</TableCell>
+              <TableCell>CFF</TableCell>
+              <TableCell>Regional</TableCell>
+              <TableCell>National</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -48,6 +56,9 @@ export function Ranking() {
                   <TableCell>{row.player.firstName} {row.player.lastName}</TableCell>
                   <TableCell>{row.player.cffNumber}</TableCell>
                   <TableCell>{row.points}</TableCell>
+                  <TableCell>{showDistribution(row.cffDistribution)}</TableCell>
+                  <TableCell>{showDistribution(row.regionalDistribution)}</TableCell>
+                  <TableCell>{showDistribution(row.nationalDistribution)}</TableCell>
                 </TableRow>
               ))
             }
