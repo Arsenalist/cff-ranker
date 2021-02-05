@@ -46,6 +46,9 @@ export async function findParticipant(competitionId: string, participantId: stri
 }
 
 export async function saveParticipantInCompetitionResult(competitionResultId: string, participantId: string, data: Partial<CompetitionParticipant>) {
+  if (!data.cffNumber) {
+    throw new MultiMessageError([`CFF# cannot be blank`])
+  }
   if (!isCffNumberFormatValid(data.cffNumber)) {
     throw new MultiMessageError([`Invalid CFF# format: ${data.cffNumber}`])
   }

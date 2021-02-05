@@ -1,4 +1,3 @@
-import { mockOnce } from '../../mockgoose';
 import {
   saveCompetitionResults,
   saveParticipantInCompetitionResult,
@@ -9,7 +8,6 @@ import { AgeCategory, CompetitionResult, CompetitionStatus, CompetitionZone } fr
 import * as mygoose from './mygoose';
 
 import * as mongoose from 'mongoose';
-import { ValidationFileModel } from './schemas/player';
 
 const ageCategory: AgeCategory = {
   _id: new mongoose.Types.ObjectId("600ae95ca9a08111903e5066"),
@@ -48,15 +46,12 @@ function aCompetitionResult(): CompetitionResult {
 describe('CFF# is allowed to be blank', () => {
   it('participant with blank CFF is not rejected but competition is in approved status', async () => {
     const fields = aCompetitionResult()
-    ValidationFileModel.findOne = jest.fn((params) => null);
     fields.results[0].cffNumber = ""
-    jest.resetAllMocks()
-    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
-    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({});
-    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementation(jest.fn())
-    mockOnce('insertMany')
-    mockOnce('insertOne')
+    jest.restoreAllMocks()
+    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValueOnce({});
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValueOnce(ageCategory);
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields)
     expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].warnings[0].type).toBe("MISSING_CFF_NUMBER")
   });
@@ -65,13 +60,12 @@ describe('CFF# is allowed to be blank', () => {
 describe('CFF# validation from validation file', () => {
   it('participant with invalid CFF# is rejected', async () => {
     const fields = aCompetitionResult()
-    ValidationFileModel.findOne = jest.fn((params) => null);
     fields.results[0].cffNumber = "INVALID_CFFNUMBER"
     fields.results[0].name = "INVALID_NAME"
     fields.results[0].surname = "INVALID_SURNAME"
     fields.results[0].yearOfBirth = 2000
     fields.results[0].gender = "INVALID_GENDER"
-    jest.resetAllMocks()
+    jest.restoreAllMocks()
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue(null);
     try {
       await saveCompetitionResults(fields)
@@ -85,6 +79,7 @@ describe('CFF# validation from validation file', () => {
 
 describe('competition fields are validated', () => {
   it('check for required fields at top level', async () => {
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
     try {
       fields.creator = null;
@@ -98,16 +93,15 @@ describe('competition fields are validated', () => {
       jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
       jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
       jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
-
       await saveCompetitionResults(fields);
       fail('should not reach here');
     } catch (err) {
-      console.log(err)
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
       expect(Object.keys(err.errors).length).toBe(7); // age category is handled separately
     }
   });
   it('age category is invalid', async () => {
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
     jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({})
@@ -120,6 +114,7 @@ describe('competition fields are validated', () => {
     }
   });
   it('competition code does not exist', async () => {
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({})
     jest.spyOn(mygoose, 'getCompetition').mockResolvedValue(null)
@@ -132,12 +127,12 @@ describe('competition fields are validated', () => {
     }
   })
   it('results are valid', async () => {
-    mockOnce('insertOne');
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
     jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
     jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementation(jest.fn())
+    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields);
     expect(saveCompetitionResultsSpy.mock.calls[0][0].status).toBe(CompetitionStatus.approved)
   });
@@ -145,16 +140,17 @@ describe('competition fields are validated', () => {
 
 describe('competition results approval/rejection', () => {
   it('competition is approved', async () => {
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
-    jest.resetAllMocks()
+    jest.restoreAllMocks()
     jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
     const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResult').mockImplementationOnce(jest.fn())
     await updateCompetitionResultStatus(fields._id, CompetitionStatus.approved )
     expect(updateCompetitionResults).toHaveBeenCalledWith(expect.objectContaining({status: CompetitionStatus.approved}))
   });
   it('competition is rejected', async () => {
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
-    jest.resetAllMocks()
     jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
     const updateCompetitionResults = jest.spyOn(mygoose, 'updateCompetitionResult').mockImplementationOnce(jest.fn())
     await updateCompetitionResultStatus(fields._id, CompetitionStatus.rejected )
@@ -164,6 +160,7 @@ describe('competition results approval/rejection', () => {
 
 describe('CFF# format is considered when saving a participant in a competition', () => {
   it('save a participant is rejected', async () => {
+    jest.restoreAllMocks()
     const invalidCffNumber = "ABC"
     try {
       await saveParticipantInCompetitionResult("competitionId", "participantId", {cffNumber: invalidCffNumber} )
@@ -173,11 +170,22 @@ describe('CFF# format is considered when saving a participant in a competition',
     }
   });
   it('save a participant works', async () => {
+    jest.restoreAllMocks()
     const fields = aCompetitionResult()
     jest.spyOn(mygoose, 'findCompetitionResult').mockResolvedValue(fields)
     jest.spyOn(mygoose, 'queryListById').mockResolvedValue({ } )
     jest.spyOn(mygoose, 'save').mockResolvedValue(null)
     await saveParticipantInCompetitionResult("competitionId", "participantId", {cffNumber: "C06-0516"} )
+  });
+  it('saving a participant with blank CFF is rejected', async () => {
+    jest.restoreAllMocks()
+    const blankCffNumber = ""
+    try {
+      await saveParticipantInCompetitionResult("competitionId", "participantId", {cffNumber: blankCffNumber} )
+      fail("should not get here")
+    } catch (e) {
+      expect(e.errorMessages[0]).toBe(`CFF# cannot be blank`)
+    }
   });
 });
 
