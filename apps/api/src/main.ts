@@ -187,7 +187,7 @@ app.delete('/api/age-category', asyncHandler(async (req, res) => {
 }));
 
 
-const port = process.env.port || 3333;
+const port = process.env.PORT || 3333;
 app.use(handleErrors);
 const server = app.listen(port, () => {
   console.log('Listening at http://localhost:' + port);

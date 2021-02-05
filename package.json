@@ -8,6 +8,7 @@
     "build": "nx build",
     "build:ranker": "nx build ranker",
     "build:api": "nx build api",
+    "serve:api": "nx serve api",
     "test": "nx test",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",
