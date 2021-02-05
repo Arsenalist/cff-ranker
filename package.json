@@ -9,7 +9,7 @@
     "build:ranker:prod": "nx build ranker --configuration=production",
     "build:api": "nx build api",
     "serve:api": "nx serve api",
-    "test": "nx test",
+    "test": "nx run-many --all --target=test --parallel",
     "lint": "nx workspace-lint && nx lint",
     "e2e": "nx e2e",
     "affected:apps": "nx affected:apps",
