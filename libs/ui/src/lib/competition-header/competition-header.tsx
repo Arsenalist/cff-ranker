@@ -29,7 +29,7 @@ export function CompetitionHeader(props: CompetitionHeaderProps) {
               {competition.tournamentName} ({competition.competitionShortName})
             </Typography>
             <Typography variant="body2" component="p">
-              Age Category {competition.ageCategory.name}
+              Age Category {(competition.ageCategory as AgeCategory).name}
             </Typography>
             <Typography variant="body2" component="p">
               Competition Type {competition.competitionType}

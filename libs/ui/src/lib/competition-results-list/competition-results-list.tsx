@@ -9,7 +9,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { Chip } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
 
 export function CompetitionResultsList() {
   const [competitions, setCompetitions] = useState<CompetitionResult[]>([])
@@ -66,7 +66,7 @@ export function CompetitionResultsList() {
                   {row.gender}
                 </TableCell>
                 <TableCell scope="row">
-                  {row.ageCategory.name}
+                  {(row.ageCategory as AgeCategory).name}
                 </TableCell>
                 <TableCell scope="row">
                   {statusChip(row.status)}
