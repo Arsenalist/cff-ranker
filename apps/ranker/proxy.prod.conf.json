@@ -1,0 +1,6 @@
+{
+  "/api": {
+    "target": "https://cff-ranker-api.herokuapp.com",
+    "secure": true
+  }
+}

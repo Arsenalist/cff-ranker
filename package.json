@@ -6,7 +6,7 @@
     "nx": "nx",
     "start": "nx serve",
     "build": "nx build",
-    "build:ranker": "nx build ranker",
+    "build:ranker:prod": "nx build ranker --configuration=production",
     "build:api": "nx build api",
     "serve:api": "nx serve api",
     "test": "nx test",

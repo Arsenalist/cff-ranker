@@ -53,7 +53,8 @@
           },
           "configurations": {
             "production": {
-              "buildTarget": "ranker:build:production"
+              "buildTarget": "ranker:build:production",
+              "proxyConfig": "apps/ranker/proxy.prod.conf.json"
             }
           }
         },
