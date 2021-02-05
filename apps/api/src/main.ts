@@ -36,9 +36,16 @@ const express = require('express')
 
 const asyncHandler = require('express-async-handler');
 const app = express();
+const cors = require('cors')
 app.use(require('express-fileupload')());
 app.use(express.json());
 app.use(express.urlencoded());
+
+app.use(cors({
+  origin: function (origin, callback) {
+      callback(null, ['http://localhost:3000', 'http://localhost:4200', 'https://ranking.fencing.ca', 'https://ranking.fencing.ca'])
+  }
+}))
 
 app.use(jwt({
   secret: jwksRsa.expressJwtSecret({
