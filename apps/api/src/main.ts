@@ -43,7 +43,7 @@ app.use(express.urlencoded());
 
 app.use(cors({
   origin: function (origin, callback) {
-      callback(null, ['http://localhost:3000', 'http://localhost:4200', 'https://ranking.fencing.ca', 'https://ranking.fencing.ca'])
+      callback(null, ['http://localhost:4200', 'https://ranking.fencing.ca'])
   }
 }))
 
