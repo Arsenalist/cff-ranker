@@ -17,6 +17,7 @@ describe('<ViewCompetition/>', () => {
   it('no warnings to be shown', async () => {
     mock.onGet("/api/competition/cid").reply(200, {
       results:[{
+            _id: 'aliceId',
             name: "Alice",
             surname: "Angel",
             warnings: []}]
@@ -34,6 +35,7 @@ describe('<ViewCompetition/>', () => {
   it('no warnings to be shown', async () => {
     mock.onGet("/api/competition/cid").reply(200, {
         results:[{
+          _id: 'aliceId',
           name: "Alice",
           surname: "Angel",
           warnings: [{type: 'warning message'}]}]
@@ -52,6 +54,7 @@ describe('<ViewCompetition/>', () => {
   it('edit button shows popup', async () => {
     mock.onGet("/api/competition/cid").reply(200, {
         results:[{
+          _id: 'aliceId',
           name: "Alice",
           surname: "Angel",
           warnings: [{type: 'warning message'}]}]
@@ -66,6 +69,7 @@ describe('<ViewCompetition/>', () => {
     mock.onGet("/api/competition/cid").replyOnce(200, {
         status: CompetitionStatus.pending,
         results:[{
+          _id: 'bobId',
           name: "Bob",
           surname: "Angel",
           warnings: []}]
@@ -73,6 +77,7 @@ describe('<ViewCompetition/>', () => {
     ).onGet("/api/competition/cid").replyOnce(200, {
         status: status,
         results:[{
+          _id: 'blueId',
           name: "Blue",
           surname: "Angel",
           warnings: []}]

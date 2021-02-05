@@ -13,7 +13,7 @@ import Button from '@material-ui/core/Button';
 import EditParticipant from '../edit-participant/edit-participant'
 import CompetitionHeader from '../competition-header/competition-header';
 import Dialog from '@material-ui/core/Dialog';
-import { CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
+import { CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
 
 function checkHasWarnings(competition: CompetitionResult) {
   return competition.results.filter((r) => r.warnings.length !== 0).length !== 0;
@@ -72,111 +72,110 @@ export function ViewCompetition() {
     });
   }, [reload, id]);
 
-
+  const WarningRow = (props: {participant: CompetitionParticipant}) => (
+    <>
+      {props.participant.warnings.map((warning) => (
+      <TableRow key={`${props.participant._id} ${warning.type}`}>
+        <TableCell>
+          <Button data-testid="edit-button" variant="outlined" color="primary"
+                  onClick={(e) => editParticipant(props.participant._id)}>
+            Edit
+          </Button>
+        </TableCell>
+        <TableCell colSpan={7}>
+          <Chip
+            label={warning.type}
+            color="secondary"
+          />
+        </TableCell>
+      </TableRow>
+    ))}
+      </>
+  )
   return (
-    <div>
-      <CompetitionHeader competition={competition} />
-      <p>
-        {competition && competition.status !== CompetitionStatus.approved &&
-        <Button variant="contained" color="primary" data-testid="approve-button" disabled={hasWarnings}
-                onClick={approve}>
-          Approve
-        </Button>
-        }
-        {competition && competition.status === CompetitionStatus.approved &&
-        <Chip
-          data-testid="approved-chip"
-          label="Approved Competition"
-          color="primary"
-          variant="default"
-        />
-        }
-        {competition && competition.status !== CompetitionStatus.rejected &&
-        <Button variant="contained" data-testid="reject-button" color="secondary" onClick={reject}>
-          Reject
-        </Button>
-        }
-        {competition && competition.status === CompetitionStatus.rejected &&
-        <Chip
-          data-testid="rejected-chip"
-          label="Rejected Competition"
-          color="secondary"
-          variant="default"
-        />
-        }
-      </p>
-      <p>
-        {introMessage}
-      </p>
-    <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Rank</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>CFF#</TableCell>
-            <TableCell>Gender</TableCell>
-            <TableCell>YOB</TableCell>
-            <TableCell>Completed</TableCell>
-            <TableCell>Club</TableCell>
-            <TableCell>Country</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>{competition && competition.results ?
-            competition.results.map((row) => (
-              <><TableRow key={row._id}>
-              <TableCell scope="row">
-                {row.rank}
-              </TableCell>
-              <TableCell scope="row">
-                {row.name} {row.surname}
-              </TableCell>
-              <TableCell scope="row">
-                {row.cffNumber}
-              </TableCell>
-              <TableCell scope="row">
-                {row.gender}
-              </TableCell>
-              <TableCell scope="row">
-                {row.yearOfBirth}
-              </TableCell>
-              <TableCell scope="row">
-                {row.completed}
-              </TableCell>
-              <TableCell scope="row">
-                {row.club}
-              </TableCell>
-              <TableCell scope="row">
-                {row.country}
-              </TableCell>
-            </TableRow>
+      <>
+        <CompetitionHeader competition={competition}/>
+        <p>
+          {competition && competition.status !== CompetitionStatus.approved &&
+          <Button variant="contained" color="primary" data-testid="approve-button" disabled={hasWarnings}
+                  onClick={approve}>
+            Approve
+          </Button>}
+          {competition && competition.status === CompetitionStatus.approved &&
+          <Chip
+            data-testid="approved-chip"
+            label="Approved Competition"
+            color="primary"
+            variant="default"/>}
+          {competition && competition.status !== CompetitionStatus.rejected &&
+          <Button variant="contained" data-testid="reject-button" color="secondary" onClick={reject}>
+            Reject
+          </Button>}
+          {competition && competition.status === CompetitionStatus.rejected &&
+          <Chip
+            data-testid="rejected-chip"
+            label="Rejected Competition"
+            color="secondary"
+            variant="default"/>}
+        </p>
+        <p>
+          {introMessage}
+        </p>
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead key={"header"}>
               <TableRow>
-                {row.warnings.map((warning) => (
-                  <>
-                  <TableCell>
-                    <Button data-testid="edit-button" variant="outlined" color="primary" onClick={(e) => editParticipant(row._id)}>
-                      Edit
-                    </Button>
-                  </TableCell>
-                  <TableCell colSpan={7}>
-                    <Chip
-                      label={warning.type}
-                      color="secondary"
-                    />
-                  </TableCell>
-                  </>
-                ))}
+                <TableCell>Rank</TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>CFF#</TableCell>
+                <TableCell>Gender</TableCell>
+                <TableCell>YOB</TableCell>
+                <TableCell>Completed</TableCell>
+                <TableCell>Club</TableCell>
+                <TableCell>Country</TableCell>
               </TableRow>
-            </>
-          )) : ''}
-        </TableBody>
-      </Table>
-    </TableContainer>
+            </TableHead>
+            <TableBody key="participants">
+            {competition && competition.results && competition.results.map((row) => (
+              <>
+              <TableRow key={row._id}>
+                <TableCell scope="row">
+                  {row.rank}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.name} {row.surname}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.cffNumber}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.gender}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.yearOfBirth}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.completed}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.club}
+                </TableCell>
+                <TableCell scope="row">
+                  {row.country}
+                </TableCell>
+              </TableRow>
+                <WarningRow participant={row} key={`warning=${row._id}`}/>
+              </>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Dialog open={open} onClose={handleClose}>
-        {competition ? <EditParticipant onSave={onSave} onCancel={handleClose} competitionId={competition._id}  participantId={participantId}/>
-        : ''}
+        {competition ? <EditParticipant onSave={onSave} onCancel={handleClose} competitionId={competition._id}
+                                        participantId={participantId}/>
+          : ''}
       </Dialog>
-    </div>
+    </>
   )
 }
 
