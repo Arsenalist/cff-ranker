@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Backdrop, createStyles, makeStyles, Theme } from '@material-ui/core';
-import { MessagesContext } from '../..';
+import { MessagesContext } from '../messages/messages-context';
 import axios from 'axios';
 
 const useStyles = makeStyles((theme: Theme) =>
