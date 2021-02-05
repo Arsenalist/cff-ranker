@@ -16,7 +16,10 @@ const ranking: Ranking = {
   ranks: [
     {
       points: 100,
-      player: {_id: "id", firstName: 'Jim', lastName: 'Jimborie', cffNumber: 'CF01-1234'}
+      player: {_id: "id", firstName: 'Jim', lastName: 'Jimborie', cffNumber: 'CF01-1234'},
+      cffDistribution: {points: 25, competitions: [{code: 'CFF1', points: 25}]},
+      nationalDistribution: {points: 25, competitions: [{code: 'NAT1', points: 25}]},
+      regionalDistribution: {points: 25, competitions: [{code: 'REG1', points: 25}]}
     }
   ]
 }
