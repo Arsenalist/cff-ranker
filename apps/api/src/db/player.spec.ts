@@ -16,12 +16,12 @@ describe('validation file fields are validated', () => {
       validated: 'y'
     }];
   });
-  it('seven out of eight fields are not provided', async () => {
+  it('six out of eight fields are not provided (gender defaults to blank)', async () => {
     try {
-      await savePlayers([{ 'name': 'Bill' }]);
+      await savePlayers([{ name: 'Bill', surname: 'Smith' }]);
     } catch (err) {
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-      expect(Object.keys(err.errors).length).toBe(7);
+      expect(Object.keys(err.errors).length).toBe(6);
     }
   });
   it('invalid province', async () => {
@@ -43,8 +43,8 @@ describe('validation file fields are validated', () => {
       expect(Object.keys(err.errors).length).toBe(1);
     }
   });
-  it('all eight fields are provided', async () => {
-    mockOnce('insertMany');
+  it('all fields are provided', async () => {
+    mockOnce('insertOne');
     await savePlayers(fields);
   });
 });
