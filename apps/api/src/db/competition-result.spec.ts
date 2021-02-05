@@ -23,7 +23,7 @@ function aCompetitionResult(): CompetitionResult {
   return {
     creator: 'Bill Smith',
     competitionType: 'individuel',
-    competitionDate: '10/12/2011',
+    competitionDate: new Date(2011, 10, 12),
     weapon: 'fleuret',
     gender: 'M',
     ageCategory: 'senior',
