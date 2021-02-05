@@ -45,6 +45,23 @@ function aCompetitionResult(): CompetitionResult {
   };
 }
 
+describe('CFF# is allowed to be blank', () => {
+  it('participant with blank CFF is not rejected but competition is in approved status', async () => {
+    const fields = aCompetitionResult()
+    ValidationFileModel.findOne = jest.fn((params) => null);
+    fields.results[0].cffNumber = ""
+    jest.resetAllMocks()
+    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({});
+    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementation(jest.fn())
+    mockOnce('insertMany')
+    mockOnce('insertOne')
+    await saveCompetitionResults(fields)
+    expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].warnings[0].type).toBe("MISSING_CFF_NUMBER")
+  });
+});
+
 describe('CFF# validation from validation file', () => {
   it('participant with invalid CFF# is rejected', async () => {
     const fields = aCompetitionResult()

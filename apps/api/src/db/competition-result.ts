@@ -26,7 +26,7 @@ export async function saveCompetitionResults(competitionResult: CompetitionResul
 
 export async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]) {
   for (const r of competitionParticipants) {
-    if (!await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
+    if (r.cffNumber && !await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
       throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
     }
   }
