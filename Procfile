@@ -1,1 +1,1 @@
-web: npm run serve:api --configuration=production --prod
+web: npm run serve:api:prod
