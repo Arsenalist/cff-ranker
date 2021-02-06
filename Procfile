@@ -1,1 +1,1 @@
-web: npm i && npm run serve:api:prod
+web: npm run serve:api:prod

@@ -2,6 +2,10 @@
   "name": "cff",
   "version": "0.0.0",
   "license": "MIT",
+  "engines": {
+    "node": "12.3.1",
+    "npm": "6.12.1"
+  },
   "scripts": {
     "nx": "node node_modules/nx/bin/nx",
     "start": "node node_modules/nx/bin/nx serve",
