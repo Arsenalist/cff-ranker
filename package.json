@@ -13,7 +13,7 @@
     "build:ranker:prod": "node node_modules/nx/bin/nx build ranker --configuration=production --prod",
     "build:api": "node node_modules/nx/bin/nx build api",
     "serve:api": "node node_modules/nx/bin/nx serve api",
-    "serve:api:prod": "node node_modules/nx/bin/nx serve api --configuration=production --prod",
+    "serve:api:prod": "node node_modules/nx/bin/nx serve api --prod",
     "serve:ranker": "node node_modules/nx/bin/nx serve ranker",
     "test": "node node_modules/nx/bin/nx run-many --all --target=test --parallel",
     "lint": "node node_modules/nx/bin/nx workspace-lint && nx lint",
