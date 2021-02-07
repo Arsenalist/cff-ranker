@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 
-function openMongo() {
-  mongoose.connect('mongodb+srv://web:vxhxbwn3i3bXAk5@cluster0.lylny.mongodb.net/ranker?retryWrites=true&w=majority', { useNewUrlParser: true });
+async function openMongo() {
+  await mongoose.connect('mongodb+srv://web:vxhxbwn3i3bXAk5@cluster0.lylny.mongodb.net/ranker?retryWrites=true&w=majority', { useNewUrlParser: true });
   const db = mongoose.connection;
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function() {
