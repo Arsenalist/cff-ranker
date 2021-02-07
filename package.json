@@ -8,7 +8,7 @@
   },
   "scripts": {
     "nx": "node node_modules/nx/bin/nx",
-    "start": "node node_modules/nx/bin/nx serve",
+    "start": "node node_modules/nx/bin/nx build api && node node_modules/nx/bin/nx serve api",
     "build": "node node_modules/nx/bin/nx build",
     "build:ranker:prod": "node node_modules/nx/bin/nx build ranker --configuration=production --prod",
     "build:api": "node node_modules/nx/bin/nx build api",
