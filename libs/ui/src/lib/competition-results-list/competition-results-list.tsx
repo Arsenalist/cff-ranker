@@ -26,7 +26,7 @@ export function CompetitionResultsList() {
       case CompetitionStatus.pending:
         return <Chip label="Pending" color="secondary" variant="default" />
       case CompetitionStatus.rejected:
-        return <Chip label="Approved" color="default" variant="default" />
+        return <Chip label="Rejected" color="default" variant="default" />
     }
   };
 
