@@ -27,7 +27,7 @@ export function RankingJobs() {
 
   return (
     <>
-      (<Button variant="contained" color="primary" data-testid="rank-button" onClick={() => rank()}>Ranking</Button>
+      <Button variant="contained" color="primary" data-testid="rank-button" onClick={() => rank()}>Create Ranking</Button>
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
