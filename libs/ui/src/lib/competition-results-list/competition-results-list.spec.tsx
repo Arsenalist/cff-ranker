@@ -13,7 +13,7 @@ describe('<CompetitionList/>', () => {
       {
         _id: "id",
         tournamentName: 'tourney name',
-        competitionDate: '12/12/2030',
+        competitionDate: '2020-12-10T05:00:00.000+00:00',
         ageCategory: {name: 'Senior'},
         weapon: 'sword',
         status: 'approved'
@@ -23,7 +23,7 @@ describe('<CompetitionList/>', () => {
       render(<MemoryRouter><CompetitionResultsList/></MemoryRouter>);
     });
     expect(screen.getByText(/tourney name/i)).toBeInTheDocument();
-    expect(screen.getByText(/12\/12\/2030/i)).toBeInTheDocument();
+    expect(screen.getByText(/2020-12-10/i)).toBeInTheDocument();
     expect(screen.getByText(/sword/i)).toBeInTheDocument();
     expect(screen.getByText(/Approved/)).toBeInTheDocument();
   });
