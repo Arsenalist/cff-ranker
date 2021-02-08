@@ -1,6 +1,6 @@
 import { decorateCompetitionResultWithWarnings, isCffNumberFormatValid } from '@cff/csv';
 import { AgeCategory, CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
-import { MultiMessageError } from '@cff/common';
+import { minimum_players_in_competition, MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 
@@ -34,7 +34,7 @@ function removedPlayers(newPlayers: CompetitionParticipant[], players: Competiti
 
 function validateAges(players: CompetitionParticipant[], ageCategory: AgeCategory): CompetitionParticipant[] {
   const newPlayers = players.filter(p => p.yearOfBirth >= ageCategory.yearOfBirth)
-  if (newPlayers.length != players.length && newPlayers.length < 6) {
+  if (newPlayers.length != players.length && newPlayers.length < minimum_players_in_competition) {
     throw new MultiMessageError([`${removedPlayers(newPlayers, players)} ineligible. Minimum number of players not met.`])
   }
   return newPlayers

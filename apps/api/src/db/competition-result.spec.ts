@@ -189,7 +189,7 @@ describe('CFF# format is considered when saving a participant in a competition',
   });
 });
 
-describe('age category / YOB', async () => {
+describe('age category / YOB', () => {
   it('invalid age category is not counted and count of participants drops below six', async () => {
     jest.restoreAllMocks()
     const fields = aCompetitionResult()

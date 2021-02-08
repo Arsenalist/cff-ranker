@@ -1,4 +1,4 @@
-import { MultiMessageError } from '@cff/common';
+import { minimum_players_in_competition, MultiMessageError } from '@cff/common';
 import { CompetitionParticipant, CompetitionResult } from '@cff/api-interfaces';
 import { isCffNumberFormatValid } from '@cff/common';
 
@@ -84,8 +84,7 @@ function validateCompetition(competition: CompetitionResult) {
       }
     }, `Line ${row}: CFF# ${p.cffNumber} is of incorrect format.`)
   }
-  const minimumNumberOfPlayersRequired = 6
-  if (errors.length === 0 && competition.results.length < minimumNumberOfPlayersRequired) {
+  if (errors.length === 0 && competition.results.length < minimum_players_in_competition) {
     errors.push("Not enough entrants.")
   }
   return errors
