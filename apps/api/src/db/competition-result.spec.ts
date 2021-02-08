@@ -189,3 +189,39 @@ describe('CFF# format is considered when saving a participant in a competition',
   });
 });
 
+describe('age category / YOB', async () => {
+  it('invalid age category is not counted and count of participants drops below six', async () => {
+    jest.restoreAllMocks()
+    const fields = aCompetitionResult()
+    for (let i=0; i<5; i++) {
+      fields.results.push({...fields.results[0], name: `${Math.random()}`})
+    }
+    fields.results[0].yearOfBirth = ageCategory.yearOfBirth - 1; // too young
+    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+    try {
+      await saveCompetitionResults(fields)
+      fail("should not get here")
+    } catch (err) {
+      expect(err).toBeInstanceOf(MultiMessageError);
+      expect(err.errorMessages[0]).toBe(`${fields.results[0].name} ${fields.results[0].surname} ineligible. Minimum number of players not met.`)
+    }
+  });
+  it('invalid age category is not counted and count of participants is above six', async () => {
+    jest.restoreAllMocks()
+    const fields = aCompetitionResult()
+    const randomNames = []
+    for (let i=0; i<6; i++) {
+      randomNames.push(`${Math.random()}`)
+      fields.results.push({...fields.results[0], name: randomNames[i]})
+    }
+    fields.results[0].yearOfBirth = ageCategory.yearOfBirth - 1; // too young
+    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
+    await saveCompetitionResults(fields)
+    expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].name).toBe(randomNames[0])
+  });
+});

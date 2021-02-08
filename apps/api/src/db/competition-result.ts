@@ -1,5 +1,5 @@
 import { decorateCompetitionResultWithWarnings, isCffNumberFormatValid } from '@cff/csv';
-import { CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
+import { AgeCategory, CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
 import { MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
@@ -10,6 +10,7 @@ export async function saveCompetitionResults(competitionResult: CompetitionResul
   if (!ageCategory) {
     throw new MultiMessageError([`Age Category is invalid: ${competitionResult.ageCategory}`])
   }
+  competitionResult.results = validateAges(competitionResult.results, ageCategory)
   const competition = await getCompetitionByCode(competitionResult.competitionShortName)
   competitionResult.ageCategory = ageCategory
   competitionResult.competition = competition._id
@@ -22,6 +23,21 @@ export async function saveCompetitionResults(competitionResult: CompetitionResul
   }
   await mygoose.saveCompetitionResults(decoratedResults)
   return decoratedResults
+}
+
+function removedPlayers(newPlayers: CompetitionParticipant[], players: CompetitionParticipant[]) {
+  return players.filter(p => (
+    newPlayers.filter(newP => JSON.stringify(p) === JSON.stringify(newP) ).length == 0
+  )).map(p => `${p.name} ${p.surname}`).join(", ")
+
+}
+
+function validateAges(players: CompetitionParticipant[], ageCategory: AgeCategory): CompetitionParticipant[] {
+  const newPlayers = players.filter(p => p.yearOfBirth >= ageCategory.yearOfBirth)
+  if (newPlayers.length != players.length && newPlayers.length < 6) {
+    throw new MultiMessageError([`${removedPlayers(newPlayers, players)} ineligible. Minimum number of players not met.`])
+  }
+  return newPlayers
 }
 
 export async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]) {
