@@ -24,5 +24,9 @@ export function ClassificationUploadPage() {
 }
 
 export function Home() {
-  return (<img src="https://hips.hearstapps.com/digitalspyuk.cdnds.net/17/35/1504271735-umathurman-killbill.jpg"/>)
+  return (
+    <>
+      Welcome to the CFF Ranking App.
+    </>
+  )
 }
