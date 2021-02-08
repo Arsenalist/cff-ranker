@@ -6,11 +6,9 @@ import {
   saveParticipantInCompetitionResult,
   updateCompetitionResultStatus
 } from './db/competition-result';
-import { handleUpload } from './file-upload';
 import { parseClassificationFileContents, parseCompetitionFileContents, parseValidationFileContents } from '@cff/csv';
 import { handleErrors } from './middleware/errors';
 import { openMongo } from './db/mongodb/mongo-connection';
-import { readFile } from './file-io';
 import {
   Competition,
   CompetitionParticipant,
@@ -37,7 +35,6 @@ const express = require('express')
 const asyncHandler = require('express-async-handler');
 const app = express();
 const cors = require('cors')
-app.use(require('express-fileupload')());
 app.use(express.json());
 app.use(express.urlencoded());
 
@@ -61,9 +58,11 @@ app.use(jwt({
 
 openMongo();
 
-app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
-    const filePathOnDisk = await handleUpload(req, 'uploadedFile');
-    const contents = await readFile(filePathOnDisk);
+const multer = require('multer');
+const upload = multer({ storage: multer.memoryStorage() })
+
+app.post('/api/upload-validation-file', upload.single('uploadedFile'), asyncHandler(async (req, res) => {
+  const contents = String(req.file.buffer)
     const results: Player[] = await parseValidationFileContents(contents);
     await savePlayers(results);
     res.send({
@@ -71,9 +70,8 @@ app.post('/api/upload-validation-file', asyncHandler(async (req, res) => {
     })
 }));
 
-app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
-  const filePathOnDisk = await handleUpload(req, 'uploadedFile');
-  const contents = await readFile(filePathOnDisk);
+app.post('/api/upload-competition-file', upload.single('uploadedFile'), asyncHandler(async (req, res) => {
+  const contents = String(req.file.buffer)
   const results: CompetitionResult = await parseCompetitionFileContents(contents);
   if (req.body && !req.body.code) {
     throw new Error("Competition code is required.")
@@ -85,9 +83,8 @@ app.post('/api/upload-competition-file', asyncHandler(async (req, res) => {
   })
 }));
 
-app.post('/api/upload-classification-file', asyncHandler(async (req, res) => {
-  const filePathOnDisk = await handleUpload(req, 'uploadedFile');
-  const contents = await readFile(filePathOnDisk);
+app.post('/api/upload-classification-file', upload.single('uploadedFile'), asyncHandler(async (req, res) => {
+  const contents = String(req.files.uploadedFile.data)
   const results: PlayerClassification[] = await parseClassificationFileContents(contents);
   await savePlayerClassifications(results);
   res.send({
