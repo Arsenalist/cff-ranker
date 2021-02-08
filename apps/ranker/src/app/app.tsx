@@ -46,9 +46,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     appBar: {
       [theme.breakpoints.up('sm')]: {
-        width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
       },
+      zIndex: theme.zIndex.drawer + 1,
     },
     appBarShift: {
       width: `calc(100% - ${drawerWidth}px)`,
