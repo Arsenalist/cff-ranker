@@ -1,11 +1,13 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom';
-import { createMuiTheme, createStyles, makeStyles, MuiThemeProvider, Theme } from '@material-ui/core/styles';
+import { createStyles, makeStyles, MuiThemeProvider, Theme, useTheme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import { ClassificationUploadPage, Home, ValidateFileUploadPage } from './pages';
 import Typography from '@material-ui/core/Typography';
 import Toolbar from '@material-ui/core/Toolbar/Toolbar';
+import MenuIcon from '@material-ui/icons/Menu';
+
 import {
   AgeCategoryList,
   BackdropLoader,
@@ -22,16 +24,13 @@ import {
   UploadCompetitionResults,
   ViewCompetition
 } from '@cff/ui';
-
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { Auth0Provider } from '@auth0/auth0-react';
-import { Drawer, List, ListItem, ListItemText } from '@material-ui/core';
+import { Divider, Drawer, Hidden, IconButton, List, ListItem, ListItemText } from '@material-ui/core';
 import { Auth } from './auth';
 
-const theme = createMuiTheme({
-  typography: {
-    fontFamily: 'Roboto, sans-serif'
-  }
-});
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -39,18 +38,36 @@ const useStyles = makeStyles((theme: Theme) =>
     root: {
       display: 'flex',
     },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-    },
     drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
+      [theme.breakpoints.up('sm')]: {
+        width: drawerWidth,
+        flexShrink: 0,
+      },
     },
+    appBar: {
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(100% - ${drawerWidth}px)`,
+        marginLeft: drawerWidth,
+      },
+    },
+    appBarShift: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+      transition: theme.transitions.create(['margin', 'width'], {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+    },
+    menuButton: {
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        display: 'none',
+      },
+    },
+    // necessary for content to be below app bar
+    toolbar: theme.mixins.toolbar,
     drawerPaper: {
       width: drawerWidth,
-    },
-    drawerContainer: {
-      overflow: 'auto',
     },
     content: {
       flexGrow: 1,
@@ -58,11 +75,29 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flex: 1
-    }
+    },
+    drawerHeader: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: theme.spacing(0, 1),
+      // necessary for content to be below app bar
+      ...theme.mixins.toolbar,
+      justifyContent: 'flex-end',
+    },
   }),
 );
+
+
 export const App = () => {
   const classes = useStyles();
+  const theme = useTheme();
+  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const handleDrawerClose = () => {
+    setMobileOpen(false);
+  };
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
 
   const menuItems = [
     { path: '/rankings/jobs', text: 'View Rankings' },
@@ -73,6 +108,19 @@ export const App = () => {
     { path: '/manage-competitions', text: 'Manage Competitions' },
     { path: '/manage-age-categories', text: 'Manage Age Categories' }
   ];
+
+  const drawer = (
+    <div>
+      <div className={classes.toolbar} />
+      <List>
+        {menuItems.map(m => (
+          <List>
+            <ListItem button component={Link} to={m.path}><ListItemText primary={m.text} onClick={e => handleDrawerClose()}/></ListItem>
+          </List>
+        ))}
+      </List>
+    </div>
+  );
 
   return (
     <Router>
@@ -90,34 +138,67 @@ export const App = () => {
             <BackdropLoader />
             <div className={classes.root}>
             <CssBaseline/>
-            <AppBar position="fixed" className={classes.appBar}>
-              <Toolbar>
-                <Typography variant="h6" className={classes.title}>
-                  <Link href="#"  style={{ textDecoration: 'none', color: 'white' }} to="/">CFF</Link>
-                </Typography>
-                <LoginButton/>
-                <Profile/>
-                <LogoutButton/>
-              </Toolbar>
-            </AppBar>
-              <Drawer
-                className={classes.drawer}
-                variant="permanent"
-                classes={{
-                  paper: classes.drawerPaper,
-                }}
-              >
-                <Toolbar />
-                <div className={classes.drawerContainer}>
-              {menuItems.map(m => (
-                <List>
-                  <ListItem button component={Link} to={m.path}><ListItemText primary={m.text}/></ListItem>
-                </List>
-              ))}
-                </div>
-            </Drawer>
+              <AppBar
+                position="fixed"
+                className={classes.appBar}>
+                <Toolbar>
+                  <IconButton
+                    color="inherit"
+                    aria-label="open drawer"
+                    edge="start"
+                    onClick={handleDrawerToggle}
+                    className={classes.menuButton}
+                  >
+                    <MenuIcon />
+                  </IconButton>
+                  <Typography variant="h6" className={classes.title}>
+                    <Link href="#"  style={{ textDecoration: 'none', color: 'white' }} to="/">CFF</Link>
+                  </Typography>
+                  <LoginButton/>
+                  <Profile/>
+                  <LogoutButton/>
+                </Toolbar>
+              </AppBar>
+              <nav className={classes.drawer} aria-label="mailbox folders">
+                <Hidden smUp implementation="css">
+                  <Drawer
+                    variant="temporary"
+                    anchor={theme.direction === 'rtl' ? 'right' : 'left'}
+                    open={mobileOpen}
+                    onClose={handleDrawerToggle}
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    ModalProps={{
+                      keepMounted: true, // Better open performance on mobile.
+                    }}
+                  >
+                    <div className={classes.drawerHeader}>
+                      <IconButton onClick={handleDrawerClose}>
+                        {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                      </IconButton>
+                    </div>
+                    <Divider />
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+                <Hidden xsDown implementation="css">
+                  <Drawer
+                    classes={{
+                      paper: classes.drawerPaper,
+                    }}
+                    variant="permanent"
+                    open
+                  >
+                    <IconButton onClick={handleDrawerClose}>
+                      {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                    </IconButton>
+                    {drawer}
+                  </Drawer>
+                </Hidden>
+              </nav>
               <main className={classes.content}>
-                <Toolbar />
+                <div className={classes.toolbar} />
               <Messages/>
               <Switch>
                 <Route path="/" exact component={Home}/>
