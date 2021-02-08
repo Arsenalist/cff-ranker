@@ -190,9 +190,6 @@ export const App = () => {
                     variant="permanent"
                     open
                   >
-                    <IconButton onClick={handleDrawerClose}>
-                      {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                    </IconButton>
                     {drawer}
                   </Drawer>
                 </Hidden>
