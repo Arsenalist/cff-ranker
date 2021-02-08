@@ -25,6 +25,11 @@ export function RankingJobs() {
     history.push("/rankings/jobs/" + id)
   }
 
+  const formatDate = (date) =>  {
+    const d = new Date(date);
+    return d.toLocaleDateString() + " " + d.toLocaleTimeString()
+  }
+
   return (
     <>
       <Button variant="contained" color="primary" data-testid="rank-button" onClick={() => rank()}>Create Ranking</Button>
@@ -42,7 +47,7 @@ export function RankingJobs() {
               rankingJobs.map(row => (
                 <TableRow key={row._id}>
                   <TableCell>{row.user}</TableCell>
-                  <TableCell>{row.dateGenerated}</TableCell>
+                  <TableCell>{formatDate(new Date(row.dateGenerated))}</TableCell>
                   <TableCell>
                     <Button variant="outlined" color="primary" data-testid="rank" onClick={() => showJobDetails(row._id)}>Ranking</Button>
                   </TableCell>
