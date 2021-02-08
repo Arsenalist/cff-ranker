@@ -30,6 +30,11 @@ export function CompetitionResultsList() {
     }
   };
 
+  const formatDate = (date) =>  {
+    const d = new Date(date);
+    return d.toLocaleDateString()
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -54,7 +59,7 @@ export function CompetitionResultsList() {
                   </Link>
                 </TableCell>
                 <TableCell scope="row">
-                  {row.competitionDate}
+                  {formatDate(row.competitionDate)}
                 </TableCell>
                 <TableCell scope="row">
                   {row.competitionType}
