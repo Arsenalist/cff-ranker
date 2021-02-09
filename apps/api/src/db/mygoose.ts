@@ -106,6 +106,24 @@ export async function saveClassifications(classifications: PlayerClassification[
   await new ClassificationFileModel({classifications: classifications}).save()
 }
 
+export async function deleteCompetitionResult(_id: string) {
+  await CompetitionResultsModel.findByIdAndDelete(mongoose.Types.ObjectId(_id))
+}
+
+export async function getCompetitionResultsInLastYear(competitionCode: string): Promise<CompetitionResult> {
+  const competition: Competition = await CompetitionModel.findOne({code: competitionCode})
+  const aYearAgo = new Date();
+  aYearAgo.setDate(aYearAgo.getDate()-365)
+  const today = new Date();
+  return CompetitionResultsModel.findOne({
+    competition: competition._id,
+    competitionDate: {
+      $gte: aYearAgo,
+      $lte: today
+    }
+  }).populate('competition ageCategory');
+
+}
 export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon, ageCategory: AgeCategory, gender: string): Promise<CompetitionResult[]> {
   const aYearAgo = new Date();
   aYearAgo.setDate(aYearAgo.getDate()-365)
@@ -117,7 +135,7 @@ export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon
     status: CompetitionStatus.approved,
     competitionDate: {
       $gte: aYearAgo,
-      $lt: today
+      $lte: today
     }
   }).populate('competition ageCategory');
 }

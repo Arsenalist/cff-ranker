@@ -50,7 +50,8 @@ describe('CFF# is allowed to be blank', () => {
     jest.restoreAllMocks()
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValueOnce({});
     jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValueOnce(ageCategory);
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({code: 'COMP1'});
+    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
     const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields)
     expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].warnings[0].type).toBe("MISSING_CFF_NUMBER")
@@ -93,6 +94,7 @@ describe('competition fields are validated', () => {
       jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
       jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
       jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
+      jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
       await saveCompetitionResults(fields);
       fail('should not reach here');
     } catch (err) {
@@ -132,6 +134,7 @@ describe('competition fields are validated', () => {
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
     jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
     jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
+    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
     const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields);
     expect(saveCompetitionResultsSpy.mock.calls[0][0].status).toBe(CompetitionStatus.approved)
@@ -200,6 +203,7 @@ describe('age category / YOB', () => {
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
     jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
     jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
     try {
       await saveCompetitionResults(fields)
       fail("should not get here")
@@ -219,9 +223,28 @@ describe('age category / YOB', () => {
     fields.results[0].yearOfBirth = ageCategory.yearOfBirth - 1; // too young
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
     jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({code: 'COMP1'});
+    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
     const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields)
     expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].name).toBe(randomNames[0])
+  });
+});
+
+describe('competition results already exist', () => {
+  it('if competition exists overwrite the record', async () => {
+    jest.restoreAllMocks()
+    const fields = aCompetitionResult()
+    const existing = aCompetitionResult()
+    existing._id = "existing_id"
+    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValueOnce({});
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValueOnce(ageCategory);
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({code: 'COMP1'});
+    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(existing);
+    const deleteCompetitionResultSpy = jest.spyOn(mygoose, 'deleteCompetitionResult').mockImplementationOnce(jest.fn())
+    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
+    await saveCompetitionResults(fields)
+    expect(deleteCompetitionResultSpy.mock.calls[0][0]).toBe(existing._id)
+    expect(saveCompetitionResultsSpy).toHaveBeenCalledTimes(1)
   });
 });

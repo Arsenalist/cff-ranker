@@ -3,6 +3,7 @@ import { AgeCategory, CompetitionParticipant, CompetitionResult, CompetitionStat
 import { minimum_players_in_competition, MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
+import { getCompetitionResultsInLastYear } from './mygoose';
 
 export async function saveCompetitionResults(competitionResult: CompetitionResult) {
   await validateParticipantsInCompetitionResult(competitionResult.results)
@@ -20,6 +21,10 @@ export async function saveCompetitionResults(competitionResult: CompetitionResul
     decoratedResults.status = CompetitionStatus.pending
   } else {
     decoratedResults.status = CompetitionStatus.approved
+  }
+  const existing = await getCompetitionResultsInLastYear(competition.code);
+  if (existing) {
+    await mygoose.deleteCompetitionResult(existing._id)
   }
   await mygoose.saveCompetitionResults(decoratedResults)
   return decoratedResults
