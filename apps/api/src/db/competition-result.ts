@@ -1,6 +1,6 @@
 import { decorateCompetitionResultWithWarnings, isCffNumberFormatValid } from '@cff/csv';
-import { AgeCategory, CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
-import { minimum_players_in_competition, MultiMessageError } from '@cff/common';
+import { CompetitionParticipant, CompetitionResult, CompetitionStatus } from '@cff/api-interfaces';
+import { minimum_age_in_competition, minimum_players_in_competition, MultiMessageError } from '@cff/common';
 import * as mygoose from './mygoose';
 import { getCompetitionByCode } from './competition';
 import { getCompetitionResultsInLastYear } from './mygoose';
@@ -11,7 +11,8 @@ export async function saveCompetitionResults(competitionResult: CompetitionResul
   if (!ageCategory) {
     throw new MultiMessageError([`Age Category is invalid: ${competitionResult.ageCategory}`])
   }
-  competitionResult.results = validateAges(competitionResult.results, ageCategory)
+  const maxYearOfBirth = new Date().getFullYear() - minimum_age_in_competition;
+  competitionResult.results = validateAges(competitionResult.results, ageCategory.yearOfBirth, maxYearOfBirth, minimum_players_in_competition)
   const competition = await getCompetitionByCode(competitionResult.competitionShortName)
   competitionResult.ageCategory = ageCategory
   competitionResult.competition = competition._id
@@ -37,9 +38,9 @@ function removedPlayers(newPlayers: CompetitionParticipant[], players: Competiti
 
 }
 
-function validateAges(players: CompetitionParticipant[], ageCategory: AgeCategory): CompetitionParticipant[] {
-  const newPlayers = players.filter(p => p.yearOfBirth >= ageCategory.yearOfBirth)
-  if (newPlayers.length != players.length && newPlayers.length < minimum_players_in_competition) {
+function validateAges(players: CompetitionParticipant[], minYearOfBirth: number, maxYearOfBirth: number, minPlayers: number): CompetitionParticipant[] {
+  const newPlayers = players.filter(p => p.yearOfBirth >= minYearOfBirth && p.yearOfBirth <= maxYearOfBirth)
+  if (newPlayers.length != players.length && newPlayers.length < minPlayers) {
     throw new MultiMessageError([`${removedPlayers(newPlayers, players)} ineligible. Minimum number of players not met.`])
   }
   return newPlayers

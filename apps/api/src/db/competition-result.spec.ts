@@ -43,15 +43,19 @@ function aCompetitionResult(): CompetitionResult {
   };
 }
 
+function mockParticipantsExistsInCompetitionFileAndCompetitionIsValid() {
+  jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
+  jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
+  jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
+  jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null);
+}
+
 describe('CFF# is allowed to be blank', () => {
   it('participant with blank CFF is not rejected but competition is in approved status', async () => {
     const fields = aCompetitionResult()
     fields.results[0].cffNumber = ""
     jest.restoreAllMocks()
-    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValueOnce({});
-    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValueOnce(ageCategory);
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({code: 'COMP1'});
-    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
+    mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
     const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields)
     expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].warnings[0].type).toBe("MISSING_CFF_NUMBER")
@@ -91,10 +95,7 @@ describe('competition fields are validated', () => {
       fields.ageCategory = null;
       fields.tournamentName = null;
       fields.competitionShortName = null;
-      jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
-      jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-      jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
-      jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
+      mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
       await saveCompetitionResults(fields);
       fail('should not reach here');
     } catch (err) {
@@ -131,10 +132,7 @@ describe('competition fields are validated', () => {
   it('results are valid', async () => {
     jest.restoreAllMocks()
     const fields = aCompetitionResult()
-    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValue({code: 'a', name: 'b', zone: CompetitionZone.cff})
-    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
+    mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
     const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields);
     expect(saveCompetitionResultsSpy.mock.calls[0][0].status).toBe(CompetitionStatus.approved)
@@ -200,10 +198,7 @@ describe('age category / YOB', () => {
       fields.results.push({...fields.results[0], name: `${Math.random()}`})
     }
     fields.results[0].yearOfBirth = ageCategory.yearOfBirth - 1; // too young
-    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
-    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({});
-    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
+    mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
     try {
       await saveCompetitionResults(fields)
       fail("should not get here")
@@ -221,10 +216,37 @@ describe('age category / YOB', () => {
       fields.results.push({...fields.results[0], name: randomNames[i]})
     }
     fields.results[0].yearOfBirth = ageCategory.yearOfBirth - 1; // too young
-    jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue({});
-    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
-    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce({code: 'COMP1'});
-    jest.spyOn(mygoose, 'getCompetitionResultsInLastYear').mockResolvedValueOnce(null)
+    mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
+    const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
+    await saveCompetitionResults(fields)
+    expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].name).toBe(randomNames[0])
+  });
+  it('under 13 are not allowed and count of participants drops below six', async () => {
+    jest.restoreAllMocks()
+    const fields = aCompetitionResult()
+    for (let i=0; i<5; i++) {
+      fields.results.push({...fields.results[0], name: `${Math.random()}`})
+    }
+    fields.results[0].yearOfBirth = new Date().getFullYear() - 13 + 1
+    mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
+    try {
+      await saveCompetitionResults(fields)
+      fail("should not get here")
+    } catch (err) {
+      expect(err).toBeInstanceOf(MultiMessageError);
+      expect(err.errorMessages[0]).toBe(`${fields.results[0].name} ${fields.results[0].surname} ineligible. Minimum number of players not met.`)
+    }
+  });
+  it('invalid age is not counted and count of participants is above six', async () => {
+    jest.restoreAllMocks()
+    const fields = aCompetitionResult()
+    const randomNames = []
+    for (let i=0; i<6; i++) {
+      randomNames.push(`${Math.random()}`)
+      fields.results.push({...fields.results[0], name: randomNames[i]})
+    }
+    fields.results[0].yearOfBirth = new Date().getFullYear() - 13 + 1 // too young
+    mockParticipantsExistsInCompetitionFileAndCompetitionIsValid();
     const saveCompetitionResultsSpy = jest.spyOn(mygoose, 'saveCompetitionResults').mockImplementationOnce(jest.fn())
     await saveCompetitionResults(fields)
     expect(saveCompetitionResultsSpy.mock.calls[0][0].results[0].name).toBe(randomNames[0])
