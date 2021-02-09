@@ -13,7 +13,7 @@ import { CompetitionModel } from './schemas/competition';
 import { ClassificationFileModel } from './schemas/player-classification';
 import { AgeCategoryModel } from './schemas/age-category';
 import { ValidationFileModel } from './schemas/player';
-import { MultiMessageError } from '@cff/common';
+import { days_before_overwriting_competition_results, MultiMessageError } from '@cff/common';
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');
@@ -112,13 +112,13 @@ export async function deleteCompetitionResult(_id: string) {
 
 export async function getCompetitionResultsInLastYear(competitionCode: string): Promise<CompetitionResult> {
   const competition: Competition = await CompetitionModel.findOne({code: competitionCode})
-  const aYearAgo = new Date();
-  aYearAgo.setDate(aYearAgo.getDate()-365)
+  const thirteenMonthsAgo = new Date();
+  thirteenMonthsAgo.setDate(thirteenMonthsAgo.getDate()-(days_before_overwriting_competition_results))
   const today = new Date();
   return CompetitionResultsModel.findOne({
     competition: competition._id,
     competitionDate: {
-      $gte: aYearAgo,
+      $gte: thirteenMonthsAgo,
       $lte: today
     }
   }).populate('competition ageCategory');
