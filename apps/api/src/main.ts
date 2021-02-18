@@ -84,7 +84,7 @@ app.post('/api/upload-competition-file', upload.single('uploadedFile'), asyncHan
 }));
 
 app.post('/api/upload-classification-file', upload.single('uploadedFile'), asyncHandler(async (req, res) => {
-  const contents = String(req.files.uploadedFile.data)
+  const contents = String(req.file.buffer)
   const results: PlayerClassification[] = await parseClassificationFileContents(contents);
   await savePlayerClassifications(results);
   res.send({
