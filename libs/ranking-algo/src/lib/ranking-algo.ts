@@ -30,6 +30,20 @@ export function filterCompetitionResults(competitionResults: CompetitionResult[]
     v.results.filter(p => p.cffNumber === player.cffNumber).length !== 0)
 }
 
+export function decorateRanksWithPositions(ranks: Rank[]) {
+  let position = 0
+  for (let i=0; i<ranks.length; i++) {
+    position = position + 1
+    if (ranks[i].position === undefined && i === 0) {
+      ranks[i].position = position
+    } else if (ranks[i].points === ranks[i-1].points) {
+      ranks[i].position = ranks[i-1].position
+    } else if (ranks[i].points !== ranks[i-1].points) {
+      ranks[i].position = position
+    }
+  }
+}
+
 export function rank(competitionResults: CompetitionResult[], players: PlayerClassification[]): Ranking {
   const forceMap = createForceMap(competitionResults, players)
   const ranks: Rank[] = []
@@ -42,6 +56,7 @@ export function rank(competitionResults: CompetitionResult[], players: PlayerCla
     }
   }
   ranks.sort((a, b) => b.points - a.points)
+  decorateRanksWithPositions(ranks)
   return {ranks: ranks}
 }
 

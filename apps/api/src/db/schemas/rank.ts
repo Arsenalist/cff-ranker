@@ -10,6 +10,7 @@ const zoneDistribution = new mongoose.Schema({
 });
 
 export const rank = new mongoose.Schema({
+  position: { type: Number, required: true },
   points: { type: Number, required: true },
   player: { type: playerClassificationSchema },
   cffDistribution: zoneDistribution,

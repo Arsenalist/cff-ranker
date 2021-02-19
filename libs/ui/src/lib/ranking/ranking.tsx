@@ -41,6 +41,7 @@ export function Ranking() {
         <Table>
           <TableHead>
             <TableRow key="header">
+              <TableCell>#</TableCell>
               <TableCell>Name</TableCell>
               <TableCell>CFF Number</TableCell>
               <TableCell>Points</TableCell>
@@ -53,6 +54,7 @@ export function Ranking() {
             {
               ranking.ranks.map(row => (
                 <TableRow key={row.player._id}>
+                  <TableCell>{row.position}</TableCell>
                   <TableCell>{row.player.firstName} {row.player.lastName}</TableCell>
                   <TableCell>{row.player.cffNumber}</TableCell>
                   <TableCell>{row.points}</TableCell>

@@ -123,6 +123,7 @@ export type ZoneDistribution = {
 };
 
 export interface Rank {
+  position?: number
   player?: PlayerClassification
   points?: number
   cffDistribution?: ZoneDistribution

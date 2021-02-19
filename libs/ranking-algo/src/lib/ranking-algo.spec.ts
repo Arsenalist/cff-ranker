@@ -1,11 +1,17 @@
-import { calculateForce, calculatePointsForParticipant, filterCompetitionResults, rank } from './ranking-algo';
+import {
+  decorateRanksWithPositions,
+  calculateForce,
+  calculatePointsForParticipant,
+  filterCompetitionResults,
+  rank
+} from './ranking-algo';
 import {
   AgeCategory,
   CompetitionParticipant,
   CompetitionResult,
   CompetitionZone,
   PlayerClass,
-  PlayerClassification,
+  PlayerClassification, Rank,
   Ranking, Weapon
 } from '@cff/api-interfaces';
 
@@ -345,6 +351,7 @@ describe('top five cff competitions, regional and national are grouped', () => {
     }
   }
   function validateRank(rankings: Ranking, cffNumber: string, position: number, total: number, cffTotal: number, cffCompetitions: ({ code: string; '50.3': undefined } | { code: string; points: number } | { code: string; points: number } | { code: string; points: number } | { code: string; points: number })[], regionalTotal: number, nationalTotal: number) {
+    expect(rankings.ranks[position-1].position).toBe(position)
     expect(rankings.ranks[position-1].player.cffNumber).toBe(cffNumber)
     expect(rankings.ranks[position-1].points).toBe(total)
     expect(rankings.ranks[position-1].cffDistribution.points).toBe(cffTotal)
@@ -495,3 +502,63 @@ describe('top five cff competitions, regional and national are grouped', () => {
         {code: "CFF5", points: 5.4}], 42.6, 36.4)
   })
 })
+describe('addPositionsToRanks', () => {
+  function createRanking(...points: number[]): Rank[] {
+    return points.map(p => { return {points: p}} )
+  }
+  it('one player only so they are #1', () => {
+    const ranks = createRanking(1)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+  })
+  it('no duplicate rankings', () => {
+    const ranks = createRanking(1, 2, 3, 4)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+    expect(ranks[1].position).toBe(2)
+    expect(ranks[2].position).toBe(3)
+    expect(ranks[3].position).toBe(4)
+  })
+  it('one tied to start', () => {
+    const ranks = createRanking(1, 1, 3, 4)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+    expect(ranks[1].position).toBe(1)
+    expect(ranks[2].position).toBe(3)
+    expect(ranks[3].position).toBe(4)
+  })
+  it('one tied in the end', () => {
+    const ranks = createRanking(1, 2, 3, 3)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+    expect(ranks[1].position).toBe(2)
+    expect(ranks[2].position).toBe(3)
+    expect(ranks[3].position).toBe(3)
+  })
+  it('one tied in the middle', () => {
+    const ranks = createRanking(1, 2, 2, 3)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+    expect(ranks[1].position).toBe(2)
+    expect(ranks[2].position).toBe(2)
+    expect(ranks[3].position).toBe(4)
+  })
+  it('all tied but last', () => {
+    const ranks = createRanking(1, 1, 1, 2)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+    expect(ranks[1].position).toBe(1)
+    expect(ranks[2].position).toBe(1)
+    expect(ranks[3].position).toBe(4)
+  })
+  it('all tied', () => {
+    const ranks = createRanking(1, 1, 1, 1)
+    decorateRanksWithPositions(ranks)
+    expect(ranks[0].position).toBe(1)
+    expect(ranks[1].position).toBe(1)
+    expect(ranks[2].position).toBe(1)
+    expect(ranks[3].position).toBe(1)
+  })
+})
+
+
