@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://cff-ranker-api.azurewebsites.net'
+  apiBaseUrl: 'https://rankingapi.fencing.ca'
 };
