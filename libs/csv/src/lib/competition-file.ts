@@ -97,6 +97,20 @@ function addMessageToErrorsListIfTestFails(errors: string[], test: () => boolean
   return errors
 }
 
+function parseYearOfBirth(date: string): string {
+  // a string with numbers
+  if (/^\d+$/.test(date)) {
+    return date
+  }
+  // return the year part if matches
+  const result = date.match(/\d+\/{1}\d+\/{1}(\d+)/);
+  if (result) {
+    return result[1]
+  }
+  // just return the input if nothing has matched
+  return date
+}
+
 async function parseResults(fileContents: string): Promise<CompetitionParticipant[]> {
   return await csv.parse(fileContents, {
     from_line: 3,
@@ -109,7 +123,7 @@ async function parseResults(fileContents: string): Promise<CompetitionParticipan
       return {
         surname: block1[0],
         name: block1[1],
-        yearOfBirth: block1[2],
+        yearOfBirth: parseYearOfBirth(block1[2]),
         gender: block1[3],
         country: block1[4],
         cffNumber: block3[0],

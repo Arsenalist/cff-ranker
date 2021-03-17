@@ -89,6 +89,24 @@ describe('competition file csv parsing', () => {
     expect(result.results[0].rank).toBe("1")
     expect(result.results[0].completed).toBe("t")
   });
+  it('Year of Birth can also be of m/d/yyyy format', async () => {
+    const validCsvContents = "FFF;WIN;competition;sylvie clement;individuel\n" +
+      "10/12/2011;fleuret;M;senior;FM CHALLENGE DE LA VILLE DE LONGUEUIL;FM OM\n" +
+      "TEISSEIRE,Nicolas,1/1/1986,M,CAN,,;,,;C06-0516,QC,OM,,;1,t\n" +
+      "VANHAASTER,Maximilien,1992,M,CAN,,;,,;C06-0019,QC,CRA,,;2,t\n" +
+      "BRODEUR,Marc-Antoine,1/2/1993,M,CAN,,;,,;C06-0999,QC,OM,,;3,t\n" +
+      "DAVID,Francois-Olivier,3/5/1994,M,CAN,,;,,;C06-1004,QC,OM,,;3,t\n" +
+      "BONTEMS,Pierre-Olivier,1988,M,CAN,,;,,;C10-0065,QC,OM,,;5,t\n" +
+      "PROVENCHER,Francois,1994,M,CAN,,;,,;C06-0446,ON,OTT,,;6,t"
+    const result = await parseCompetitionFileContents(validCsvContents);
+    expect(result.results.length).toBe(6)
+    expect(result.results[0].yearOfBirth).toBe("1986")
+    expect(result.results[1].yearOfBirth).toBe("1992")
+    expect(result.results[2].yearOfBirth).toBe("1993")
+    expect(result.results[3].yearOfBirth).toBe("1994")
+    expect(result.results[4].yearOfBirth).toBe("1988")
+    expect(result.results[5].yearOfBirth).toBe("1994")
+  });
 });
 
 describe('competition file errors', () => {
