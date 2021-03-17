@@ -58,7 +58,7 @@ describe('competition file csv parsing', () => {
       fail("should not get here")
     } catch (e) {
       expect(e.errorMessages[0]).toBe("The weapon is not specified.")
-      expect(e.errorMessages[1]).toBe("Line 1: Missing YOB.")
+      expect(e.errorMessages[1]).toBe("Line 3: Missing YOB.")
     }
   })
   it('all results are valid, but not enough entrants', async () => {
@@ -118,7 +118,7 @@ describe('competition file errors', () => {
     try {
       await parseCompetitionFileContents(csv);
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: Missing YOB.")
+      expect(e.errorMessages[0]). toBe("Line 3: Missing YOB.")
     }
   });
   it('year of birth and surname are missing', async () => {
@@ -128,8 +128,8 @@ describe('competition file errors', () => {
     try {
       await parseCompetitionFileContents(csv);
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: Missing Surname.")
-      expect(e.errorMessages[1]).toBe("Line 1: Missing YOB.")
+      expect(e.errorMessages[0]).toBe("Line 3: Missing Surname.")
+      expect(e.errorMessages[1]).toBe("Line 3: Missing YOB.")
     }
   });
   it('all fields are missing', async () => {
@@ -140,15 +140,15 @@ describe('competition file errors', () => {
       await parseCompetitionFileContents(csv);
       fail('it should not reach here');
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: Missing Surname.")
-      expect(e.errorMessages[1]).toBe("Line 1: Missing Name.")
-      expect(e.errorMessages[2]).toBe("Line 1: Missing YOB.")
-      expect(e.errorMessages[3]).toBe("Line 1: Missing Gender.")
-      expect(e.errorMessages[4]).toBe("Line 1: Missing Country.")
-      expect(e.errorMessages[5]).toBe("Line 1: Missing Branch.")
-      expect(e.errorMessages[6]).toBe("Line 1: Missing Club.")
-      expect(e.errorMessages[7]).toBe("Line 1: Missing Rank.")
-      expect(e.errorMessages[8]).toBe("Line 1: Missing Completed.")
+      expect(e.errorMessages[0]).toBe("Line 3: Missing Surname.")
+      expect(e.errorMessages[1]).toBe("Line 3: Missing Name.")
+      expect(e.errorMessages[2]).toBe("Line 3: Missing YOB.")
+      expect(e.errorMessages[3]).toBe("Line 3: Missing Gender.")
+      expect(e.errorMessages[4]).toBe("Line 3: Missing Country.")
+      expect(e.errorMessages[5]).toBe("Line 3: Missing Branch.")
+      expect(e.errorMessages[6]).toBe("Line 3: Missing Club.")
+      expect(e.errorMessages[7]).toBe("Line 3: Missing Rank.")
+      expect(e.errorMessages[8]).toBe("Line 3: Missing Completed.")
     }
   });
   it('all fields missing in one line, some in the other', async () => {
@@ -160,16 +160,16 @@ describe('competition file errors', () => {
       await parseCompetitionFileContents(csv);
       fail('it should not reach here');
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: Missing Surname.")
-      expect(e.errorMessages[1]).toBe("Line 1: Missing Name.")
-      expect(e.errorMessages[2]).toBe("Line 1: Missing YOB.")
-      expect(e.errorMessages[3]).toBe("Line 1: Missing Gender.")
-      expect(e.errorMessages[4]).toBe("Line 1: Missing Country.")
-      expect(e.errorMessages[5]).toBe("Line 1: Missing Branch.")
-      expect(e.errorMessages[6]).toBe("Line 1: Missing Club.")
-      expect(e.errorMessages[7]).toBe("Line 1: Missing Rank.")
-      expect(e.errorMessages[8]).toBe("Line 1: Missing Completed.")
-      expect(e.errorMessages[9]).toBe("Line 2: Missing Name.")
+      expect(e.errorMessages[0]).toBe("Line 3: Missing Surname.")
+      expect(e.errorMessages[1]).toBe("Line 3: Missing Name.")
+      expect(e.errorMessages[2]).toBe("Line 3: Missing YOB.")
+      expect(e.errorMessages[3]).toBe("Line 3: Missing Gender.")
+      expect(e.errorMessages[4]).toBe("Line 3: Missing Country.")
+      expect(e.errorMessages[5]).toBe("Line 3: Missing Branch.")
+      expect(e.errorMessages[6]).toBe("Line 3: Missing Club.")
+      expect(e.errorMessages[7]).toBe("Line 3: Missing Rank.")
+      expect(e.errorMessages[8]).toBe("Line 3: Missing Completed.")
+      expect(e.errorMessages[9]).toBe("Line 4: Missing Name.")
     }
   });
   it('Incorrect CFF# (all letters)', async () => {
@@ -180,7 +180,7 @@ describe('competition file errors', () => {
       await parseCompetitionFileContents(csv);
       fail('it should not reach here');
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: CFF# LETTERS is of incorrect format.")
+      expect(e.errorMessages[0]).toBe("Line 3: CFF# LETTERS is of incorrect format.")
     }
   });
   it('Incorrect CFF# (two letters to start)', async () => {
@@ -191,7 +191,7 @@ describe('competition file errors', () => {
       await parseCompetitionFileContents(csv);
       fail('it should not reach here');
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: CFF# CC12-123 is of incorrect format.")
+      expect(e.errorMessages[0]).toBe("Line 3: CFF# CC12-123 is of incorrect format.")
     }
   });
   it('Incorrect CFF# (no dash)', async () => {
@@ -202,7 +202,7 @@ describe('competition file errors', () => {
       await parseCompetitionFileContents(csv);
       fail('it should not reach here');
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: CFF# C12123 is of incorrect format.")
+      expect(e.errorMessages[0]).toBe("Line 3: CFF# C12123 is of incorrect format.")
     }
   });
   it('Incorrect CFF# (not enough trailing digits)', async () => {
@@ -213,7 +213,7 @@ describe('competition file errors', () => {
       await parseCompetitionFileContents(csv);
       fail('it should not reach here');
     } catch (e) {
-      expect(e.errorMessages[0]).toBe("Line 1: CFF# C12-123 is of incorrect format.")
+      expect(e.errorMessages[0]).toBe("Line 3: CFF# C12-123 is of incorrect format.")
     }
   });
   it('Correct CFF# format', async () => {

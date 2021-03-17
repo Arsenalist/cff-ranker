@@ -66,7 +66,7 @@ function validateCompetition(competition: CompetitionResult) {
   addMessageToErrorsListIfTestFails(errors, () => !!competition.tournamentName, "The tournament name is not specified.")
   for (let i = 0; i < competition.results.length; i++) {
     const p = competition.results[i]
-    const row = i + 1
+    const row = i + 1 + 2 // the two is so line numbers consider the two header rows
     addMessageToErrorsListIfTestFails(errors, () => !!p.surname, `Line ${row}: Missing Surname.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.name, `Line ${row}: Missing Name.`)
     addMessageToErrorsListIfTestFails(errors, () => !!p.yearOfBirth, `Line ${row}: Missing YOB.`)
@@ -107,8 +107,8 @@ function parseYearOfBirth(date: string): string {
   if (result) {
     return result[1]
   }
-  // just return the input if nothing has matched
-  return date
+  // just return blank if nothing has matched
+  return ""
 }
 
 async function parseResults(fileContents: string): Promise<CompetitionParticipant[]> {
