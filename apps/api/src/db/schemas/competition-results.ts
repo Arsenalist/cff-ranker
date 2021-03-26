@@ -4,7 +4,7 @@ import { competitionParticipant } from './competition-participant';
 
 const competitionFileRecordSchema = new mongoose.Schema({
   competition: { type: mongoose.Schema.Types.ObjectId, ref: 'Competition' },
-  creator: { type: String, required: true },
+  creator: { type: String },
   competitionType: { type: String, required: true },
   competitionDate: { type: Date, required: true },
   weapon: { type: String, required: true, lowercase: true, enum: ['fleuret', 'epee', 'sabre'] },
