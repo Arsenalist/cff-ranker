@@ -9,7 +9,7 @@ async function parseValidationFileContents(fileContents) {
     'Club': 'club',
     'Branch': 'branch',
     'Country': 'country',
-    'CFF#': 'cffNumber',
+    'CFF Number': 'cffNumber',
     'Validated': 'validated'
   };
   return await validationFileSpec.parse(fileContents, {
