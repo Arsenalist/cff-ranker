@@ -19,5 +19,23 @@ describe('validation file csv parsing', () => {
     expect(row.cffNumber).toBe("123");
     expect(row.validated).toBe("y");
   });
+
+  it('blank newlines are allowed', async () => {
+    const contents = "Surname,Name,YOB,Gender,Club,Branch,Country,CFF Number,Validated\n\n\n" +
+      "Lowry,Kyle,1986,M,TOR,ON,CAN,123,y";
+    const result = await parseValidationFileContents(contents);
+    expect(result.length).toBe(1);
+    const row = result[0];
+    expect(row.surname).toBe("Lowry");
+  });
+
+  it('content is trimmed before parsing', async () => {
+    const contents = "\nSurname,Name,YOB,Gender,Club,Branch,Country,CFF Number,Validated\n" +
+      "Lowry,Kyle,1986,M,TOR,ON,CAN,123,y\n ";
+    const result = await parseValidationFileContents(contents);
+    expect(result.length).toBe(1);
+    const row = result[0];
+    expect(row.surname).toBe("Lowry");
+  });
 });
 

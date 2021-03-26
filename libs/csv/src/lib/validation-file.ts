@@ -12,10 +12,11 @@ async function parseValidationFileContents(fileContents) {
     'CFF Number': 'cffNumber',
     'Validated': 'validated'
   };
-  return await validationFileSpec.parse(fileContents, {
+  return await validationFileSpec.parse(fileContents.trim(), {
     columns: (header) => {
       return header.map(column => columnToFieldMapping[column]);
-    }
+    },
+    skip_empty_lines: true
   });
 }
 
