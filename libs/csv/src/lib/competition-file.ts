@@ -114,6 +114,9 @@ function parseYearOfBirth(date: string): string {
 async function parseResults(fileContents: string): Promise<CompetitionParticipant[]> {
   return await csv.parse(fileContents, {
     from_line: 3,
+    skip_empty_lines: true,
+    ignore_last_delimiters: true,
+    trim: true,
     delimiter: ';',
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     on_record: (record, { lines }) => {

@@ -14,7 +14,10 @@ export async function parseClassificationFileContents(fileContents: string): Pro
   return await asyncCsv.parse(fileContents, {
     columns: (header) => {
       return header.map(column => columnToFieldMapping[column]);
-    }
+    },
+    skip_empty_lines: true,
+    ignore_last_delimiters: true,
+    trim: true
   });
 
 }

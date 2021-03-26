@@ -37,5 +37,14 @@ describe('validation file csv parsing', () => {
     const row = result[0];
     expect(row.surname).toBe("Lowry");
   });
+
+  it('fields are trimmed', async () => {
+    const contents = "Surname,Name,YOB,Gender,Club,Branch,Country,CFF Number,Validated\n" +
+      "Lowry ,Kyle,1986,M,TOR,ON,CAN,123,y";
+    const result = await parseValidationFileContents(contents);
+    expect(result.length).toBe(1);
+    const row = result[0];
+    expect(row.surname).toBe("Lowry");
+  });
 });
 
