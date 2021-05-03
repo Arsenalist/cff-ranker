@@ -6,10 +6,13 @@ import { getCompetitionByCode } from './competition';
 import { getCompetitionResultsInLastYear } from './mygoose';
 
 export async function saveCompetitionResults(competitionResult: CompetitionResult) {
-  await validateParticipantsInCompetitionResult(competitionResult.results)
+  const errors = await validateParticipantsInCompetitionResult(competitionResult.results)
   const ageCategory = await mygoose.getAgeCategoryByCode(competitionResult.ageCategory as string);
   if (!ageCategory) {
-    throw new MultiMessageError([`Age Category is invalid: ${competitionResult.ageCategory}`])
+    errors.push(`Age Category is invalid: ${competitionResult.ageCategory}`)
+  }
+  if (errors.length !== 0) {
+    throw new MultiMessageError(errors)
   }
   const maxYearOfBirth = new Date().getFullYear() - minimum_age_in_competition;
   competitionResult.results = validateAges(competitionResult.results, ageCategory.yearOfBirth, maxYearOfBirth, minimum_players_in_competition)
@@ -46,12 +49,14 @@ function validateAges(players: CompetitionParticipant[], minYearOfBirth: number,
   return newPlayers
 }
 
-export async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]) {
+export async function validateParticipantsInCompetitionResult(competitionParticipants: CompetitionParticipant[]): Promise<string[]> {
+  const errorList: string[] = []
   for (const r of competitionParticipants) {
     if (r.cffNumber && !await mygoose.validateParticipant(r.cffNumber, r.name, r.surname, r.yearOfBirth, r.gender)) {
-      throw new MultiMessageError([`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`])
+      errorList.push(`Could not validate: ${r.cffNumber}, ${r.name}, ${r.surname}, ${r.yearOfBirth}, ${r.gender}.`)
     }
   }
+  return errorList
 }
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {

@@ -71,6 +71,7 @@ describe('CFF# validation from validation file', () => {
     fields.results[0].yearOfBirth = 2000
     fields.results[0].gender = "INVALID_GENDER"
     jest.restoreAllMocks()
+    jest.spyOn(mygoose, 'getAgeCategoryByCode').mockResolvedValue(ageCategory);
     jest.spyOn(mygoose, 'validateParticipant').mockResolvedValue(null);
     try {
       await saveCompetitionResults(fields)
@@ -100,7 +101,7 @@ describe('competition fields are validated', () => {
       fail('should not reach here');
     } catch (err) {
       expect(err).toBeInstanceOf(mongoose.Error.ValidationError);
-      expect(Object.keys(err.errors).length).toBe(7); // age category is handled separately
+      expect(Object.keys(err.errors).length).toBe(6); // age category is handled separately
     }
   });
   it('age category is invalid', async () => {
