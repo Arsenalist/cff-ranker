@@ -147,13 +147,19 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
     cffMap[p.cffNumber] = p
   }
   const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1).lean()
-  return latestClassificationFile.classifications.map(c => {
+  const errors = []
+  const returnValue = latestClassificationFile.classifications.map(c => {
       const cffMapElement = cffMap[c.cffNumber];
       if (!cffMapElement) {
-        throw new MultiMessageError([`${c.cffNumber} was not found in the validation file but exists in the classification file.`])
+        errors.push(`${c.cffNumber} was not found in the validation file but exists in the classification file.`)
       }
       return {...c, province: cffMapElement.branch}
   })
+  if (errors) {
+    throw new MultiMessageError(errors)
+  } else {
+    return returnValue
+  }
 }
 
 export async function save(entity) {
