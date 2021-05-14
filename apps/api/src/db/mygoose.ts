@@ -152,6 +152,7 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
       const cffMapElement = cffMap[c.cffNumber];
       if (!cffMapElement) {
         errors.push(`${c.cffNumber} was not found in the validation file but exists in the classification file.`)
+        return c
       }
       return {...c, province: cffMapElement.branch}
   })
