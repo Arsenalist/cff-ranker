@@ -14,6 +14,7 @@ import { ClassificationFileModel } from './schemas/player-classification';
 import { AgeCategoryModel } from './schemas/age-category';
 import { ValidationFileModel } from './schemas/player';
 import { days_before_overwriting_competition_results, MultiMessageError } from '@cff/common';
+import { environment } from '../environments/environment';
 
 export async function findCompetitionResults(): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({}).populate('ageCategory competition');
@@ -140,6 +141,24 @@ export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon
   }).populate('competition ageCategory');
 }
 
+export function decorateClassificationFileDataWithValidationFileData(classifications, cffMap: {}) {
+  const errors = [];
+  const result = classifications.map(c => {
+    const cffMapElement = cffMap[c.cffNumber];
+    if (!cffMapElement) {
+      errors.push(`${c.cffNumber} was not found in the validation file but exists in the classification file.`);
+    } else {
+      return { ...c, province: cffMapElement.branch };
+    }
+  });
+
+  if (errors.length && environment.show_validation_classification_mismatches_when_ranking) {
+    throw new MultiMessageError(errors);
+  } else {
+    return result;
+  }
+}
+
 export async function getPlayerClassifications(): Promise<PlayerClassification[]> {
   const validationFile = await ValidationFileModel.findOne().sort('-dateGenerated').limit(1)
   const cffMap = {}
@@ -147,20 +166,7 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
     cffMap[p.cffNumber] = p
   }
   const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1).lean()
-  const errors = []
-  const returnValue = latestClassificationFile.classifications.map(c => {
-      const cffMapElement = cffMap[c.cffNumber];
-      if (!cffMapElement) {
-        errors.push(`${c.cffNumber} was not found in the validation file but exists in the classification file.`)
-        return c
-      }
-      return {...c, province: cffMapElement.branch}
-  })
-  if (errors) {
-    throw new MultiMessageError(errors)
-  } else {
-    return returnValue
-  }
+  return decorateClassificationFileDataWithValidationFileData(latestClassificationFile, cffMap);
 }
 
 export async function save(entity) {
