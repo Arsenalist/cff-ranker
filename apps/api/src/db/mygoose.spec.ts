@@ -3,16 +3,22 @@ import { decorateClassificationFileDataWithValidationFileData } from './mygoose'
 import { environment } from '../environments/environment';
 
 describe('decorateClassificationFileDataWithValidationFileData', () => {
-  const classifications: PlayerClassification[] = [{
-    weapon: Weapon.Fleuret,
-    province: 'ON',
-    cffNumber: 'CFF-10234',
-    lastName: 'last name',
-    firstName: 'first name',
-    club: 'ARS'
-  }]
-  const validationRecord: Player = { branch: 'AB' }
-  const validationFileMap = {[classifications[0].cffNumber]: validationRecord}
+  let classifications: PlayerClassification[]
+  let validationRecord: Player
+  let validationFileMap
+  beforeEach(() => {
+    classifications = [{
+      weapon: Weapon.Fleuret,
+      province: 'ON',
+      cffNumber: 'CFF-10234',
+      lastName: 'last name',
+      firstName: 'first name',
+      club: 'ARS'
+    }]
+    validationRecord = { branch: 'AB' }
+    validationFileMap = {[classifications[0].cffNumber]: validationRecord}
+  })
+
 
   it('flag on: branch from validation file is copied over to classification file record', () => {
     environment.show_validation_classification_mismatches_when_ranking = true
@@ -42,9 +48,25 @@ describe('decorateClassificationFileDataWithValidationFileData', () => {
     }
   });
 
-  it('flag off: errors are hidden', () => {
+  it('flag off: errors are hidden, no classifications found after comparison to validation file', () => {
     environment.show_validation_classification_mismatches_when_ranking = false
     const result = decorateClassificationFileDataWithValidationFileData(classifications, {})
+    expect(result.length).toEqual(0)
+  });
+
+  it('flag off: errors are hidden, one classification found after comparison to validation file', () => {
+    classifications.push(
+      {
+        weapon: Weapon.Fleuret,
+        province: 'AB',
+        cffNumber: 'CFF-10235',
+        lastName: 'last name 2 ',
+        firstName: 'first name 2',
+        club: 'ARS'
+      }
+    )
+    environment.show_validation_classification_mismatches_when_ranking = false
+    const result = decorateClassificationFileDataWithValidationFileData(classifications, validationFileMap)
     expect(result.length).toEqual(1)
   });
 });

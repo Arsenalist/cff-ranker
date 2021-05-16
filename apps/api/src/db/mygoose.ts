@@ -150,7 +150,7 @@ export function decorateClassificationFileDataWithValidationFileData(classificat
     } else {
       return { ...c, province: cffMapElement.branch };
     }
-  });
+  }).filter(c => c !== undefined && c !== null)
 
   if (errors.length && environment.show_validation_classification_mismatches_when_ranking) {
     throw new MultiMessageError(errors);
@@ -166,7 +166,7 @@ export async function getPlayerClassifications(): Promise<PlayerClassification[]
     cffMap[p.cffNumber] = p
   }
   const latestClassificationFile = await ClassificationFileModel.findOne().sort('-dateGenerated').limit(1).lean()
-  return decorateClassificationFileDataWithValidationFileData(latestClassificationFile, cffMap);
+  return decorateClassificationFileDataWithValidationFileData(latestClassificationFile.classifications, cffMap);
 }
 
 export async function save(entity) {
