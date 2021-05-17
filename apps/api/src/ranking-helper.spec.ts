@@ -42,5 +42,15 @@ describe("main.ts", ()=> {
     }
   });
 
+  it("end date must be greater than start date", () => {
+    const startDate = '2021-05-17T19:41:00.162Z';
+    const endDate = '1999-05-17T19:41:00.162Z';
+    try {
+      validateRankingParameters(startDate, endDate)
+      fail("should not get here")
+    } catch (e) {
+      expect(e.errorMessages[0]).toEqual('End date must be greater than start date')
+    }  });
+
 
 });

@@ -24,7 +24,7 @@ describe('RankingJobs', () => {
     expect(screen.getByText(rankingJob1.user)).toBeInTheDocument();
   });
 
-  it('ranking job is added afer calling rank', async () => {
+  it('ranking job is added after calling rank', async () => {
     mock.onGet('/api/rankings/jobs').replyOnce(200, [rankingJob1]).
          onGet('/api/rankings/jobs').replyOnce(200, [rankingJob1, rankingJob2])
     mock.onPost('/api/rank').reply(200)
