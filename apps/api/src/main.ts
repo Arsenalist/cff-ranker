@@ -18,7 +18,7 @@ import {
   PlayerClassification,
   Weapon
 } from '@cff/api-interfaces';
-import { getApprovedCompetitionResultsInLast12Months, getPlayerClassifications } from './db/mygoose';
+import { getApprovedCompetitionResults, getPlayerClassifications } from './db/mygoose';
 import { rank } from '@cff/ranking-algo';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
 import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
@@ -27,6 +27,8 @@ import { savePlayerClassifications } from './db/player-classification';
 import { AgeCategoryModel } from './db/schemas/age-category';
 import { RankingJobModel } from './db/schemas/ranking-job';
 import { RankingModel } from './db/schemas/ranking';
+import { validateRankingParameters } from './ranking-helper';
+
 
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
@@ -144,19 +146,23 @@ app.get('/api/rankings/ranking/:id', asyncHandler(async (req, res) => {
   res.send(await RankingModel.findById(req.params.id).populate("ageCategory"))
 }));
 
-
-app.get('/api/rank', asyncHandler(async (req, res) => {
+app.post('/api/rank', asyncHandler(async (req, res) => {
   const playerClassifications = await getPlayerClassifications()
+  validateRankingParameters(req.body.startDate, req.body.endDate)
+  const startDate = new Date(req.body.startDate)
+  const endDate = new Date(req.body.endDate)
   const rankingJobModel = await new RankingJobModel({
     user: req.user["https://fencing.ca/name"],
-    dateGenerated: Date.now()
+    dateGenerated: Date.now(),
+    startDate: new Date(req.body.startDate),
+    endDate: new Date(req.body.endDate)
   }).save()
 
   const ageCategories = await AgeCategoryModel.find({})
   for (const key of Object.keys(Weapon)) {
     for(const ageCategory of ageCategories) {
       for (const gender of ["M", "F"]) {
-        const allCompetitionResults = await getApprovedCompetitionResultsInLast12Months(Weapon[key], ageCategory, gender)
+        const allCompetitionResults = await getApprovedCompetitionResults(Weapon[key], ageCategory, gender, startDate, endDate)
         const ranking = rank(allCompetitionResults, playerClassifications);
         ranking.weapon = Weapon[key];
         ranking.ageCategory = ageCategory

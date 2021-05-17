@@ -142,7 +142,9 @@ export interface Ranking {
 export interface RankingJob {
   _id?: string
   user: string
-  dateGenerated: Date
+  dateGenerated: Date,
+  startDate: Date,
+  endDate: Date
 }
 
 export interface ValidationFile {

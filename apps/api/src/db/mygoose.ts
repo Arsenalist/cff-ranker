@@ -125,18 +125,15 @@ export async function getCompetitionResultsInLastYear(competitionCode: string): 
   }).populate('competition ageCategory');
 
 }
-export async function getApprovedCompetitionResultsInLast12Months(weapon: Weapon, ageCategory: AgeCategory, gender: string): Promise<CompetitionResult[]> {
-  const aYearAgo = new Date();
-  aYearAgo.setDate(aYearAgo.getDate()-(365*3))
-  const today = new Date();
+export async function getApprovedCompetitionResults(weapon: Weapon, ageCategory: AgeCategory, gender: string, startDate: Date, endDate: Date): Promise<CompetitionResult[]> {
   return CompetitionResultsModel.find({
     weapon: weapon,
     ageCategory: ageCategory,
     gender: gender,
     status: CompetitionStatus.approved,
     competitionDate: {
-      $gte: aYearAgo,
-      $lte: today
+      $gte: startDate,
+      $lte: endDate
     }
   }).populate('competition ageCategory');
 }
