@@ -22,6 +22,12 @@ export async function createCompetition(competition: Competition) {
   }
 }
 
+export async function saveCompetition(competition: Competition) {
+  const c = await mygoose.getCompetition(competition.code)
+  c.name = competition.name
+  await mygoose.updateCompetition(c)
+}
+
 export async function deleteCompetition(code: string) {
   await mygoose.deleteCompetition(code)
 }

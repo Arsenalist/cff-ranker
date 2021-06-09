@@ -21,7 +21,7 @@ import {
 import { getApprovedCompetitionResults, getPlayerClassifications } from './db/mygoose';
 import { rank } from '@cff/ranking-algo';
 import { createAgeCategory, deleteAgeCategory, getAgeCategories, updateAgeCategory } from './db/age-category';
-import { createCompetition, deleteCompetition, getCompetitions } from './db/competition';
+import { createCompetition, deleteCompetition, getCompetitions, saveCompetition } from './db/competition';
 import { savePlayers } from './db/player';
 import { savePlayerClassifications } from './db/player-classification';
 import { AgeCategoryModel } from './db/schemas/age-category';
@@ -121,6 +121,11 @@ app.post('/api/participant/:competitionId/:participantId', asyncHandler(async (r
 
 app.put('/api/competition', asyncHandler(async (req, res) => {
   await createCompetition(req.body)
+  res.send()
+}));
+
+app.post('/api/competition', asyncHandler(async (req, res) => {
+  await saveCompetition(req.body)
   res.send()
 }));
 

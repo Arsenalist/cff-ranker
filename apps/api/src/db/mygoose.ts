@@ -51,6 +51,10 @@ export async function updateCompetitionResult(competitionResults: CompetitionRes
   await save(competitionResults)
 }
 
+export async function updateCompetition(competition: Competition) {
+  await save(competition)
+}
+
 export async function savePlayers(results: Player[]) {
   const lowercase = results.map(p => { return {
     ...p,

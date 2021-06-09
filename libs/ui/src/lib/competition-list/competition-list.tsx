@@ -14,9 +14,10 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
@@ -26,9 +27,14 @@ import Paper from '@material-ui/core/Paper';
 
 export function CompetitionList() {
   const [competitions, setCompetitions] = useState<Competition[]>([]);
+  const [competition, setCompetition] = useState<Competition>();
   const [openAddDialog, setAddDialogOpen] = useState(false);
+  const [openEditDialog, setEditDialogOpen] = useState(false);
   const [reload, setReload] = useState(0);
   const { register, handleSubmit } = useForm<Competition>();
+  const { register: registerSave, control, handleSubmit: handleSubmitSave, setValue } = useForm<Competition>(
+    {shouldUnregister: false}
+  );
   useEffect(() => {
     axios.get('/api/competition').then(response => {
       setCompetitions(response.data);
@@ -40,6 +46,20 @@ export function CompetitionList() {
       setReload(reload + 1);
       setAddDialogOpen(false);
     });
+  };
+
+  const onSave = (data: Competition) => {
+    const payload = {...competition, name: data.name}
+    axios.post('/api/competition', payload).then(() => {
+      setReload(reload + 1);
+      setEditDialogOpen(false);
+    });
+  };
+
+  const showEditDialog = (c: Competition) => {
+    setCompetition(c)
+    setValue('name', c.name)
+    setEditDialogOpen(true);
   };
 
   const onDelete = (code: string) => {
@@ -60,6 +80,7 @@ export function CompetitionList() {
               <TableCell>Name</TableCell>
               <TableCell>Code</TableCell>
               <TableCell>Zone</TableCell>
+              <TableCell>Edit</TableCell>
               <TableCell>Delete</TableCell>
             </TableRow>
           </TableHead>
@@ -69,6 +90,12 @@ export function CompetitionList() {
                 <TableCell scope="row">{row.name}</TableCell>
                 <TableCell scope="row">{row.code}</TableCell>
                 <TableCell scope="row">{row.zone}</TableCell>
+                <TableCell scope="row">
+                  <IconButton edge="end" aria-label="edit" data-testid="edit-button-x"
+                              onClick={() => showEditDialog(row)}>
+                    <EditIcon/>
+                  </IconButton>
+                </TableCell>
                 <TableCell scope="row">
                   <IconButton edge="end" aria-label="delete" data-testid="delete-button"
                               onClick={() => onDelete(row.code)}>
@@ -80,6 +107,34 @@ export function CompetitionList() {
           </TableBody>
         </Table>
       </TableContainer>
+      <Dialog open={openEditDialog} onClose={() => setEditDialogOpen(false)} aria-labelledby="form-dialog-title2">
+        <form onSubmit={handleSubmitSave(onSave)}>
+          <DialogTitle>Edit Competition</DialogTitle>
+          <DialogContent>
+
+                <TextField
+                  autoFocus
+                  name="name"
+                  margin="dense"
+                  inputProps={{ 'data-testid': 'name-save' }}
+                  label="Name"
+                  type="text"
+                  inputRef={registerSave}
+                  fullWidth
+                />
+
+
+          </DialogContent>
+          <DialogActions>
+            <Button color="primary">
+              Cancel
+            </Button>
+            <Button type="submit" color="primary" data-testid="save-button-confirm">
+              Save
+            </Button>
+          </DialogActions>
+        </form>
+      </Dialog>
       <Dialog open={openAddDialog} onClose={() => setAddDialogOpen(false)} aria-labelledby="form-dialog-title">
         <form onSubmit={handleSubmit(onSubmit)}>
           <DialogTitle>Add a Competition</DialogTitle>

@@ -1,7 +1,7 @@
 import { Competition, CompetitionZone } from '@cff/api-interfaces';
 import { mockOnce } from '../../mockgoose';
 import * as mygoose from './mygoose';
-import { createCompetition, deleteCompetition, getCompetitions } from './competition';
+import { createCompetition, deleteCompetition, getCompetitions, saveCompetition } from './competition';
 
 describe ('manage competitions', () => {
   const competition: Competition = {
@@ -44,5 +44,15 @@ describe ('manage competitions', () => {
     const getCompetitionsMock = jest.spyOn(mygoose, 'getCompetitions').mockImplementation()
     await getCompetitions()
     expect(getCompetitionsMock).toHaveBeenCalledWith()
+  })
+  it('saves competition name only', async() => {
+    const existingCompetition: Competition = {name: "oldName", code: "oldCode"}
+    const newCompetition: Competition = {name: "newName", code: "newCode"}
+    jest.spyOn(mygoose, 'getCompetition').mockResolvedValueOnce(existingCompetition)
+    const updateCompetitionMock = jest.spyOn(mygoose, 'updateCompetition').mockImplementation(jest.fn())
+    await saveCompetition(newCompetition)
+    expect(updateCompetitionMock).toHaveBeenCalledWith(
+      {name: newCompetition.name, code: existingCompetition.code}
+    )
   })
 })
